@@ -1,12 +1,22 @@
 import { apiFetch } from './api-client';
 
+export interface DiscussionTag {
+    id: number;
+    name: string;
+}
+
 export interface Discussion {
     id: string;
     createdAt: string;
+    updatedAt?: string;
     title: string;
-    content?: string;
+    excerpt?: string;
+    htmlContent?: string;
+    jsonContent?: object;
+    tags?: DiscussionTag[];
     author?: {
         id: string;
+        fullName?: string;
         profile?: {
             fullName?: string;
             firstName?: string;
@@ -20,6 +30,8 @@ export interface Discussion {
     };
     likesCount?: number;
     commentsCount?: number;
+    followersCount?: number;
+    isPinned?: boolean;
     isLiked?: boolean;
     isFollowing?: boolean;
 }

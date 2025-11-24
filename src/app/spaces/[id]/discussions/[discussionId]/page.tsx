@@ -63,7 +63,8 @@ export default function DiscussionPage() {
         );
     }
 
-    const authorName = discussion.author?.profile?.fullName
+    const authorName = (discussion.author as any)?.fullName
+        || discussion.author?.profile?.fullName
         || `${discussion.author?.profile?.firstName || ''} ${discussion.author?.profile?.lastName || ''}`.trim()
         || 'Unknown';
 
@@ -91,9 +92,9 @@ export default function DiscussionPage() {
                 <header className="discussion-article-header">
                     <h1 className="discussion-article-title">{discussion.title}</h1>
                     <div className="discussion-article-meta">
-                        {discussion.author?.profile?.photo ? (
+                        {((discussion.author as any)?.photo || discussion.author?.profile?.photo) ? (
                             <img
-                                src={discussion.author.profile.photo}
+                                src={(discussion.author as any)?.photo || discussion.author?.profile?.photo}
                                 alt={authorName}
                                 className="discussion-article-avatar"
                             />
@@ -109,10 +110,11 @@ export default function DiscussionPage() {
                     </div>
                 </header>
 
-                {discussion.content && (
-                    <div className="discussion-article-content">
-                        <p>{discussion.content}</p>
-                    </div>
+                {discussion.htmlContent && (
+                    <div
+                        className="discussion-article-content"
+                        dangerouslySetInnerHTML={{ __html: discussion.htmlContent }}
+                    />
                 )}
 
                 <footer className="discussion-article-footer">
@@ -131,7 +133,7 @@ export default function DiscussionPage() {
 
             <section className="discussion-comments">
                 <h2 className="discussion-comments-title">
-                    Comments ({comments?.length ?? 0})
+                    Comments ({discussion.commentsCount ?? 0})
                 </h2>
 
                 {currentUserId ? (
@@ -180,7 +182,8 @@ export default function DiscussionPage() {
 }
 
 function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number }) {
-    const authorName = comment.author?.profile?.fullName
+    const authorName = (comment.author as any)?.fullName
+        || comment.author?.profile?.fullName
         || `${comment.author?.profile?.firstName || ''} ${comment.author?.profile?.lastName || ''}`.trim()
         || 'Unknown';
 
@@ -200,9 +203,9 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
     return (
         <div className="comment" style={{ marginLeft: depth > 0 ? `${depth * 1.5}rem` : 0 }}>
             <div className="comment-header">
-                {comment.author?.profile?.photo ? (
+                {((comment.author as any)?.photo || comment.author?.profile?.photo) ? (
                     <img
-                        src={comment.author.profile.photo}
+                        src={(comment.author as any)?.photo || comment.author?.profile?.photo}
                         alt={authorName}
                         className="comment-avatar"
                     />
