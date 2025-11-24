@@ -1,14 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { getDiscussion, getDiscussionComments, Comment } from '@/lib/discussions';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getDiscussion, getDiscussionComments, createComment, Comment } from '@/lib/discussions';
+import { getCurrentUserId } from '@/lib/auth';
 import Link from 'next/link';
 
 export default function DiscussionPage() {
     const params = useParams();
     const spaceId = params.id as string;
     const discussionId = params.discussionId as string;
+    const currentUserId = getCurrentUserId();
+    const queryClient = useQueryClient();
+    const [replyContent, setReplyContent] = useState('');
 
     const { data: discussion, isLoading, error } = useQuery({
         queryKey: ['discussion', discussionId],
@@ -21,6 +26,23 @@ export default function DiscussionPage() {
         queryFn: () => getDiscussionComments(discussionId),
         enabled: !!discussionId,
     });
+
+    const commentMutation = useMutation({
+        mutationFn: (content: string) =>
+            createComment(discussionId, { content, author: currentUserId! }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['discussion-comments', discussionId] });
+            queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
+            setReplyContent('');
+        },
+    });
+
+    const handleSubmitReply = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (replyContent.trim() && currentUserId) {
+            commentMutation.mutate(replyContent.trim());
+        }
+    };
 
     if (isLoading) {
         return (
@@ -111,6 +133,37 @@ export default function DiscussionPage() {
                 <h2 className="discussion-comments-title">
                     Comments ({comments?.length ?? 0})
                 </h2>
+
+                {currentUserId ? (
+                    <form className="discussion-reply-form" onSubmit={handleSubmitReply}>
+                        <textarea
+                            className="discussion-reply-input"
+                            placeholder="Write a reply..."
+                            value={replyContent}
+                            onChange={(e) => setReplyContent(e.target.value)}
+                            rows={3}
+                            disabled={commentMutation.isPending}
+                        />
+                        <div className="discussion-reply-actions">
+                            <button
+                                type="submit"
+                                className="discussion-reply-submit"
+                                disabled={!replyContent.trim() || commentMutation.isPending}
+                            >
+                                {commentMutation.isPending ? 'Posting...' : 'Post Reply'}
+                            </button>
+                        </div>
+                        {commentMutation.isError && (
+                            <p className="discussion-reply-error">
+                                Failed to post reply. Please try again.
+                            </p>
+                        )}
+                    </form>
+                ) : (
+                    <p className="discussion-login-prompt">
+                        <Link href="/login">Log in</Link> to reply to this discussion.
+                    </p>
+                )}
 
                 {comments && comments.length > 0 ? (
                     <div className="discussion-comments-list">

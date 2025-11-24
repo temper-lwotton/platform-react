@@ -1659,6 +1659,121 @@ a {
   }
 }
 
+/* Discussion Reply Form */
+.discussion-reply-form {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
+
+.discussion-reply-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.discussion-reply-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.discussion-reply-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.discussion-reply-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.discussion-reply-submit {
+  padding: 0.5rem 1.25rem;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.discussion-reply-submit:hover:not(:disabled) {
+  background-color: #0052a3;
+}
+
+.discussion-reply-submit:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.discussion-reply-error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.discussion-login-prompt {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  text-align: center;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.discussion-login-prompt a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.discussion-login-prompt a:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .discussion-reply-form {
+    background-color: #2a2a2a;
+    border-color: #404040;
+  }
+
+  .discussion-reply-input {
+    background-color: #1a1a1a;
+    border-color: #404040;
+    color: #e5e5e5;
+  }
+
+  .discussion-reply-input:focus {
+    border-color: #4da3ff;
+    box-shadow: 0 0 0 3px rgba(77, 163, 255, 0.2);
+  }
+
+  .discussion-reply-input:disabled {
+    background-color: #2a2a2a;
+  }
+
+  .discussion-login-prompt {
+    background-color: #2a2a2a;
+    color: #999;
+  }
+
+  .discussion-login-prompt a {
+    color: #4da3ff;
+  }
+}
+
 /* Comment */
 .comment {
   background: var(--background);

@@ -111,3 +111,19 @@ export function unfollowDiscussion(id: string): Promise<void> {
         method: 'DELETE',
     });
 }
+
+// Create a comment on a discussion
+export function createComment(
+    discussionId: string,
+    data: { content: string; author: string; parent?: string }
+): Promise<Comment> {
+    return apiFetch<Comment>('/api/discussion/comments', {
+        method: 'POST',
+        body: JSON.stringify({
+            content: data.content,
+            author: Number(data.author),
+            discussion: Number(discussionId),
+            parent: data.parent ? Number(data.parent) : null,
+        }),
+    });
+}
