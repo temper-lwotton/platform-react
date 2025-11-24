@@ -29,6 +29,7 @@ export function MessageThread({
     const otherParticipants = participants.filter(p => p.id !== currentUserId);
     const displayName = otherParticipants.length > 0
         ? otherParticipants.map(p =>
+            (p as any).fullName ||
             p.profile?.fullName ||
             `${p.profile?.firstName || ''} ${p.profile?.lastName || ''}`.trim() ||
             'Unknown'
@@ -59,7 +60,8 @@ export function MessageThread({
                                 messages[index - 1]?.sender?.id !== message.sender?.id
                             );
 
-                            const senderName = message.sender?.profile?.fullName ||
+                            const senderName = (message.sender as any)?.fullName ||
+                                message.sender?.profile?.fullName ||
                                 `${message.sender?.profile?.firstName || ''} ${message.sender?.profile?.lastName || ''}`.trim() ||
                                 'Unknown';
 
@@ -81,9 +83,9 @@ export function MessageThread({
                                     className={`message ${isOwn ? 'message--own' : 'message--other'}`}
                                 >
                                     {!isOwn && showAvatar && (
-                                        message.sender?.profile?.photo ? (
+                                        ((message.sender as any)?.photo || message.sender?.profile?.photo) ? (
                                             <img
-                                                src={message.sender.profile.photo}
+                                                src={(message.sender as any)?.photo || message.sender?.profile?.photo}
                                                 alt={senderName}
                                                 className="message-avatar"
                                             />

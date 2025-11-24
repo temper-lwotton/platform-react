@@ -31,6 +31,7 @@ export function ConversationList({ conversations, currentUserId }: ConversationL
 
                 const displayName = otherParticipants.length > 0
                     ? otherParticipants.map(p =>
+                        (p as any).fullName ||
                         p.profile?.fullName ||
                         `${p.profile?.firstName || ''} ${p.profile?.lastName || ''}`.trim() ||
                         'Unknown'
@@ -53,9 +54,9 @@ export function ConversationList({ conversations, currentUserId }: ConversationL
                             href={`/messages/${conversation.id}`}
                             className={`conversation-list-item ${isActive ? 'conversation-list-item--active' : ''} ${conversation.unread > 0 ? 'conversation-list-item--unread' : ''}`}
                         >
-                            {firstParticipant?.profile?.photo ? (
+                            {((firstParticipant as any)?.photo || firstParticipant?.profile?.photo) ? (
                                 <img
-                                    src={firstParticipant.profile.photo}
+                                    src={(firstParticipant as any)?.photo || firstParticipant?.profile?.photo}
                                     alt={displayName}
                                     className="conversation-list-avatar"
                                 />
