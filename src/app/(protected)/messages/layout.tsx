@@ -20,8 +20,8 @@ function useCurrentUserId(): string | null {
 }
 
 export default function MessagesLayout({
-                                           children,
-                                       }: {
+    children,
+}: {
     children: React.ReactNode;
 }) {
     const currentUserId = useCurrentUserId();
@@ -31,18 +31,6 @@ export default function MessagesLayout({
         queryFn: () => getConversations(currentUserId!),
         enabled: !!currentUserId,
     });
-
-    if (!currentUserId) {
-        return (
-            <div className="messages-layout">
-                <div className="messages-auth-required">
-                    <p>Please log in to view messages</p>
-                    <Link href="/login" className="messages-login-link">
-                        Go to login</Link>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="messages-layout">
@@ -58,7 +46,7 @@ export default function MessagesLayout({
                 ) : (
                     <ConversationList
                         conversations={conversations || []}
-                        currentUserId={currentUserId}
+                        currentUserId={currentUserId || ''}
                     />
                 )}
             </aside>

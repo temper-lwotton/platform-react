@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUsers, User } from '@/lib/users';
 import { startConversation } from '@/lib/conversations';
 import { getCurrentUserId } from '@/lib/auth';
@@ -14,6 +14,7 @@ function useCurrentUserId(): string | null {
 
 export default function NewConversationPage() {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const currentUserId = useCurrentUserId();
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
     const [message, setMessage] = useState('');
@@ -31,8 +32,13 @@ export default function NewConversationPage() {
                 sender: currentUserId!,
                 recipients: selectedUsers.map(u => u.id),
             }),
-        onSuccess: (conversation) => {
-            router.push(`/messages/${conversation.id}`);
+        onSuccess: (response) => {
+            // The API returns the created message, which has a conversation field
+            // Use conversation ID if available, otherwise fall back to id
+            const conversationId = response.conversation || response.id;
+            // Invalidate the conversations list so it shows the new conversation
+            queryClient.invalidateQueries({ queryKey: ['conversations', currentUserId] });
+            router.push(`/messages/${conversationId}`);
         },
     });
 

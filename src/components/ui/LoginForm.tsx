@@ -5,7 +5,12 @@ import { useForm } from 'react-hook-form';
 import { login, LoginCredentials } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 
-export function LoginForm() {
+interface LoginFormProps {
+    onSuccess?: () => void;
+    redirectTo?: string;
+}
+
+export function LoginForm({ onSuccess, redirectTo = '/spaces' }: LoginFormProps) {
     const router = useRouter();
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +27,11 @@ export function LoginForm() {
 
         try {
             await login(data);
-            router.push('/spaces');
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                router.push(redirectTo);
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Login failed');
         } finally {

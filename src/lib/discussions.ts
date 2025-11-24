@@ -73,7 +73,16 @@ export function getDiscussionComments(id: string): Promise<Comment[]> {
 }
 
 // Create discussion
-export function createDiscussion(data: { title: string; content?: string; space?: string }): Promise<Discussion> {
+export interface CreateDiscussionData {
+    title: string;
+    excerpt: string;
+    htmlContent: string;
+    author: number;
+    space: number;
+    tags?: number[];
+}
+
+export function createDiscussion(data: CreateDiscussionData): Promise<Discussion> {
     return apiFetch<Discussion>('/api/discussion', {
         method: 'POST',
         body: JSON.stringify(data),

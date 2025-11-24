@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getSpaceDiscussions } from '@/lib/discussions';
@@ -34,8 +35,18 @@ export default function SpaceDiscussionsPage() {
     return (
         <div className="discussions-page">
             <header className="discussions-header">
-                <h1 className="discussions-title">Discussions</h1>
-                <p className="discussions-subtitle">Join the conversation</p>
+                <div className="discussions-header-top">
+                    <div>
+                        <h1 className="discussions-title">Discussions</h1>
+                        <p className="discussions-subtitle">Join the conversation</p>
+                    </div>
+                    <Link
+                        href={`/spaces/${spaceId}/discussions/new`}
+                        className="discussions-new-button"
+                    >
+                        New Discussion
+                    </Link>
+                </div>
             </header>
 
             {discussions && discussions.length > 0 ? (
