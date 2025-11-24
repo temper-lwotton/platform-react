@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getConversations } from '@/lib/conversations';
 import { ConversationList } from '@/components/ui/ConversationList';
@@ -7,13 +8,20 @@ import { getCurrentUserId } from '@/lib/auth';
 import Link from 'next/link';
 
 function useCurrentUserId(): string | null {
-    if (typeof window === 'undefined') return null;
-    return getCurrentUserId();
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Runs only on the client, after hydration
+        const id = getCurrentUserId();
+        setUserId(id);
+    }, []);
+
+    return userId;
 }
 
 export default function MessagesLayout({
-    children,
-}: {
+                                           children,
+                                       }: {
     children: React.ReactNode;
 }) {
     const currentUserId = useCurrentUserId();
@@ -29,7 +37,8 @@ export default function MessagesLayout({
             <div className="messages-layout">
                 <div className="messages-auth-required">
                     <p>Please log in to view messages</p>
-                    <Link href="/login" className="messages-login-link">Go to login</Link>
+                    <Link href="/login" className="messages-login-link">
+                        Go to login</Link>
                 </div>
             </div>
         );

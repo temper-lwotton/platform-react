@@ -141,3 +141,25 @@ export function deleteMessage(
         method: 'DELETE',
     });
 }
+
+// Typing indicator types
+export interface TypingUser {
+    id: number;
+    fullName: string;
+    timestamp: number;
+}
+
+export interface TypingUsersResponse {
+    typingUsers: TypingUser[];
+}
+
+// Get users currently typing in a conversation
+export async function getTypingUsers(
+    conversationId: string,
+    excludeUserId: string
+): Promise<TypingUser[]> {
+    const response = await apiFetch<TypingUsersResponse>(
+        `/api/conversations/typing/${conversationId}?excludeUserId=${excludeUserId}`
+    );
+    return response.typingUsers;
+}

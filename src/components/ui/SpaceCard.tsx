@@ -11,7 +11,7 @@ export function SpaceCard({ space }: SpaceCardProps) {
     const memberCount = space.members.length + space.admins.length;
 
     return (
-        <Link href={`/spaces/${space.id}`} className=§"space-card">
+        <Link href={`/spaces/${space.id}`} className="space-card">
             <div className="space-card-header">
                 <div className="space-card-icon">
                     {space.title.charAt(0).toUpperCase()}

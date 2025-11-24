@@ -1,24 +1,88 @@
 'use client';
 
-import { useState, useRef, KeyboardEvent } from 'react';
+import { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import { getToken } from '@/lib/auth';
 
 interface MessageInputProps {
     onSend: (content: string, attachments?: File[]) => void;
     disabled?: boolean;
     placeholder?: string;
+    conversationId?: string;
+    currentUserId?: string;
 }
 
 export function MessageInput({
     onSend,
     disabled = false,
     placeholder = 'Type a message...',
+    conversationId,
+    currentUserId,
 }: MessageInputProps) {
     const [content, setContent] = useState('');
     const [attachments, setAttachments] = useState<File[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Cleanup typing timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+        };
+    }, []);
+
+    const sendTypingStatus = async (isTyping: boolean) => {
+        if (!conversationId || !currentUserId) return;
+
+        const token = getToken();
+        const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
+
+        try {
+            await fetch(`${apiBaseUrl}/api/conversations/typing/${conversationId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+                },
+                body: JSON.stringify({
+                    userId: Number(currentUserId),
+                    isTyping,
+                }),
+            });
+        } catch (error) {
+            // Silently fail - typing indicator is not critical
+            console.debug('Failed to send typing status:', error);
+        }
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setContent(e.target.value);
+
+        // Send typing status
+        if (conversationId && currentUserId) {
+            sendTypingStatus(true);
+
+            // Clear previous timeout
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+
+            // Set timeout to stop typing after 3s of inactivity
+            typingTimeoutRef.current = setTimeout(() => {
+                sendTypingStatus(false);
+            }, 3000);
+        }
+    };
 
     const handleSend = () => {
         if (content.trim() || attachments.length > 0) {
+            // Clear typing status when sending
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+            sendTypingStatus(false);
+
             onSend(content.trim(), attachments.length > 0 ? attachments : undefined);
             setContent('');
             setAttachments([]);
@@ -83,7 +147,7 @@ export function MessageInput({
                 <textarea
                     className="message-input-field"
                     value={content}
-                    onChange={(e) => setContent(e.target.value)}
+                    onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
                     disabled={disabled}

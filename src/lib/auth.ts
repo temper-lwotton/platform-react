@@ -124,7 +124,7 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
     setToken(data.token);
 
     // Store user data
-    if (data.user) {
+    if (data.user && typeof window !== 'undefined') {
         setCurrentUserId(String(data.user.id));
         localStorage.setItem(USER_EMAIL_KEY, data.user.email);
         localStorage.setItem(USER_NAME_KEY, data.user.fullName);

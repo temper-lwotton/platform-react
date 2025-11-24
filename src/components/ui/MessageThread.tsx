@@ -3,12 +3,14 @@
 import { useEffect, useRef } from 'react';
 import { Message } from '@/lib/conversations';
 import { User } from '@/lib/users';
+import { TypingIndicator } from './TypingIndicator';
 
 interface MessageThreadProps {
     messages: Message[];
     participants: User[];
     currentUserId: string;
     onDeleteMessage?: (messageId: string) => void;
+    typingUsers?: string[]; // Names of users currently typing
 }
 
 export function MessageThread({
@@ -16,6 +18,7 @@ export function MessageThread({
     participants,
     currentUserId,
     onDeleteMessage,
+    typingUsers = [],
 }: MessageThreadProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -129,6 +132,9 @@ export function MessageThread({
                                 </div>
                             );
                         })}
+                        {typingUsers.length > 0 && (
+                            <TypingIndicator names={typingUsers} />
+                        )}
                         <div ref={messagesEndRef} />
                     </>
                 )}

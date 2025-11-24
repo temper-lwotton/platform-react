@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getConversation, replyToConversation, deleteMessage } from '@/lib/conversations';
+import { getConversation, replyToConversation, deleteMessage, getTypingUsers } from '@/lib/conversations';
 import { MessageThread } from '@/components/ui/MessageThread';
 import { MessageInput } from '@/components/ui/MessageInput';
 import { getCurrentUserId } from '@/lib/auth';
@@ -24,6 +24,17 @@ export default function ConversationPage() {
         enabled: !!currentUserId && !!conversationId,
         refetchInterval: 10000, // Poll every 10 seconds for new messages
     });
+
+    // Poll for typing users every 2 seconds
+    const { data: typingUsersData } = useQuery({
+        queryKey: ['typingUsers', conversationId, currentUserId],
+        queryFn: () => getTypingUsers(conversationId, currentUserId!),
+        enabled: !!currentUserId && !!conversationId,
+        refetchInterval: 2000,
+    });
+
+    // Extract names of typing users
+    const typingUsers = typingUsersData?.map(u => u.fullName) || [];
 
     const sendMutation = useMutation({
         mutationFn: ({ content, attachments }: { content: string; attachments?: File[] }) =>
@@ -87,11 +98,14 @@ export default function ConversationPage() {
                 participants={conversation.participants}
                 currentUserId={currentUserId}
                 onDeleteMessage={handleDelete}
+                typingUsers={typingUsers}
             />
             <MessageInput
                 onSend={handleSend}
                 disabled={sendMutation.isPending}
                 placeholder="Type a message..."
+                conversationId={conversationId}
+                currentUserId={currentUserId}
             />
         </div>
     );
