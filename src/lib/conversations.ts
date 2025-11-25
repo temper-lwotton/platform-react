@@ -37,6 +37,12 @@ export function getConversations(userId: string): Promise<ConversationHead[]> {
     return apiFetch<ConversationHead[]>(`/api/conversations/${userId}`);
 }
 
+// Get total unread message count
+export async function getUnreadMessagesCount(userId: string): Promise<number> {
+    const conversations = await getConversations(userId);
+    return conversations.reduce((total, conv) => total + conv.unread, 0);
+}
+
 // Get full conversation thread (also marks as read)
 export function getConversation(userId: string, conversationId: string): Promise<Conversation> {
     return apiFetch<Conversation>(`/api/conversations/${userId}/${conversationId}`);

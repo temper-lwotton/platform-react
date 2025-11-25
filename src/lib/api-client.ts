@@ -45,5 +45,10 @@ export async function apiFetch<T>(
         throw new Error(`API error ${res.status}: ${text}`);
     }
 
+    // Handle 204 No Content responses
+    if (res.status === 204) {
+        return undefined as T;
+    }
+
     return res.json() as Promise<T>;
 }

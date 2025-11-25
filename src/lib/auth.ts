@@ -3,10 +3,40 @@ const USER_ID_KEY = 'current_user_id';
 const USER_EMAIL_KEY = 'current_user_email';
 const USER_NAME_KEY = 'current_user_name';
 
+interface UserProfile {
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
+    companyName?: string;
+    jobTitle?: string;
+    dob?: string;
+    telephone?: string;
+    companyType?: string;
+    linkedInProfile?: string;
+    trigProjectTitle?: string;
+    transportModesOfInterest?: string[];
+    photo?: string;
+}
+
+interface UserSpace {
+    id: number;
+    title: string;
+}
+
 export interface AuthUser {
     id: string;
     email: string;
     fullName: string;
+}
+
+export interface FullUser {
+    id: number;
+    createdAt: string;
+    externalId?: string;
+    email: string;
+    profile?: UserProfile;
+    adminSpaces: UserSpace[];
+    memberSpaces: UserSpace[];
 }
 
 interface LoginResponse {
@@ -128,15 +158,18 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
         setCurrentUserId(String(data.user.id));
         localStorage.setItem(USER_EMAIL_KEY, data.user.email);
         localStorage.setItem(USER_NAME_KEY, data.user.fullName);
+
+        // Dispatch login event so components can update
+        window.dispatchEvent(new CustomEvent('auth:login'));
     }
 
     return data;
 }
 
 /**
- * Get current user from API (requires valid token)
+ * Get current user from API with full details including spaces (requires valid token)
  */
-export async function fetchCurrentUser(): Promise<AuthUser> {
+export async function fetchCurrentUser(): Promise<FullUser> {
     const token = getToken();
     if (!token) {
         throw new Error('Not authenticated');

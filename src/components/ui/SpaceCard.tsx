@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import * as Avatar from '@radix-ui/react-avatar';
 import { Space } from '@/lib/spaces';
 
 interface SpaceCardProps {
@@ -12,24 +13,37 @@ export function SpaceCard({ space }: SpaceCardProps) {
 
     return (
         <Link href={`/spaces/${space.id}`} className="space-card">
-            <div className="space-card-header">
-                <div className="space-card-icon">
-                    {space.title.charAt(0).toUpperCase()}
-                </div>
-                <div className="space-card-title-group">
-                    <h3 className="space-card-title">{space.title}</h3>
-                    {space.subtitle && <span className="space-card-subtitle">{space.subtitle}</span>}
-                </div>
-            </div>
-            {space.description && (
-                <p className="space-card-description">{space.description}</p>
-            )}
-            <div className="space-card-footer">
-                <span className={`space-card-badge ${space.isPublic ? 'space-card-badge--public' : 'space-card-badge--private'}`}>
-                    {space.isPublic ? 'Public' : 'Private'}
-                </span>
-                <span className="space-card-members">{memberCount} member{memberCount !== 1 ? 's' : ''}</span>
-            </div>
+            <article className="space-card-content">
+                <header className="space-card-header">
+                    <Avatar.Root className="space-card-icon">
+                        <Avatar.Fallback className="space-card-icon-fallback">
+                            {space.title.charAt(0).toUpperCase()}
+                        </Avatar.Fallback>
+                    </Avatar.Root>
+                    <div className="space-card-title-group">
+                        <h3 className="space-card-title">{space.title}</h3>
+                        {space.subtitle && (
+                            <p className="space-card-subtitle">{space.subtitle}</p>
+                        )}
+                    </div>
+                </header>
+                {space.description && (
+                    <p className="space-card-description">{space.description}</p>
+                )}
+                <footer className="space-card-footer">
+                    <span
+                        className="space-card-badge"
+                        data-public={space.isPublic}
+                        role="status"
+                        aria-label={space.isPublic ? 'Public space' : 'Private space'}
+                    >
+                        {space.isPublic ? 'Public' : 'Private'}
+                    </span>
+                    <span className="space-card-members" aria-label={`${memberCount} members`}>
+                        {memberCount} member{memberCount !== 1 ? 's' : ''}
+                    </span>
+                </footer>
+            </article>
         </Link>
     );
 }

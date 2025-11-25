@@ -1,0 +1,216 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+import * as Popover from '@radix-ui/react-popover';
+import {
+    getConversations,
+    getUnreadMessagesCount,
+    ConversationHead,
+} from '@/lib/conversations';
+import { getCurrentUserId } from '@/lib/auth';
+
+export function MessagesDropdown() {
+    const router = useRouter();
+    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+    const [isClient, setIsClient] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        setCurrentUserId(getCurrentUserId());
+    }, []);
+
+    // Fetch unread count
+    const { data: unreadCount = 0 } = useQuery({
+        queryKey: ['messages-count', currentUserId],
+        queryFn: () => getUnreadMessagesCount(currentUserId!),
+        enabled: !!currentUserId && isClient,
+        refetchInterval: 30000, // Poll every 30 seconds
+    });
+
+    // Fetch conversations when popover is opened
+    const { data: conversations = [], isLoading } = useQuery({
+        queryKey: ['conversations', currentUserId],
+        queryFn: () => getConversations(currentUserId!),
+        enabled: !!currentUserId && isOpen,
+    });
+
+    const getTimeAgo = (dateString: string): string => {
+        const normalizedDateString = dateString.replace(' ', 'T');
+        const date = new Date(normalizedDateString);
+
+        if (isNaN(date.getTime())) {
+            return 'recently';
+        }
+
+        const now = new Date();
+        const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+        if (seconds < 60) return 'just now';
+        if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+        if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+        if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+        return date.toLocaleDateString();
+    };
+
+    const getDisplayName = (conversation: ConversationHead): string => {
+        const otherParticipants = conversation.participants?.filter(
+            p => p.id !== currentUserId
+        ) || [];
+
+        if (otherParticipants.length === 0) {
+            return 'Conversation';
+        }
+
+        return otherParticipants
+            .map(p =>
+                (p as any).fullName ||
+                p.profile?.fullName ||
+                `${p.profile?.firstName || ''} ${p.profile?.lastName || ''}`.trim() ||
+                p.email ||
+                'Unknown'
+            )
+            .join(', ');
+    };
+
+    if (!isClient || !currentUserId) {
+        return null;
+    }
+
+    const latestConversations = conversations.slice(0, 5);
+
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open);
+    };
+
+    const handleConversationClick = (conversationId: string) => {
+        setIsOpen(false);
+        router.push(`/messages/${conversationId}`);
+    };
+
+    return (
+        <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
+            <Popover.Trigger asChild>
+                <button
+                    type="button"
+                    className="messages-button"
+                    aria-label="Messages"
+                >
+                    <span className="messages-icon">💬</span>
+                    {unreadCount > 0 && (
+                        <span className="messages-badge">
+                            {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                    )}
+                </button>
+            </Popover.Trigger>
+
+            <Popover.Portal>
+                <Popover.Content
+                    className="messages-dropdown-menu"
+                    align="end"
+                    sideOffset={8}
+                >
+                    <div className="messages-dropdown-header">
+                        <h3 className="messages-dropdown-title">Messages</h3>
+                    </div>
+
+                    <div className="messages-list">
+                        {isLoading ? (
+                            <div className="messages-loading">Loading...</div>
+                        ) : latestConversations.length === 0 ? (
+                            <div className="messages-empty">No messages</div>
+                        ) : (
+                            latestConversations.map((conversation) => {
+                                const otherParticipants =
+                                    conversation.participants?.filter(
+                                        p => p.id !== currentUserId
+                                    ) || [];
+
+                                const displayName = getDisplayName(conversation);
+
+                                const initials =
+                                    displayName
+                                        .split(' ')
+                                        .map(part => part.charAt(0))
+                                        .join('')
+                                        .toUpperCase()
+                                        .slice(0, 2) || '?';
+
+                                const firstParticipant = otherParticipants[0];
+                                const hasPhoto =
+                                    (firstParticipant as any)?.photo ||
+                                    firstParticipant?.profile?.photo;
+
+                                return (
+                                    <button
+                                        key={conversation.id}
+                                        type="button"
+                                        className={`messages-item ${
+                                            conversation.unread > 0
+                                                ? 'messages-item--unread'
+                                                : ''
+                                        }`}
+                                        onClick={() =>
+                                            handleConversationClick(conversation.id)
+                                        }
+                                    >
+                                        <div className="messages-item-avatar">
+                                            {hasPhoto ? (
+                                                <img
+                                                    src={hasPhoto}
+                                                    alt={displayName}
+                                                    className="messages-item-avatar-img"
+                                                />
+                                            ) : (
+                                                <div className="messages-item-avatar-placeholder">
+                                                    {initials}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="messages-item-content">
+                                            <h4 className="messages-item-name">
+                                                {displayName}
+                                            </h4>
+                                            <p className="messages-item-preview">
+                                                {conversation.lastMessage}
+                                            </p>
+                                            <span className="messages-item-time">
+                                                {getTimeAgo(conversation.updatedAt)}
+                                            </span>
+                                        </div>
+                                        {conversation.unread > 0 && (
+                                            <span className="messages-item-badge">
+                                                {conversation.unread}
+                                            </span>
+                                        )}
+                                    </button>
+                                );
+                            })
+                        )}
+                    </div>
+
+                    {conversations.length > 0 && (
+                        <>
+                            <div className="messages-dropdown-separator" />
+
+                            <div className="messages-dropdown-footer">
+                                <Popover.Close asChild>
+                                    <Link
+                                        href="/messages"
+                                        className="messages-view-all"
+                                    >
+                                        View all messages
+                                    </Link>
+                                </Popover.Close>
+                            </div>
+                        </>
+                    )}
+                </Popover.Content>
+            </Popover.Portal>
+        </Popover.Root>
+    );
+}
