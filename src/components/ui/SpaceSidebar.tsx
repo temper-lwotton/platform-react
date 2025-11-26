@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Icon } from './Icon';
 
 interface SpaceSidebarProps {
     spaceId: string;
@@ -9,9 +10,9 @@ interface SpaceSidebarProps {
 }
 
 const navItems = [
-    { href: '', label: 'Overview', icon: 'home' },
-    { href: '/discussions', label: 'Discussions', icon: 'chat' },
-    { href: '/events', label: 'Events', icon: 'calendar' },
+    { href: '', label: 'Overview', icon: 'home' as const },
+    { href: '/discussions', label: 'Discussions', icon: 'chat' as const },
+    { href: '/events', label: 'Events', icon: 'calendar' as const },
 ];
 
 export function SpaceSidebar({ spaceId, spaceTitle }: SpaceSidebarProps) {
@@ -39,7 +40,7 @@ export function SpaceSidebar({ spaceId, spaceTitle }: SpaceSidebarProps) {
                                     href={fullPath}
                                     className={`space-sidebar-link ${isActive ? 'space-sidebar-link--active' : ''}`}
                                 >
-                                    <span className="space-sidebar-icon" data-icon={item.icon} />
+                                    <Icon icon={item.icon} size={18} className="space-sidebar-icon" />
                                     {item.label}
                                 </Link>
                             </li>

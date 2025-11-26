@@ -114,12 +114,11 @@ export default function FeedPage() {
   // Helper function to extract space ID from discussion or event
   const getSpaceId = (item: Discussion | Event): number | null => {
     if ('space' in item && item.space) {
+      const space = item.space as any;
       // For discussions, space can be an object or ID
-      if (typeof item.space === 'object' && 'id' in item.space) {
-        return typeof item.space.id === 'string' ? parseInt(item.space.id) : item.space.id;
+      if (typeof space === 'object' && 'id' in space) {
+        return typeof space.id === 'string' ? parseInt(space.id) : space.id;
       }
-      // For events, space is always an object
-      return item.space.id;
     }
     return null;
   };

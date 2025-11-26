@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Event, formatEventDateRange, isUpcoming, isOngoing, isPast } from '@/lib/events';
+import { Icon } from './Icon';
 
 type RSVPStatus = 'going' | 'maybe' | 'not_going' | null;
 
@@ -86,6 +87,7 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
               href={`/spaces/${event.space.id}`}
               className="event-card-space-link"
             >
+              <Icon icon="folder" size={14} className="event-card-space-icon" />
               {event.space.name}
             </Link>
             <span className="event-card-separator">•</span>
@@ -101,12 +103,12 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
 
         <div className="event-card-details">
           <div className="event-card-detail">
-            <span className="event-card-detail-icon" data-icon="calendar" />
+            <Icon icon="calendar" size={16} className="event-card-detail-icon" />
             <span className="event-card-detail-text">{dateRange}</span>
           </div>
 
           <div className="event-card-detail">
-            <span className="event-card-detail-icon" data-icon="location" />
+            <Icon icon="mapMarker" size={16} className="event-card-detail-icon" />
             <span className="event-card-detail-text">
               {event.isOnline ? 'Online Event' : event.location || 'Location TBA'}
             </span>
@@ -156,7 +158,7 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
                 className="event-card-link-button"
                 onClick={(e) => e.stopPropagation()}
               >
-                <span className="event-card-link-icon" data-icon="external" />
+                <Icon icon="external" size={16} className="event-card-link-icon" />
                 Event Link
               </a>
             )}

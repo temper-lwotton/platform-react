@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import * as Separator from '@radix-ui/react-separator';
 import { getSpace, Space } from '@/lib/spaces';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
+import { Icon } from './Icon';
 
 export function HomeSidebar() {
     const pathname = usePathname();
@@ -58,7 +59,7 @@ export function HomeSidebar() {
                     href="/feed"
                     className={`home-sidebar-link ${isActive('/feed') ? 'home-sidebar-link--active' : ''}`}
                 >
-                    <span className="home-sidebar-link-icon">📰</span>
+                    <Icon icon="feed" size={18} className="home-sidebar-link-icon" />
                     <span className="home-sidebar-link-text">Feed</span>
                 </Link>
 
@@ -111,7 +112,7 @@ export function HomeSidebar() {
                                 isActive('/getting-started') ? 'home-sidebar-link--active' : ''
                             }`}
                         >
-                            <span className="home-sidebar-link-icon">🚀</span>
+                            <Icon icon="rocket" size={18} className="home-sidebar-link-icon" />
                             <span className="home-sidebar-link-text">Getting Started</span>
                         </Link>
                         <Link
@@ -120,7 +121,7 @@ export function HomeSidebar() {
                                 isActive('/help') ? 'home-sidebar-link--active' : ''
                             }`}
                         >
-                            <span className="home-sidebar-link-icon">❓</span>
+                            <Icon icon="help" size={18} className="home-sidebar-link-icon" />
                             <span className="home-sidebar-link-text">Help Center</span>
                         </Link>
                         <Link
@@ -129,7 +130,7 @@ export function HomeSidebar() {
                                 isActive('/community-guidelines') ? 'home-sidebar-link--active' : ''
                             }`}
                         >
-                            <span className="home-sidebar-link-icon">📋</span>
+                            <Icon icon="clipboard" size={18} className="home-sidebar-link-icon" />
                             <span className="home-sidebar-link-text">Community Guidelines</span>
                         </Link>
                         <Link
@@ -138,7 +139,7 @@ export function HomeSidebar() {
                                 isActive('/feedback') ? 'home-sidebar-link--active' : ''
                             }`}
                         >
-                            <span className="home-sidebar-link-icon">💬</span>
+                            <Icon icon="comment" size={18} className="home-sidebar-link-icon" />
                             <span className="home-sidebar-link-text">Give Feedback</span>
                         </Link>
                     </div>

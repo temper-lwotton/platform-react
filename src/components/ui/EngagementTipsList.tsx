@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { EngagementTip } from '@/types/engagement';
+import { Icon } from './Icon';
 
 interface EngagementTipsListProps {
     tips: EngagementTip[];
@@ -28,7 +29,10 @@ export function EngagementTipsList({ tips, maxVisible = 3 }: EngagementTipsListP
     return (
         <div className="engagement-tips">
             <div className="tips-header">
-                <h4 className="tips-title">💡 Tips to Improve</h4>
+                <h4 className="tips-title">
+                    <Icon icon="lightbulb" size={18} style={{ display: 'inline', marginRight: '0.5rem' }} />
+                    Tips to Improve
+                </h4>
                 {totalPotentialGain > 0 && (
                     <span className="potential-gain">+{totalPotentialGain} potential points</span>
                 )}
@@ -36,7 +40,10 @@ export function EngagementTipsList({ tips, maxVisible = 3 }: EngagementTipsListP
 
             {highPriority.length > 0 && !showAll && (
                 <div className="tip-section">
-                    <div className="tip-section-title">⚡ High Priority</div>
+                    <div className="tip-section-title">
+                        <Icon icon="zap" size={16} style={{ display: 'inline', marginRight: '0.5rem' }} />
+                        High Priority
+                    </div>
                     {highPriority.map(tip => (
                         <TipItem key={tip.id} tip={tip} />
                     ))}
@@ -45,7 +52,10 @@ export function EngagementTipsList({ tips, maxVisible = 3 }: EngagementTipsListP
 
             {mediumPriority.length > 0 && !showAll && (
                 <div className="tip-section">
-                    <div className="tip-section-title">📌 Medium Priority</div>
+                    <div className="tip-section-title">
+                        <Icon icon="pin" size={16} style={{ display: 'inline', marginRight: '0.5rem' }} />
+                        Medium Priority
+                    </div>
                     {mediumPriority.slice(0, maxVisible - highPriority.length).map(tip => (
                         <TipItem key={tip.id} tip={tip} />
                     ))}
@@ -97,7 +107,8 @@ function TipItem({ tip }: TipItemProps) {
             <p className="tip-description">{tip.description}</p>
             {tip.suggestion && (
                 <div className="tip-suggestion">
-                    💬 {tip.suggestion}
+                    <Icon icon="comment" size={16} style={{ display: 'inline', marginRight: '0.5rem' }} />
+                    {tip.suggestion}
                 </div>
             )}
         </div>

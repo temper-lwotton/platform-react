@@ -3,9 +3,11 @@
 import { useState, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getDiscussion, getDiscussionComments, createComment, Comment, transformComments } from '@/lib/discussions';
+import { getDiscussion, getDiscussionComments, createComment, Comment, transformComments, likeDiscussion, unlikeDiscussion } from '@/lib/discussions';
 import { getCurrentUserId } from '@/lib/auth';
 import Link from 'next/link';
+import { Icon } from '@/components/ui/Icon';
+import { LikesDisplay } from '@/components/ui/LikesDisplay';
 
 export default function DiscussionPage() {
     const params = useParams();
@@ -30,17 +32,7 @@ export default function DiscussionPage() {
     // Transform API comment structure (__children) to our format (replies)
     const commentTree = useMemo(() => {
         if (!comments) return [];
-
-        // Debug: Log raw comments from API
-        console.log('Raw comments from API:', JSON.stringify(comments, null, 2));
-
-        // API already returns nested structure with __children, just transform to replies
-        const transformed = transformComments(comments);
-
-        // Debug: Log transformed structure
-        console.log('Transformed comments:', JSON.stringify(transformed, null, 2));
-
-        return transformed;
+        return transformComments(comments);
     }, [comments]);
 
     const commentMutation = useMutation({
@@ -54,6 +46,21 @@ export default function DiscussionPage() {
             queryClient.invalidateQueries({ queryKey: ['discussion-comments', discussionId] });
             queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
             setReplyContent('');
+        },
+    });
+
+    const likeMutation = useMutation({
+        mutationFn: () => {
+            // User ID is automatically detected from JWT token in API
+            if (discussion?.isLiked) {
+                return unlikeDiscussion(discussionId);
+            } else {
+                return likeDiscussion(discussionId);
+            }
+        },
+        onSuccess: () => {
+            // Refresh discussion data to get updated likedBy array
+            queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
         },
     });
 
@@ -139,12 +146,14 @@ export default function DiscussionPage() {
 
                 <footer className="discussion-article-footer">
                     <div className="discussion-article-stats">
+                        <LikesDisplay
+                            likesCount={discussion.likesCount ?? 0}
+                            isLiked={discussion.isLiked ?? false}
+                            likedBy={discussion.likedBy ?? []}
+                            onLikeToggle={() => likeMutation.mutate()}
+                        />
                         <span className="discussion-article-stat">
-                            <span className="discussion-article-stat-icon" data-icon="heart" />
-                            {discussion.likesCount ?? 0} like{(discussion.likesCount ?? 0) !== 1 ? 's' : ''}
-                        </span>
-                        <span className="discussion-article-stat">
-                            <span className="discussion-article-stat-icon" data-icon="comment" />
+                            <Icon icon="comment" size={18} className="discussion-article-stat-icon" />
                             {discussion.commentsCount ?? 0} comment{(discussion.commentsCount ?? 0) !== 1 ? 's' : ''}
                         </span>
                     </div>

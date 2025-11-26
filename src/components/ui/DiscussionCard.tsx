@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Discussion } from '@/lib/discussions';
+import { Icon } from './Icon';
 
 interface DiscussionCardProps {
     discussion: Discussion;
@@ -36,6 +37,7 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
             {spaceName && (
                 <div className="discussion-card-space">
                     <Link href={`/spaces/${spaceId}`} className="discussion-card-space-link">
+                        <Icon icon="folder" size={14} className="discussion-card-space-icon" />
                         {spaceName}
                     </Link>
                 </div>
@@ -74,11 +76,11 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
             <div className="discussion-card-footer">
                 <div className="discussion-card-stats">
                     <span className="discussion-card-stat">
-                        <span className="discussion-card-stat-icon" data-icon="heart" />
+                        <Icon icon="heart" size={16} className="discussion-card-stat-icon" />
                         {discussion.likesCount ?? 0}
                     </span>
                     <span className="discussion-card-stat">
-                        <span className="discussion-card-stat-icon" data-icon="comment" />
+                        <Icon icon="comment" size={16} className="discussion-card-stat-icon" />
                         {discussion.commentsCount ?? 0}
                     </span>
                 </div>

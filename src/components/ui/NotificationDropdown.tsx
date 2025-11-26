@@ -17,6 +17,7 @@ import {
     Notification,
 } from '@/lib/notifications';
 import { getCurrentUserId } from '@/lib/auth';
+import { Icon } from './Icon';
 
 export function NotificationDropdown() {
     const router = useRouter();
@@ -164,7 +165,7 @@ export function NotificationDropdown() {
                     className="notification-button"
                     aria-label="Notifications"
                 >
-                    <span className="notification-icon">🔔</span>
+                    <Icon icon="bell" size={20} className="notification-icon" />
                     {unreadCount > 0 && (
                         <span className="notification-badge">
                             {unreadCount > 9 ? '9+' : unreadCount}

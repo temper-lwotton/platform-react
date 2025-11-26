@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import * as Label from '@radix-ui/react-label';
+import { Icon } from './Icon';
 
 interface ExcerptSelectorProps {
     excerpts: string[];
@@ -92,7 +93,7 @@ export function ExcerptSelector({
                     </RadioGroup.Item>
                     <div className="excerpt-custom-content">
                         <div className="excerpt-custom-header">
-                            <span className="excerpt-custom-icon">✏️</span>
+                            <Icon icon="pencil" size={16} className="excerpt-custom-icon" />
                             <span className="excerpt-custom-label">Write your own</span>
                         </div>
                         {isCustomSelected && (

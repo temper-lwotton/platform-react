@@ -7,7 +7,7 @@ import * as Label from '@radix-ui/react-label';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Separator from '@radix-ui/react-separator';
 import Link from 'next/link';
-import { createEvent } from '@/lib/events';
+import { createEventWithPhoto } from '@/lib/events';
 import { getCurrentUserId } from '@/lib/auth';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
 
@@ -29,6 +29,8 @@ export default function NewEventPage() {
   const [isOnline, setIsOnline] = useState(false);
   const [location, setLocation] = useState('');
   const [link, setLink] = useState('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -38,6 +40,24 @@ export default function NewEventPage() {
   const handleEditorChange = (plainText: string, html: string) => {
     setContent(plainText);
     setHtmlContent(html);
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPhotoFile(file);
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
   };
 
   // Helper function to convert datetime-local to ISO 8601
@@ -82,10 +102,8 @@ export default function NewEventPage() {
         payload.link = link.trim();
       }
 
-      // author is auto-populated from authenticated user on backend
-      // photo needs separate upload (not supported in JSON payload)
-
-      return createEvent(payload);
+      // Use createEventWithPhoto to handle photo upload
+      return createEventWithPhoto(payload, photoFile || undefined);
     },
     onSuccess: (newEvent) => {
       queryClient.invalidateQueries({ queryKey: ['space-events', spaceId] });
@@ -163,6 +181,38 @@ export default function NewEventPage() {
             disabled={createMutation.isPending}
             required
           />
+        </div>
+
+        {/* Event Photo */}
+        <div className="form-field">
+          <Label.Root htmlFor="photo" className="form-label">
+            Event Photo
+          </Label.Root>
+          {photoPreview ? (
+            <div className="photo-preview-container">
+              <img src={photoPreview} alt="Event preview" className="photo-preview" />
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                className="photo-remove-button"
+                disabled={createMutation.isPending}
+              >
+                Remove Photo
+              </button>
+            </div>
+          ) : (
+            <input
+              id="photo"
+              type="file"
+              accept="image/*"
+              className="form-input"
+              onChange={handlePhotoChange}
+              disabled={createMutation.isPending}
+            />
+          )}
+          <p className="form-help-text">
+            Upload a photo for your event (optional)
+          </p>
         </div>
 
         {/* Date and Time */}
@@ -281,7 +331,7 @@ export default function NewEventPage() {
               onChange={handleEditorChange}
               placeholder="Describe your event... What will attendees learn or experience?"
               disabled={createMutation.isPending}
-              mode="full"
+              mode="advanced"
             />
           </div>
           <p className="form-help-text">

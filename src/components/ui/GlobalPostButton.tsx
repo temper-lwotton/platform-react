@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { getCurrentUserId } from '@/lib/auth';
+import { Icon } from './Icon';
 
 export function GlobalPostButton() {
     const router = useRouter();
@@ -48,7 +49,7 @@ export function GlobalPostButton() {
                         className="global-post-dropdown-item"
                         onSelect={() => handleNavigate('/posts/new')}
                     >
-                        <span className="global-post-dropdown-icon">💬</span>
+                        <Icon icon="comment" size={20} className="global-post-dropdown-icon" />
                         <div className="global-post-dropdown-text">
                             <div className="global-post-dropdown-label">Discussion</div>
                             <div className="global-post-dropdown-description">
@@ -63,7 +64,7 @@ export function GlobalPostButton() {
                         className="global-post-dropdown-item"
                         onSelect={() => handleNavigate('/events/new')}
                     >
-                        <span className="global-post-dropdown-icon">📅</span>
+                        <Icon icon="calendar" size={20} className="global-post-dropdown-icon" />
                         <div className="global-post-dropdown-text">
                             <div className="global-post-dropdown-label">Event</div>
                             <div className="global-post-dropdown-description">

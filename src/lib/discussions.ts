@@ -5,6 +5,12 @@ export interface DiscussionTag {
     name: string;
 }
 
+export interface DiscussionUser {
+    id: number;
+    name: string;
+    photo?: string;
+}
+
 export interface Discussion {
     id: string;
     createdAt: string;
@@ -28,6 +34,8 @@ export interface Discussion {
         id: string;
         title: string;
     };
+    likedBy?: DiscussionUser[];
+    followedBy?: DiscussionUser[];
     likesCount?: number;
     commentsCount?: number;
     followersCount?: number;
@@ -133,18 +141,36 @@ export function deleteDiscussion(id: string): Promise<void> {
 }
 
 // Like discussion
-export function likeDiscussion(id: string, userId: string): Promise<void> {
+// User ID is automatically detected from JWT token
+export function likeDiscussion(id: string): Promise<void> {
     return apiFetch<void>(`/api/discussion/${id}/like`, {
         method: 'POST',
-        body: JSON.stringify({ user: userId }),
+        body: JSON.stringify({}), // Empty body - user ID from JWT
     });
 }
 
 // Unlike discussion
+// User ID is automatically detected from JWT token
 export function unlikeDiscussion(id: string): Promise<void> {
     return apiFetch<void>(`/api/discussion/${id}/unlike`, {
         method: 'DELETE',
     });
+}
+
+// Get users who liked a discussion
+export interface DiscussionLiker {
+    id: string;
+    fullName?: string;
+    profile?: {
+        fullName?: string;
+        firstName?: string;
+        lastName?: string;
+        photo?: string;
+    };
+}
+
+export function getDiscussionLikes(id: string): Promise<DiscussionLiker[]> {
+    return apiFetch<DiscussionLiker[]>(`/api/discussion/${id}/likes`);
 }
 
 // Follow discussion

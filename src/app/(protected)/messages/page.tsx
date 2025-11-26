@@ -1,10 +1,12 @@
 'use client';
 
+import { Icon } from '@/components/ui/Icon';
+
 export default function MessagesPage() {
     return (
         <div className="messages-placeholder">
             <div className="messages-placeholder-icon">
-                <span>💬</span>
+                <Icon icon="comment" size={48} />
             </div>
             <h2 className="messages-placeholder-title">Your Messages</h2>
             <p className="messages-placeholder-text">

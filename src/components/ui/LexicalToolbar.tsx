@@ -32,20 +32,20 @@ import type { EditorFeatures, EditorMode } from '@/lib/lexical-config';
 import { LinkInsertDialog } from './lexical/dialogs/LinkInsertDialog';
 import { CodeBlockInsertDialog } from './lexical/dialogs/CodeBlockInsertDialog';
 import {
-    formatBold,
-    formatItalic,
-    formatUnderline,
-    formatStrikethrough,
-    code,
-    formatListBullets,
-    formatListNumbered,
-    undo,
-    redo,
-    quote,
-    link,
-    image,
-    blockTable,
-} from '@wordpress/icons';
+    Bold,
+    Italic,
+    Underline,
+    Strikethrough,
+    Code2,
+    List,
+    ListOrdered,
+    Undo,
+    Redo,
+    Quote,
+    Link2,
+    Image,
+    Table,
+} from 'lucide-react';
 
 interface ToolbarPluginProps {
     disabled?: boolean;
@@ -223,7 +223,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                     aria-label="Undo"
                     title="Undo (Ctrl+Z)"
                 >
-                    {undo}
+                    <Undo size={16} />
                 </button>
             )}
             {features.redo && (
@@ -235,7 +235,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                     aria-label="Redo"
                     title="Redo (Ctrl+Y)"
                 >
-                    {redo}
+                    <Redo size={16} />
                 </button>
             )}
 
@@ -279,7 +279,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         aria-label="Format bold"
                         title="Bold (Ctrl+B)"
                     >
-                        {formatBold}
+                        <Bold size={16} />
                     </button>
                 )}
                 {features.italic && (
@@ -291,7 +291,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         aria-label="Format italic"
                         title="Italic (Ctrl+I)"
                     >
-                        {formatItalic}
+                        <Italic size={16} />
                     </button>
                 )}
                 {features.underline && (
@@ -303,7 +303,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         aria-label="Format underline"
                         title="Underline (Ctrl+U)"
                     >
-                        {formatUnderline}
+                        <Underline size={16} />
                     </button>
                 )}
                 {features.strikethrough && (
@@ -315,7 +315,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         aria-label="Format strikethrough"
                         title="Strikethrough"
                     >
-                        {formatStrikethrough}
+                        <Strikethrough size={16} />
                     </button>
                 )}
                 {features.code && (
@@ -327,7 +327,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         aria-label="Format code"
                         title="Code"
                     >
-                        {code}
+                        <Code2 size={16} />
                     </button>
                 )}
             </div>
@@ -348,7 +348,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                             aria-label="Bullet list"
                             title="Bullet list"
                         >
-                            {formatListBullets}
+                            <List size={16} />
                         </button>
                     )}
                     {features.numberedList && (
@@ -360,7 +360,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                             aria-label="Numbered list"
                             title="Numbered list"
                         >
-                            {formatListNumbered}
+                            <ListOrdered size={16} />
                         </button>
                     )}
                 </div>
@@ -380,7 +380,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 aria-label="Quote block"
                                 title="Quote block"
                             >
-                                {quote}
+                                <Quote size={16} />
                             </button>
                         )}
                         {features.codeBlock && (
@@ -392,7 +392,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 aria-label="Code block"
                                 title="Insert code block"
                             >
-                                {code}
+                                <Code2 size={16} />
                             </button>
                         )}
                     </div>
@@ -413,7 +413,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 aria-label="Insert link"
                                 title="Insert link"
                             >
-                                {link}
+                                <Link2 size={16} />
                             </button>
                         )}
                         {features.images && (
@@ -427,7 +427,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 aria-label="Insert image"
                                 title="Insert image (coming soon)"
                             >
-                                {image}
+                                <Image size={16} />
                             </button>
                         )}
                         {features.tables && (
@@ -441,7 +441,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 aria-label="Insert table"
                                 title="Insert table (coming soon)"
                             >
-                                {blockTable}
+                                <Table size={16} />
                             </button>
                         )}
                     </div>

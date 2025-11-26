@@ -141,6 +141,76 @@ export function createEvent(data: EventPayload): Promise<Event> {
 }
 
 /**
+ * Create a new event with photo upload
+ * Uses FormData to support file upload
+ * @param data - Event data
+ * @param photoFile - Photo file to upload (optional)
+ * @returns Promise<Event>
+ */
+export async function createEventWithPhoto(data: EventPayload, photoFile?: File): Promise<Event> {
+  const formData = new FormData();
+
+  // Add all event fields
+  formData.append('title', data.title);
+  formData.append('space', data.space.toString());
+  formData.append('startDateTime', data.startDateTime);
+  formData.append('endDateTime', data.endDateTime);
+  formData.append('htmlContent', data.htmlContent);
+  formData.append('jsonContent', JSON.stringify(data.jsonContent));
+  formData.append('isOnline', data.isOnline.toString());
+
+  // Optional fields
+  if (data.location) {
+    formData.append('location', data.location);
+  }
+  if (data.link) {
+    formData.append('link', data.link);
+  }
+  if (data.tagIds && data.tagIds.length > 0) {
+    data.tagIds.forEach(tagId => {
+      formData.append('tagIds[]', tagId.toString());
+    });
+  }
+
+  // Add photo file if provided
+  if (photoFile) {
+    formData.append('photo', photoFile);
+  }
+
+  // Use direct fetch to avoid Content-Type being set
+  // (Browser needs to set Content-Type with multipart boundary automatically)
+  const { getToken, clearAuth } = await import('./auth');
+  const token = getToken();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
+
+  const headers: HeadersInit = {};
+  if (token) {
+    (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
+  }
+  // NOTE: Do NOT set Content-Type - browser will set it automatically with boundary
+
+  const response = await fetch(`${API_BASE_URL}/api/events`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      clearAuth();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('auth:logout'));
+      }
+      throw new Error('Session expired. Please log in again.');
+    }
+    const text = await response.text();
+    throw new Error(`API error ${response.status}: ${text}`);
+  }
+
+  return response.json() as Promise<Event>;
+}
+
+/**
  * Update an existing event
  * @param id - Event ID
  * @param data - Partial event data to update

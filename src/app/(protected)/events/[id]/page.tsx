@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getEvent, formatEventDateRange, isUpcoming, isOngoing } from '@/lib/events';
 import Link from 'next/link';
+import { Icon } from '@/components/ui/Icon';
 
 export default function EventDetailPage() {
   const params = useParams();
@@ -105,7 +106,7 @@ export default function EventDetailPage() {
           <div className="event-article-details-section">
             <div className="event-article-detail-card">
               <div className="event-article-detail-row">
-                <span className="event-article-detail-icon" data-icon="calendar" />
+                <Icon icon="calendar" size={20} className="event-article-detail-icon" />
                 <div>
                   <div className="event-article-detail-label">Date & Time</div>
                   <div className="event-article-detail-value">{dateRange}</div>
@@ -113,7 +114,7 @@ export default function EventDetailPage() {
               </div>
 
               <div className="event-article-detail-row">
-                <span className="event-article-detail-icon" data-icon="location" />
+                <Icon icon="mapMarker" size={20} className="event-article-detail-icon" />
                 <div>
                   <div className="event-article-detail-label">Location</div>
                   <div className="event-article-detail-value">
@@ -124,7 +125,7 @@ export default function EventDetailPage() {
 
               {event.link && (
                 <div className="event-article-detail-row">
-                  <span className="event-article-detail-icon" data-icon="link" />
+                  <Icon icon="link" size={20} className="event-article-detail-icon" />
                   <div>
                     <div className="event-article-detail-label">Event Link</div>
                     <a

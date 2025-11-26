@@ -12,6 +12,7 @@ import {
     ConversationHead,
 } from '@/lib/conversations';
 import { getCurrentUserId } from '@/lib/auth';
+import { Icon } from './Icon';
 
 export function MessagesDropdown() {
     const router = useRouter();
@@ -169,7 +170,7 @@ export function MessagesDropdown() {
                     className="messages-button"
                     aria-label="Messages"
                 >
-                    <span className="messages-icon">💬</span>
+                    <Icon icon="comment" size={20} className="messages-icon" />
                     {unreadCount > 0 && (
                         <span className="messages-badge">
                             {unreadCount > 9 ? '9+' : unreadCount}

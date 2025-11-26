@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Event, formatEventDateRange } from '@/lib/events';
+import { Icon } from './Icon';
 
 interface UpcomingEventsSidebarProps {
   events: Event[];
@@ -94,7 +95,7 @@ export function UpcomingEventsSidebar({ events }: UpcomingEventsSidebarProps) {
                   </span>
                 ) : event.location && (
                   <span className="upcoming-event-location">
-                    📍 {event.location.split(',')[0]}
+                    <Icon icon="mapMarker" size={14} /> {event.location.split(',')[0]}
                   </span>
                 )}
               </div>

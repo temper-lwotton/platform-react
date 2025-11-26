@@ -9,7 +9,7 @@ import * as Label from '@radix-ui/react-label';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Separator from '@radix-ui/react-separator';
 import Link from 'next/link';
-import { createEvent } from '@/lib/events';
+import { createEventWithPhoto } from '@/lib/events';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { getSpace, Space } from '@/lib/spaces';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
@@ -28,6 +28,8 @@ export default function NewGlobalEventPage() {
   const [location, setLocation] = useState('');
   const [link, setLink] = useState('');
   const [selectedSpaceId, setSelectedSpaceId] = useState<string>('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   // UI state
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
@@ -86,6 +88,24 @@ export default function NewGlobalEventPage() {
     setHtmlContent(html);
   };
 
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPhotoFile(file);
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+  };
+
   // Helper function to convert datetime-local to ISO 8601
   const toISO8601 = (dateTimeLocal: string): string => {
     const date = new Date(dateTimeLocal);
@@ -122,7 +142,8 @@ export default function NewGlobalEventPage() {
         payload.link = link.trim();
       }
 
-      return createEvent(payload);
+      // Use createEventWithPhoto to handle photo upload
+      return createEventWithPhoto(payload, photoFile || undefined);
     },
     onSuccess: (newEvent) => {
       queryClient.invalidateQueries({ queryKey: ['space-events', selectedSpaceId] });
@@ -290,6 +311,38 @@ export default function NewGlobalEventPage() {
           />
         </div>
 
+        {/* Event Photo */}
+        <div className="form-field">
+          <Label.Root htmlFor="photo" className="form-label">
+            Event Photo
+          </Label.Root>
+          {photoPreview ? (
+            <div className="photo-preview-container">
+              <img src={photoPreview} alt="Event preview" className="photo-preview" />
+              <button
+                type="button"
+                onClick={handleRemovePhoto}
+                className="photo-remove-button"
+                disabled={createMutation.isPending}
+              >
+                Remove Photo
+              </button>
+            </div>
+          ) : (
+            <input
+              id="photo"
+              type="file"
+              accept="image/*"
+              className="form-input"
+              onChange={handlePhotoChange}
+              disabled={createMutation.isPending}
+            />
+          )}
+          <p className="form-help-text">
+            Upload a photo for your event (optional)
+          </p>
+        </div>
+
         {/* Date and Time */}
         <Separator.Root className="form-separator" />
         <h2 className="form-section-title">Date & Time</h2>
@@ -406,7 +459,7 @@ export default function NewGlobalEventPage() {
               onChange={handleEditorChange}
               placeholder="Describe your event... What will attendees learn or experience?"
               disabled={createMutation.isPending}
-              mode="full"
+              mode="advanced"
             />
           </div>
           <p className="form-help-text">
