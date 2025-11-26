@@ -16,9 +16,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-    { href: '/', label: 'Home',  requiresAuth: true },
-    { href: '/spaces', label: 'Spaces',  requiresAuth: true },
+    { href: '/feed', label: 'Home',  requiresAuth: true },
+    { href: '/events', label: 'Events',  requiresAuth: true },
     { href: '/users', label: 'People', requiresAuth: true },
+    { href: '/learning', label: 'Learning', requiresAuth: true },
     { href: '/login', label: 'Login', hideWhenAuth: true },
     // Example of auth-only link:
     // { href: '/my-profile', label: 'My Profile', requiresAuth: true },

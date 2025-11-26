@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getSpaceDiscussions } from '@/lib/discussions';
 import { DiscussionCard } from '@/components/ui/DiscussionCard';
+import { TopContributors } from '@/components/ui/TopContributors';
+import { UnansweredDiscussions } from '@/components/ui/UnansweredDiscussions';
 
 export default function SpaceDiscussionsPage() {
     const params = useParams();
@@ -34,36 +36,49 @@ export default function SpaceDiscussionsPage() {
 
     return (
         <div className="discussions-page">
-            <header className="discussions-header">
-                <div className="discussions-header-top">
-                    <div>
-                        <h1 className="discussions-title">Discussions</h1>
-                        <p className="discussions-subtitle">Join the conversation</p>
-                    </div>
-                    <Link
-                        href={`/spaces/${spaceId}/discussions/new`}
-                        className="discussions-new-button"
-                    >
-                        New Discussion
-                    </Link>
-                </div>
-            </header>
+            <div className="discussions-page-container">
+                {/* Main Content */}
+                <div className="discussions-page-main">
+                    <header className="discussions-header">
+                        <div className="discussions-header-top">
+                            <div>
+                                <h1 className="discussions-title">Discussions</h1>
+                                <p className="discussions-subtitle">Join the conversation</p>
+                            </div>
+                            <Link
+                                href={`/spaces/${spaceId}/discussions/new`}
+                                className="discussions-new-button"
+                            >
+                                New Discussion
+                            </Link>
+                        </div>
+                    </header>
 
-            {discussions && discussions.length > 0 ? (
-                <div className="discussions-list">
-                    {discussions.map((discussion) => (
-                        <DiscussionCard
-                            key={discussion.id}
-                            discussion={discussion}
-                            spaceId={spaceId}
-                        />
-                    ))}
+                    {discussions && discussions.length > 0 ? (
+                        <div className="discussions-list">
+                            {discussions.map((discussion) => (
+                                <DiscussionCard
+                                    key={discussion.id}
+                                    discussion={discussion}
+                                    spaceId={spaceId}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="discussions-empty">
+                            <p>No discussions yet. Start the first conversation!</p>
+                        </div>
+                    )}
                 </div>
-            ) : (
-                <div className="discussions-empty">
-                    <p>No discussions yet. Start the first conversation!</p>
-                </div>
-            )}
+
+                {/* Sidebar */}
+                {discussions && discussions.length > 0 && (
+                    <div className="discussions-page-sidebar">
+                        <TopContributors discussions={discussions} />
+                        <UnansweredDiscussions discussions={discussions} spaceId={spaceId} />
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

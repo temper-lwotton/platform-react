@@ -30,8 +30,41 @@ export interface User {
     memberSpaces: UserSpace[];
 }
 
-export function getUsers(): Promise<User[]> {
-    return apiFetch<User[]>('/api/users');
+export interface UsersQueryParams {
+    search?: string;
+    companyType?: string;
+    transportMode?: string;
+    sort?: 'name' | 'newest' | 'oldest';
+    limit?: number;
+}
+
+export function getUsers(params?: UsersQueryParams): Promise<User[]> {
+    const queryParams = new URLSearchParams();
+
+    if (params?.search) {
+        queryParams.append('search', params.search);
+    }
+
+    if (params?.companyType) {
+        queryParams.append('companyType', params.companyType);
+    }
+
+    if (params?.transportMode) {
+        queryParams.append('transportMode', params.transportMode);
+    }
+
+    if (params?.sort) {
+        queryParams.append('sort', params.sort);
+    }
+
+    if (params?.limit) {
+        queryParams.append('limit', params.limit.toString());
+    }
+
+    const queryString = queryParams.toString();
+    const url = queryString ? `/api/users?${queryString}` : '/api/users';
+
+    return apiFetch<User[]>(url);
 }
 
 export function getUser(id: string): Promise<User> {

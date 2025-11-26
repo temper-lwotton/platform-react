@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import * as Popover from '@radix-ui/react-popover';
+import * as Tabs from '@radix-ui/react-tabs';
 import {
     getNotifications,
     getUnreadCount,
@@ -98,7 +99,62 @@ export function NotificationDropdown() {
 
     if (!isClient || !currentUserId) return null;
 
-    const latestNotifications = notifications.slice(0, 5);
+    // Split notifications into inbox, mentions, and archived
+    const inboxNotifications = notifications.filter(n => !n.readAt);
+    const mentionNotifications = notifications.filter(n => n.type === 'mention');
+    const archivedNotifications = notifications.filter(n => n.readAt);
+
+    const renderNotification = (notification: Notification) => {
+        const actorName =
+            notification.actor?.profile?.fullName ||
+            notification.actor?.profile?.firstName ||
+            notification.actor?.email ||
+            'Someone';
+        const actorInitial = actorName[0]?.toUpperCase() || '?';
+        const hasPhoto = notification.actor?.profile?.photo;
+
+        return (
+            <button
+                key={notification.id}
+                className={`notification-item ${
+                    !notification.readAt ? 'notification-item--unread' : ''
+                }`}
+                onClick={() => handleNotificationClick(notification)}
+            >
+                <div className="notification-item-avatar">
+                    {hasPhoto ? (
+                        <img
+                            src={notification.actor.profile!.photo}
+                            alt={actorName}
+                            className="notification-item-avatar-img"
+                        />
+                    ) : (
+                        <div className="notification-item-avatar-placeholder">
+                            {actorInitial}
+                        </div>
+                    )}
+                </div>
+
+                <div className="notification-item-content">
+                    <h4 className="notification-item-title">
+                        {getNotificationTitle(notification)}
+                    </h4>
+
+                    <p className="notification-item-text">
+                        {getNotificationText(notification)}
+                    </p>
+
+                    <span className="notification-item-time">
+                        {getTimeAgo(notification.createdAt)}
+                    </span>
+                </div>
+
+                {!notification.readAt && (
+                    <span className="notification-item-dot" />
+                )}
+            </button>
+        );
+    };
 
     return (
         <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -138,65 +194,69 @@ export function NotificationDropdown() {
                         )}
                     </div>
 
-                    <div className="notification-list">
-                        {isLoading ? (
+                    {isLoading ? (
+                        <div className="notification-list">
                             <div className="notification-loading">Loading...</div>
-                        ) : latestNotifications.length === 0 ? (
+                        </div>
+                    ) : notifications.length === 0 ? (
+                        <div className="notification-list">
                             <div className="notification-empty">No notifications</div>
-                        ) : (
-                            latestNotifications.map((notification) => {
-                                const actorName =
-                                    notification.actor?.profile?.fullName ||
-                                    notification.actor?.profile?.firstName ||
-                                    notification.actor?.email ||
-                                    'Someone';
-                                const actorInitial = actorName[0]?.toUpperCase() || '?';
-                                const hasPhoto = notification.actor?.profile?.photo;
+                        </div>
+                    ) : (
+                        <Tabs.Root defaultValue="inbox" className="notification-tabs">
+                            <Tabs.List className="notification-tabs-list">
+                                <Tabs.Trigger value="inbox" className="notification-tab-trigger">
+                                    Inbox
+                                    {inboxNotifications.length > 0 && (
+                                        <span className="notification-tab-badge">
+                                            {inboxNotifications.length}
+                                        </span>
+                                    )}
+                                </Tabs.Trigger>
+                                <Tabs.Trigger value="mentions" className="notification-tab-trigger">
+                                    Mentions
+                                    {mentionNotifications.length > 0 && (
+                                        <span className="notification-tab-badge">
+                                            {mentionNotifications.length}
+                                        </span>
+                                    )}
+                                </Tabs.Trigger>
+                                <Tabs.Trigger value="archived" className="notification-tab-trigger">
+                                    Archived
+                                </Tabs.Trigger>
+                            </Tabs.List>
 
-                                return (
-                                    <button
-                                        key={notification.id}
-                                        className={`notification-item ${
-                                            !notification.readAt ? 'notification-item--unread' : ''
-                                        }`}
-                                        onClick={() => handleNotificationClick(notification)}
-                                    >
-                                        <div className="notification-item-avatar">
-                                            {hasPhoto ? (
-                                                <img
-                                                    src={notification.actor.profile!.photo}
-                                                    alt={actorName}
-                                                    className="notification-item-avatar-img"
-                                                />
-                                            ) : (
-                                                <div className="notification-item-avatar-placeholder">
-                                                    {actorInitial}
-                                                </div>
-                                            )}
-                                        </div>
+                            <Tabs.Content value="inbox" className="notification-tab-content">
+                                <div className="notification-list">
+                                    {inboxNotifications.length === 0 ? (
+                                        <div className="notification-empty">No unread notifications</div>
+                                    ) : (
+                                        inboxNotifications.slice(0, 5).map(renderNotification)
+                                    )}
+                                </div>
+                            </Tabs.Content>
 
-                                        <div className="notification-item-content">
-                                            <h4 className="notification-item-title">
-                                                {getNotificationTitle(notification)}
-                                            </h4>
+                            <Tabs.Content value="mentions" className="notification-tab-content">
+                                <div className="notification-list">
+                                    {mentionNotifications.length === 0 ? (
+                                        <div className="notification-empty">No mentions yet</div>
+                                    ) : (
+                                        mentionNotifications.slice(0, 5).map(renderNotification)
+                                    )}
+                                </div>
+                            </Tabs.Content>
 
-                                            <p className="notification-item-text">
-                                                {getNotificationText(notification)}
-                                            </p>
-
-                                            <span className="notification-item-time">
-                                                {getTimeAgo(notification.createdAt)}
-                                            </span>
-                                        </div>
-
-                                        {!notification.readAt && (
-                                            <span className="notification-item-dot" />
-                                        )}
-                                    </button>
-                                );
-                            })
-                        )}
-                    </div>
+                            <Tabs.Content value="archived" className="notification-tab-content">
+                                <div className="notification-list">
+                                    {archivedNotifications.length === 0 ? (
+                                        <div className="notification-empty">No archived notifications</div>
+                                    ) : (
+                                        archivedNotifications.slice(0, 5).map(renderNotification)
+                                    )}
+                                </div>
+                            </Tabs.Content>
+                        </Tabs.Root>
+                    )}
 
                     {notifications.length > 0 && (
                         <>

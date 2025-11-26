@@ -18,6 +18,21 @@ export function UserCard({ user }: UserCardProps) {
     const initials = getInitials(displayName);
     const spaceCount = user.adminSpaces.length + user.memberSpaces.length;
 
+    // Check if user joined within the last 7 days
+    const joinDate = new Date(user.createdAt);
+    const daysAgo = Math.floor((Date.now() - joinDate.getTime()) / (1000 * 60 * 60 * 24));
+    const isNewUser = daysAgo <= 7;
+
+    // Parse transport modes if they exist (handle both string and array types)
+    let transportModes: string[] = [];
+    if (profile.transportModesOfInterest) {
+        if (typeof profile.transportModesOfInterest === 'string') {
+            transportModes = profile.transportModesOfInterest.split(',').map(m => m.trim()).filter(Boolean);
+        } else if (Array.isArray(profile.transportModesOfInterest)) {
+            transportModes = (profile.transportModesOfInterest as any[]).map((m: any) => String(m).trim()).filter(Boolean);
+        }
+    }
+
     return (
         <Link href={`/users/${user.id}`} className="user-card">
             <div className="user-card-header">
@@ -44,7 +59,12 @@ export function UserCard({ user }: UserCardProps) {
                 </Avatar.Root>
 
                 <div className="user-card-info">
-                    <h3 className="user-card-name">{displayName}</h3>
+                    <div className="user-card-name-row">
+                        <h3 className="user-card-name">{displayName}</h3>
+                        {isNewUser && (
+                            <span className="user-card-new-badge">New</span>
+                        )}
+                    </div>
 
                     {profile.jobTitle && (
                         <span className="user-card-title">{profile.jobTitle}</span>
@@ -57,6 +77,22 @@ export function UserCard({ user }: UserCardProps) {
                     )}
                 </div>
             </div>
+
+            {/* Transport Modes Badges */}
+            {transportModes.length > 0 && (
+                <div className="user-card-badges">
+                    {transportModes.slice(0, 3).map((mode, index) => (
+                        <span key={index} className="user-card-transport-badge">
+                            {mode}
+                        </span>
+                    ))}
+                    {transportModes.length > 3 && (
+                        <span className="user-card-transport-badge user-card-transport-badge-more">
+                            +{transportModes.length - 3}
+                        </span>
+                    )}
+                </div>
+            )}
 
             <div className="user-card-footer">
                 <span className="user-card-email">{user.email}</span>

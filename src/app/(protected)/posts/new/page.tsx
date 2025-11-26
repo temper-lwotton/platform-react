@@ -12,6 +12,7 @@ import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { getSpace, Space } from '@/lib/spaces';
 import { ExcerptSelector } from '@/components/ui/ExcerptSelector';
 import { EngagementAnalysis } from '@/components/ui/EngagementAnalysis';
+import { LexicalEditor } from '@/components/ui/LexicalEditor';
 import type { EngagementAnalysis as EngagementAnalysisType } from '@/types/engagement';
 
 type Step = 1 | 2 | 3;
@@ -22,7 +23,8 @@ export default function NewPostPage() {
 
     // Step 1 fields
     const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState(''); // Plain text for AI analysis
+    const [htmlContent, setHtmlContent] = useState(''); // HTML for saving
     const [selectedSpaceId, setSelectedSpaceId] = useState<string>('');
 
     // Step 2 fields (AI-generated)
@@ -150,7 +152,7 @@ export default function NewPostPage() {
             createDiscussion({
                 title: title.trim(),
                 excerpt: selectedExcerpt.trim(),
-                htmlContent: `<p>${content.trim()}</p>`,
+                htmlContent: htmlContent || `<p>${content.trim()}</p>`,
                 author: Number(currentUserId),
                 space: Number(selectedSpaceId),
             }),
@@ -159,6 +161,12 @@ export default function NewPostPage() {
             router.push(`/spaces/${selectedSpaceId}/discussions/${newDiscussion.id}`);
         },
     });
+
+    // Handler for Lexical editor changes
+    const handleEditorChange = (plainText: string, html: string) => {
+        setContent(plainText);
+        setHtmlContent(html);
+    };
 
     // Step 1 validation
     const isStep1Valid =
@@ -335,14 +343,11 @@ export default function NewPostPage() {
                             <Label.Root htmlFor="post-content" className="form-label">
                                 Content
                             </Label.Root>
-                            <textarea
-                                id="post-content"
-                                className="form-input post-textarea"
-                                placeholder="Share your thoughts, questions, or ideas... (minimum 50 characters)"
+                            <LexicalEditor
                                 value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                                rows={12}
-                                required
+                                onChange={handleEditorChange}
+                                mode="simple"
+                                placeholder="Share your thoughts, questions, or ideas... (minimum 50 characters)"
                             />
                             <div className="form-field-hint">
                                 {content.length} characters {content.length < 50 && `(${50 - content.length} more needed)`}

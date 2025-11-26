@@ -3,6 +3,9 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getSpace } from '@/lib/spaces';
+import { getEvents, Event } from '@/lib/events';
+import { EventCard } from '@/components/ui/EventCard';
+import Link from 'next/link';
 
 export default function SpaceOverviewPage() {
     const params = useParams();
@@ -13,6 +16,18 @@ export default function SpaceOverviewPage() {
         queryFn: () => getSpace(id),
         enabled: !!id,
     });
+
+    // Fetch upcoming events for this space
+    const { data: events } = useQuery<Event[]>({
+        queryKey: ['space-events', id],
+        queryFn: () => getEvents({ space: parseInt(id), sort: 'asc' }),
+        enabled: !!id,
+    });
+
+    // Filter to show only upcoming events
+    const upcomingEvents = events?.filter(event => {
+        return new Date(event.eventEnd) >= new Date();
+    }).slice(0, 3); // Show max 3 upcoming events
 
     if (!space) return null;
 
@@ -55,6 +70,23 @@ export default function SpaceOverviewPage() {
                             <span className="space-overview-stat-value">{space.members.length}</span>
                             <span className="space-overview-stat-label">Member{space.members.length !== 1 ? 's' : ''}</span>
                         </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Upcoming Events Section */}
+            {upcomingEvents && upcomingEvents.length > 0 && (
+                <section className="space-overview-section">
+                    <div className="space-overview-section-header">
+                        <h2 className="space-overview-section-title">Upcoming Events</h2>
+                        <Link href={`/spaces/${id}/events`} className="space-overview-view-all">
+                            View all events →
+                        </Link>
+                    </div>
+                    <div className="space-overview-events-grid">
+                        {upcomingEvents.map((event) => (
+                            <EventCard key={event.id} event={event} />
+                        ))}
                     </div>
                 </section>
             )}

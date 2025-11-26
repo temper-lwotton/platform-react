@@ -40,6 +40,7 @@ export interface Comment {
     id: string;
     createdAt: string;
     content: string;
+    level?: number;
     author?: {
         id: string;
         profile?: {
@@ -49,12 +50,39 @@ export interface Comment {
             photo?: string;
         };
     };
-    replies?: Comment[];
+    __children?: Comment[];  // API returns nested comments with this field
+    replies?: Comment[];     // We'll map __children to replies for consistency
 }
 
-// List all discussions
-export function getDiscussions(): Promise<Discussion[]> {
-    return apiFetch<Discussion[]>('/api/discussion');
+// Transform API comments (__children) to our format (replies)
+export function transformComments(comments: Comment[]): Comment[] {
+    return comments.map(comment => ({
+        ...comment,
+        replies: comment.__children ? transformComments(comment.__children) : []
+    }));
+}
+
+// List all discussions with optional pagination
+export interface GetDiscussionsParams {
+    limit?: number;
+    offset?: number;
+}
+
+export function getDiscussions(params?: GetDiscussionsParams): Promise<Discussion[]> {
+    const queryParams = new URLSearchParams();
+
+    if (params?.limit) {
+        queryParams.append('limit', params.limit.toString());
+    }
+
+    if (params?.offset) {
+        queryParams.append('offset', params.offset.toString());
+    }
+
+    const queryString = queryParams.toString();
+    const url = queryString ? `/api/discussion?${queryString}` : '/api/discussion';
+
+    return apiFetch<Discussion[]>(url);
 }
 
 // Get discussions for a specific space

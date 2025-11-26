@@ -20,9 +20,9 @@ export default function NewConversationPage() {
     const [message, setMessage] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const { data: users } = useQuery({
+    const { data: users } = useQuery<User[]>({
         queryKey: ['users'],
-        queryFn: getUsers,
+        queryFn: () => getUsers(),
     });
 
     const createMutation = useMutation({
@@ -33,9 +33,8 @@ export default function NewConversationPage() {
                 recipients: selectedUsers.map(u => u.id),
             }),
         onSuccess: (response) => {
-            // The API returns the created message, which has a conversation field
-            // Use conversation ID if available, otherwise fall back to id
-            const conversationId = response.conversation || response.id;
+            // The API returns the created conversation with an id field
+            const conversationId = response.id;
             // Invalidate the conversations list so it shows the new conversation
             queryClient.invalidateQueries({ queryKey: ['conversations', currentUserId] });
             router.push(`/messages/${conversationId}`);

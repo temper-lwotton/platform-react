@@ -81,7 +81,15 @@ Return ONLY a JSON array of 3 strings, nothing else. Example format:
         // Parse the JSON array from the response
         let excerpts: string[];
         try {
-            excerpts = JSON.parse(responseContent);
+            // Strip markdown code fences if present
+            let cleanedContent = responseContent.trim();
+            if (cleanedContent.startsWith('```json')) {
+                cleanedContent = cleanedContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+            } else if (cleanedContent.startsWith('```')) {
+                cleanedContent = cleanedContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+            }
+
+            excerpts = JSON.parse(cleanedContent);
         } catch {
             // If parsing fails, try to extract excerpts from the text
             console.error('Failed to parse OpenAI response as JSON:', responseContent);

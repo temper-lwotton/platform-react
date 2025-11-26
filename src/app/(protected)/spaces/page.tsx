@@ -1,22 +1,29 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getSpaces, Space } from '@/lib/spaces';
+import { getSpaces, getSpaceTags, Space, SpacesQueryParams } from '@/lib/spaces';
 import { SpaceCard } from '@/components/ui/SpaceCard';
+import { SpacesFilter } from '@/components/ui/SpacesFilter';
 
 export default function SpacesPage() {
-    const { data, isLoading, error } = useQuery<Space[]>({
-        queryKey: ['spaces'],
-        queryFn: getSpaces,
+    const [filterParams, setFilterParams] = useState<SpacesQueryParams>({});
+
+    // Fetch spaces with filter parameters
+    const { data: spaces, isLoading, error } = useQuery<Space[]>({
+        queryKey: ['spaces', filterParams],
+        queryFn: () => getSpaces(filterParams),
     });
 
-    if (isLoading) {
-        return (
-            <main className="spaces-page">
-                <p className="spaces-loading">Loading spaces...</p>
-            </main>
-        );
-    }
+    // Fetch available tags
+    const { data: tags = [] } = useQuery({
+        queryKey: ['space-tags'],
+        queryFn: getSpaceTags,
+    });
+
+    const handleFilterChange = (params: SpacesQueryParams) => {
+        setFilterParams(params);
+    };
 
     if (error) {
         return (
@@ -26,22 +33,66 @@ export default function SpacesPage() {
         );
     }
 
+    const hasFilters = filterParams.search || (filterParams.tags && filterParams.tags.length > 0);
+    const showEmpty = !isLoading && (!spaces || spaces.length === 0);
+
     return (
         <main className="spaces-page">
             <header className="spaces-header">
-                <h1 className="spaces-title">Spaces</h1>
-                <p className="spaces-subtitle">Browse and manage your spaces</p>
+                <div className="spaces-header-content">
+                    <div>
+                        <h1 className="spaces-title">Spaces</h1>
+                        <p className="spaces-subtitle">Browse and manage your spaces</p>
+                    </div>
+                    {spaces && spaces.length > 0 && (
+                        <div className="spaces-count">
+                            {spaces.length} {spaces.length === 1 ? 'space' : 'spaces'}
+                        </div>
+                    )}
+                </div>
             </header>
 
-            {data && data.length > 0 ? (
+            {/* Filter Bar */}
+            <SpacesFilter
+                tags={tags}
+                onFilterChange={handleFilterChange}
+                isLoading={isLoading}
+            />
+
+            {/* Loading State */}
+            {isLoading && (
+                <div className="spaces-loading-container">
+                    <p className="spaces-loading">Loading spaces...</p>
+                </div>
+            )}
+
+            {/* Spaces Grid */}
+            {!isLoading && spaces && spaces.length > 0 && (
                 <div className="spaces-grid">
-                    {data.map((space) => (
+                    {spaces.map((space) => (
                         <SpaceCard key={space.id} space={space} />
                     ))}
                 </div>
-            ) : (
+            )}
+
+            {/* Empty State */}
+            {showEmpty && (
                 <div className="spaces-empty">
-                    <p>No spaces found. Create your first space to get started.</p>
+                    {hasFilters ? (
+                        <>
+                            <p className="spaces-empty-title">No spaces found</p>
+                            <p className="spaces-empty-description">
+                                Try adjusting your search or filter criteria
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <p className="spaces-empty-title">No spaces yet</p>
+                            <p className="spaces-empty-description">
+                                Create your first space to get started
+                            </p>
+                        </>
+                    )}
                 </div>
             )}
         </main>

@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getDiscussion, getDiscussionComments, createComment, Comment } from '@/lib/discussions';
+import { getDiscussion, getDiscussionComments, createComment, Comment, transformComments } from '@/lib/discussions';
 import { getCurrentUserId } from '@/lib/auth';
 import Link from 'next/link';
 
@@ -27,9 +27,29 @@ export default function DiscussionPage() {
         enabled: !!discussionId,
     });
 
+    // Transform API comment structure (__children) to our format (replies)
+    const commentTree = useMemo(() => {
+        if (!comments) return [];
+
+        // Debug: Log raw comments from API
+        console.log('Raw comments from API:', JSON.stringify(comments, null, 2));
+
+        // API already returns nested structure with __children, just transform to replies
+        const transformed = transformComments(comments);
+
+        // Debug: Log transformed structure
+        console.log('Transformed comments:', JSON.stringify(transformed, null, 2));
+
+        return transformed;
+    }, [comments]);
+
     const commentMutation = useMutation({
-        mutationFn: (content: string) =>
-            createComment(discussionId, { content, author: currentUserId! }),
+        mutationFn: ({ content, parentId }: { content: string; parentId?: string }) =>
+            createComment(discussionId, {
+                content,
+                author: currentUserId!,
+                parent: parentId
+            }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['discussion-comments', discussionId] });
             queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
@@ -40,7 +60,7 @@ export default function DiscussionPage() {
     const handleSubmitReply = (e: React.FormEvent) => {
         e.preventDefault();
         if (replyContent.trim() && currentUserId) {
-            commentMutation.mutate(replyContent.trim());
+            commentMutation.mutate({ content: replyContent.trim() });
         }
     };
 
@@ -70,7 +90,7 @@ export default function DiscussionPage() {
 
     const initials = authorName
         .split(' ')
-        .map(part => part.charAt(0))
+        .map((part: string) => part.charAt(0))
         .join('')
         .toUpperCase()
         .slice(0, 2);
@@ -167,10 +187,15 @@ export default function DiscussionPage() {
                     </p>
                 )}
 
-                {comments && comments.length > 0 ? (
+                {commentTree && commentTree.length > 0 ? (
                     <div className="discussion-comments-list">
-                        {comments.map((comment) => (
-                            <CommentItem key={comment.id} comment={comment} />
+                        {commentTree.map((comment) => (
+                            <CommentItem
+                                key={comment.id}
+                                comment={comment}
+                                currentUserId={currentUserId}
+                                commentMutation={commentMutation}
+                            />
                         ))}
                     </div>
                 ) : (
@@ -181,7 +206,17 @@ export default function DiscussionPage() {
     );
 }
 
-function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number }) {
+interface CommentItemProps {
+    comment: Comment;
+    depth?: number;
+    currentUserId: string | null;
+    commentMutation: any;
+}
+
+function CommentItem({ comment, depth = 0, currentUserId, commentMutation }: CommentItemProps) {
+    const [isReplying, setIsReplying] = useState(false);
+    const [replyText, setReplyText] = useState('');
+
     const authorName = (comment.author as any)?.fullName
         || comment.author?.profile?.fullName
         || `${comment.author?.profile?.firstName || ''} ${comment.author?.profile?.lastName || ''}`.trim()
@@ -189,7 +224,7 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
 
     const initials = authorName
         .split(' ')
-        .map(part => part.charAt(0))
+        .map((part: string) => part.charAt(0))
         .join('')
         .toUpperCase()
         .slice(0, 2);
@@ -199,6 +234,31 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
         day: 'numeric',
         year: 'numeric',
     });
+
+    const handleReply = () => {
+        setIsReplying(true);
+    };
+
+    const handleCancelReply = () => {
+        setIsReplying(false);
+        setReplyText('');
+    };
+
+    const handleSubmitReply = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (replyText.trim() && currentUserId) {
+            try {
+                await commentMutation.mutateAsync({
+                    content: replyText.trim(),
+                    parentId: comment.id
+                });
+                setReplyText('');
+                setIsReplying(false);
+            } catch (error) {
+                // Error is handled by the mutation
+            }
+        }
+    };
 
     return (
         <div className="comment" style={{ marginLeft: depth > 0 ? `${depth * 1.5}rem` : 0 }}>
@@ -219,13 +279,69 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
                     <span className="comment-date">{formattedDate}</span>
                 </div>
             </div>
+
             <div className="comment-content">
                 <p>{comment.content}</p>
             </div>
+
+            {currentUserId && (
+                <div className="comment-actions">
+                    <button
+                        className="comment-reply-button"
+                        onClick={handleReply}
+                        disabled={isReplying}
+                    >
+                        Reply
+                    </button>
+                </div>
+            )}
+
+            {isReplying && (
+                <form className="comment-reply-form" onSubmit={handleSubmitReply}>
+                    <textarea
+                        className="comment-reply-input"
+                        placeholder={`Reply to ${authorName}...`}
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        rows={2}
+                        disabled={commentMutation.isPending}
+                        autoFocus
+                    />
+                    <div className="comment-reply-actions">
+                        <button
+                            type="button"
+                            className="comment-reply-cancel"
+                            onClick={handleCancelReply}
+                            disabled={commentMutation.isPending}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="comment-reply-submit"
+                            disabled={!replyText.trim() || commentMutation.isPending}
+                        >
+                            {commentMutation.isPending ? 'Posting...' : 'Reply'}
+                        </button>
+                    </div>
+                    {commentMutation.isError && (
+                        <p className="comment-reply-error">
+                            Failed to post reply. Please try again.
+                        </p>
+                    )}
+                </form>
+            )}
+
             {comment.replies && comment.replies.length > 0 && (
                 <div className="comment-replies">
                     {comment.replies.map((reply) => (
-                        <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
+                        <CommentItem
+                            key={reply.id}
+                            comment={reply}
+                            depth={depth + 1}
+                            currentUserId={currentUserId}
+                            commentMutation={commentMutation}
+                        />
                     ))}
                 </div>
             )}

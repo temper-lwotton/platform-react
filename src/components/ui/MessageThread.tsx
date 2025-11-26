@@ -67,7 +67,7 @@ export function MessageThread({
 
                             const initials = senderName
                                 .split(' ')
-                                .map(part => part.charAt(0))
+                                .map((part: string) => part.charAt(0))
                                 .join('')
                                 .toUpperCase()
                                 .slice(0, 2);

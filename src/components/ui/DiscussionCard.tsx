@@ -26,8 +26,21 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
         year: 'numeric',
     });
 
+    // Get space name from discussion
+    const spaceName = typeof discussion.space === 'object'
+        ? discussion.space?.title
+        : undefined;
+
     return (
         <article className="discussion-card">
+            {spaceName && (
+                <div className="discussion-card-space">
+                    <Link href={`/spaces/${spaceId}`} className="discussion-card-space-link">
+                        {spaceName}
+                    </Link>
+                </div>
+            )}
+
             <div className="discussion-card-header">
                 {discussion.author?.profile?.photo ? (
                     <img
@@ -50,11 +63,11 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
                 <h3 className="discussion-card-title">{discussion.title}</h3>
             </Link>
 
-            {discussion.content && (
+            {discussion.excerpt && (
                 <p className="discussion-card-preview">
-                    {discussion.content.length > 150
-                        ? `${discussion.content.slice(0, 150)}...`
-                        : discussion.content}
+                    {discussion.excerpt.length > 150
+                        ? `${discussion.excerpt.slice(0, 150)}...`
+                        : discussion.excerpt}
                 </p>
             )}
 

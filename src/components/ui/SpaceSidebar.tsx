@@ -11,6 +11,7 @@ interface SpaceSidebarProps {
 const navItems = [
     { href: '', label: 'Overview', icon: 'home' },
     { href: '/discussions', label: 'Discussions', icon: 'chat' },
+    { href: '/events', label: 'Events', icon: 'calendar' },
 ];
 
 export function SpaceSidebar({ spaceId, spaceTitle }: SpaceSidebarProps) {
