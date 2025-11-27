@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Popover from '@radix-ui/react-popover';
@@ -13,6 +13,7 @@ import { getSpace, Space } from '@/lib/spaces';
 import { ExcerptSelector } from '@/components/ui/ExcerptSelector';
 import { EngagementAnalysis } from '@/components/ui/EngagementAnalysis';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
+import { MentionUser } from '@/hooks/useMentions';
 import type { EngagementAnalysis as EngagementAnalysisType } from '@/types/engagement';
 
 type Step = 1 | 2 | 3;
@@ -74,6 +75,34 @@ export default function NewPostPage() {
 
     // Find selected space for display
     const selectedSpace = userSpaces.find(s => String(s.id) === selectedSpaceId);
+
+    // Convert space members to MentionUser format (deduplicated)
+    const mentionUsers: MentionUser[] = useMemo(() => {
+        if (!selectedSpace) return [];
+
+        const allMembers = [
+            ...(selectedSpace.admins || []),
+            ...(selectedSpace.members || []),
+        ];
+
+        // Deduplicate by user ID
+        const uniqueMembers = new Map();
+        allMembers.forEach(member => {
+            if (member.id && !uniqueMembers.has(member.id)) {
+                uniqueMembers.set(member.id, member);
+            }
+        });
+
+        return Array.from(uniqueMembers.values()).map(member => ({
+            id: member.id,
+            name: member.profile?.fullName ||
+                  `${member.profile?.firstName || ''} ${member.profile?.lastName || ''}`.trim() ||
+                  member.email ||
+                  'Unknown User',
+            email: member.email,
+            avatar: member.profile?.photo,
+        }));
+    }, [selectedSpace]);
 
     // Helper to get member count
     const getMemberCount = (space: Space) => {
@@ -347,7 +376,9 @@ export default function NewPostPage() {
                                 value={content}
                                 onChange={handleEditorChange}
                                 mode="simple"
-                                placeholder="Share your thoughts, questions, or ideas... (minimum 50 characters)"
+                                placeholder="Share your thoughts, questions, or ideas... Type @ to mention someone (minimum 50 characters)"
+                                users={mentionUsers}
+                                onMention={(user) => console.log('Mentioned:', user.name)}
                             />
                             <div className="form-field-hint">
                                 {content.length} characters {content.length < 50 && `(${50 - content.length} more needed)`}

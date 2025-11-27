@@ -8,6 +8,12 @@ import { getCurrentUserId } from '@/lib/auth';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
 import { LikesDisplay } from '@/components/ui/LikesDisplay';
+import { LexicalCommentEditor } from '@/components/ui/LexicalCommentEditor';
+import { MentionContent } from '@/components/ui/MentionContent';
+import { RichContent } from '@/components/ui/RichContent';
+import { MentionUser } from '@/hooks/useMentions';
+import { getMentionedUserIds } from '@/lib/mentions';
+import { getSpace } from '@/lib/spaces';
 
 export default function DiscussionPage() {
     const params = useParams();
@@ -16,6 +22,7 @@ export default function DiscussionPage() {
     const currentUserId = getCurrentUserId();
     const queryClient = useQueryClient();
     const [replyContent, setReplyContent] = useState('');
+    const [clearEditor, setClearEditor] = useState(0); // Trigger to clear editor
 
     const { data: discussion, isLoading, error } = useQuery({
         queryKey: ['discussion', discussionId],
@@ -28,6 +35,41 @@ export default function DiscussionPage() {
         queryFn: () => getDiscussionComments(discussionId),
         enabled: !!discussionId,
     });
+
+    // Fetch space data to get members for mentions
+    const { data: space } = useQuery({
+        queryKey: ['space', spaceId],
+        queryFn: () => getSpace(spaceId),
+        enabled: !!spaceId,
+    });
+
+    // Convert space members to MentionUser format (deduplicated)
+    const mentionUsers: MentionUser[] = useMemo(() => {
+        if (!space) return [];
+
+        const allMembers = [
+            ...(space.admins || []),
+            ...(space.members || []),
+        ];
+
+        // Deduplicate by user ID
+        const uniqueMembers = new Map();
+        allMembers.forEach(member => {
+            if (member.id && !uniqueMembers.has(member.id)) {
+                uniqueMembers.set(member.id, member);
+            }
+        });
+
+        return Array.from(uniqueMembers.values()).map(member => ({
+            id: member.id,
+            name: member.profile?.fullName ||
+                  `${member.profile?.firstName || ''} ${member.profile?.lastName || ''}`.trim() ||
+                  member.email ||
+                  'Unknown User',
+            email: member.email,
+            avatar: member.profile?.photo,
+        }));
+    }, [space]);
 
     // Transform API comment structure (__children) to our format (replies)
     const commentTree = useMemo(() => {
@@ -46,6 +88,7 @@ export default function DiscussionPage() {
             queryClient.invalidateQueries({ queryKey: ['discussion-comments', discussionId] });
             queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
             setReplyContent('');
+            setClearEditor(prev => prev + 1); // Trigger editor clear
         },
     });
 
@@ -67,6 +110,11 @@ export default function DiscussionPage() {
     const handleSubmitReply = (e: React.FormEvent) => {
         e.preventDefault();
         if (replyContent.trim() && currentUserId) {
+            // Extract mentioned user IDs for notifications
+            const mentionedUserIds = getMentionedUserIds(replyContent.trim(), mentionUsers);
+            console.log('Mentioned users:', mentionedUserIds);
+
+            // TODO: Pass mentionedUserIds to backend when API supports it
             commentMutation.mutate({ content: replyContent.trim() });
         }
     };
@@ -138,9 +186,9 @@ export default function DiscussionPage() {
                 </header>
 
                 {discussion.htmlContent && (
-                    <div
+                    <RichContent
+                        content={discussion.htmlContent}
                         className="discussion-article-content"
-                        dangerouslySetInnerHTML={{ __html: discussion.htmlContent }}
                     />
                 )}
 
@@ -167,12 +215,12 @@ export default function DiscussionPage() {
 
                 {currentUserId ? (
                     <form className="discussion-reply-form" onSubmit={handleSubmitReply}>
-                        <textarea
-                            className="discussion-reply-input"
-                            placeholder="Write a reply..."
-                            value={replyContent}
-                            onChange={(e) => setReplyContent(e.target.value)}
-                            rows={3}
+                        <LexicalCommentEditor
+                            key={clearEditor}
+                            users={mentionUsers}
+                            placeholder="Write a reply... Type @ to mention someone"
+                            onChange={(text) => setReplyContent(text)}
+                            onMention={(user) => console.log('Mentioned:', user.name)}
                             disabled={commentMutation.isPending}
                         />
                         <div className="discussion-reply-actions">
@@ -204,6 +252,7 @@ export default function DiscussionPage() {
                                 comment={comment}
                                 currentUserId={currentUserId}
                                 commentMutation={commentMutation}
+                                mentionUsers={mentionUsers}
                             />
                         ))}
                     </div>
@@ -220,11 +269,13 @@ interface CommentItemProps {
     depth?: number;
     currentUserId: string | null;
     commentMutation: any;
+    mentionUsers: MentionUser[];
 }
 
-function CommentItem({ comment, depth = 0, currentUserId, commentMutation }: CommentItemProps) {
+function CommentItem({ comment, depth = 0, currentUserId, commentMutation, mentionUsers }: CommentItemProps) {
     const [isReplying, setIsReplying] = useState(false);
     const [replyText, setReplyText] = useState('');
+    const [clearNestedEditor, setClearNestedEditor] = useState(0);
 
     const authorName = (comment.author as any)?.fullName
         || comment.author?.profile?.fullName
@@ -257,12 +308,18 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation }: Com
         e.preventDefault();
         if (replyText.trim() && currentUserId) {
             try {
+                // Extract mentioned user IDs for notifications
+                const mentionedUserIds = getMentionedUserIds(replyText.trim(), mentionUsers);
+                console.log('Mentioned users in reply:', mentionedUserIds);
+
+                // TODO: Pass mentionedUserIds to backend when API supports it
                 await commentMutation.mutateAsync({
                     content: replyText.trim(),
                     parentId: comment.id
                 });
                 setReplyText('');
                 setIsReplying(false);
+                setClearNestedEditor(prev => prev + 1);
             } catch (error) {
                 // Error is handled by the mutation
             }
@@ -289,9 +346,11 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation }: Com
                 </div>
             </div>
 
-            <div className="comment-content">
-                <p>{comment.content}</p>
-            </div>
+            <MentionContent
+                content={comment.content}
+                users={mentionUsers}
+                className="comment-content"
+            />
 
             {currentUserId && (
                 <div className="comment-actions">
@@ -307,14 +366,14 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation }: Com
 
             {isReplying && (
                 <form className="comment-reply-form" onSubmit={handleSubmitReply}>
-                    <textarea
-                        className="comment-reply-input"
-                        placeholder={`Reply to ${authorName}...`}
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                        rows={2}
+                    <LexicalCommentEditor
+                        key={clearNestedEditor}
+                        users={mentionUsers}
+                        placeholder={`Reply to ${authorName}... Type @ to mention`}
+                        onChange={(text) => setReplyText(text)}
+                        onMention={(user) => console.log('Mentioned in nested reply:', user.name)}
                         disabled={commentMutation.isPending}
-                        autoFocus
+                        autoFocus={true}
                     />
                     <div className="comment-reply-actions">
                         <button
@@ -350,6 +409,7 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation }: Com
                             depth={depth + 1}
                             currentUserId={currentUserId}
                             commentMutation={commentMutation}
+                            mentionUsers={mentionUsers}
                         />
                     ))}
                 </div>

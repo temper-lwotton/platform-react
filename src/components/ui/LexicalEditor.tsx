@@ -16,6 +16,9 @@ import { registerCodeHighlighting } from '@lexical/code';
 
 import { ToolbarPlugin } from './LexicalToolbar';
 import { getEditorConfig, EditorMode } from '@/lib/lexical-config';
+import { MentionNode } from './lexical/nodes/MentionNode';
+import MentionsPlugin from './lexical/plugins/MentionsPlugin';
+import { MentionUser } from '@/hooks/useMentions';
 
 interface LexicalEditorProps {
     value: string;
@@ -23,6 +26,8 @@ interface LexicalEditorProps {
     mode?: EditorMode;
     placeholder?: string;
     disabled?: boolean;
+    users?: MentionUser[];
+    onMention?: (user: MentionUser) => void;
 }
 
 // Custom plugin to handle external updates
@@ -127,7 +132,9 @@ export function LexicalEditor({
     onChange,
     mode = 'standard',
     placeholder,
-    disabled
+    disabled,
+    users = [],
+    onMention
 }: LexicalEditorProps) {
     const editorConfig = getEditorConfig(mode);
     const effectivePlaceholder = placeholder || editorConfig.placeholder || 'Start typing...';
@@ -136,7 +143,7 @@ export function LexicalEditor({
         namespace: 'LexicalEditor',
         theme,
         onError,
-        nodes: editorConfig.nodes,
+        nodes: [...editorConfig.nodes, MentionNode],
         editable: !disabled,
     };
 
@@ -180,6 +187,9 @@ export function LexicalEditor({
                     <LinkPlugin />
                     {editorConfig.features.codeBlock && (
                         <CodeHighlightPluginWrapper />
+                    )}
+                    {users.length > 0 && (
+                        <MentionsPlugin users={users} onMention={onMention} />
                     )}
                     <OnChangePlugin onChange={handleChange} />
                     <UpdatePlugin value={value} />

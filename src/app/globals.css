@@ -15216,3 +15216,417 @@ button:focus:not(:focus-visible) {
     gap: 0.375rem;
   }
 }
+
+/* ============================================
+   Mention System
+   ============================================ */
+
+.mention-textarea-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.mention-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mention-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+}
+
+.mention-textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Mention Dropdown */
+.mention-dropdown {
+  z-index: 1000;
+  min-width: 280px;
+  max-width: 320px;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  outline: none;
+}
+
+/* Radix Popover animations */
+.mention-dropdown[data-state='open'] {
+  animation: mentionDropdownSlideIn 0.15s ease-out;
+}
+
+.mention-dropdown[data-state='closed'] {
+  animation: mentionDropdownSlideOut 0.15s ease-in;
+}
+
+@keyframes mentionDropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mentionDropdownSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.mention-dropdown-content {
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.mention-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mention-dropdown-item:hover {
+  background: var(--color-bg-hover);
+}
+
+.mention-dropdown-item--selected {
+  background: var(--color-primary-bg);
+}
+
+.mention-dropdown-item--selected:hover {
+  background: var(--color-primary-bg);
+}
+
+.mention-dropdown-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-bg-tertiary);
+  flex-shrink: 0;
+}
+
+.mention-dropdown-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mention-dropdown-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--indigo-500), var(--purple-500));
+  color: var(--white);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.mention-dropdown-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mention-dropdown-name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mention-dropdown-email {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.125rem;
+}
+
+.mention-dropdown-hint {
+  padding: 0.625rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border-primary);
+  text-align: center;
+}
+
+/* Mention Highlight (for displaying formatted text) */
+.mention-highlight {
+  color: var(--color-primary);
+  font-weight: 500;
+  background: var(--color-primary-bg);
+  padding: 0.125rem 0.25rem;
+  border-radius: 4px;
+}
+
+/* Mention Links in Comments */
+.mention-link {
+  color: var(--color-primary);
+  font-weight: 500;
+  background: var(--color-primary-bg);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.mention-link:hover {
+  background: var(--color-primary);
+  color: var(--white);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   Rich Content Display
+   ============================================ */
+
+.rich-content {
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.rich-content p {
+  margin-bottom: 1rem;
+}
+
+.rich-content p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-content h1,
+.rich-content h2,
+.rich-content h3,
+.rich-content h4,
+.rich-content h5,
+.rich-content h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.rich-content h1 {
+  font-size: 2rem;
+}
+
+.rich-content h2 {
+  font-size: 1.5rem;
+}
+
+.rich-content h3 {
+  font-size: 1.25rem;
+}
+
+.rich-content ul,
+.rich-content ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.rich-content li {
+  margin-bottom: 0.5rem;
+}
+
+.rich-content blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.rich-content code {
+  background-color: #f5f5f5;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.rich-content pre {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.rich-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.rich-content a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.rich-content a:hover {
+  text-decoration: underline;
+}
+
+.rich-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.rich-content th,
+.rich-content td {
+  border: 1px solid var(--color-border-primary);
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.rich-content th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.rich-content strong {
+  font-weight: 600;
+}
+
+.rich-content em {
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rich-content code,
+  .rich-content pre {
+    background-color: #2a2a2a;
+  }
+
+  .rich-content th {
+    background-color: #2a2a2a;
+  }
+}
+
+/* ============================================
+   Lexical Comment Editor
+   ============================================ */
+
+.lexical-comment-editor {
+  width: 100%;
+}
+
+.lexical-comment-editor-container {
+  position: relative;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lexical-comment-editor-container:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+}
+
+.lexical-comment-content-editable {
+  min-height: 80px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.lexical-comment-placeholder {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+  font-size: 0.9375rem;
+}
+
+.lexical-comment-paragraph {
+  margin: 0;
+  padding: 0;
+}
+
+.lexical-text-bold {
+  font-weight: 600;
+}
+
+.lexical-text-italic {
+  font-style: italic;
+}
+
+.lexical-text-underline {
+  text-decoration: underline;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mention-dropdown {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .mention-dropdown {
+    min-width: 240px;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .mention-dropdown-content {
+    max-height: 200px;
+  }
+
+  .mention-dropdown-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mention-dropdown-name {
+    font-size: 0.875rem;
+  }
+
+  .mention-dropdown-email {
+    font-size: 0.75rem;
+  }
+}
