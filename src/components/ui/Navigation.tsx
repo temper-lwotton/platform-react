@@ -27,7 +27,8 @@ const navItems: NavItem[] = [
         requiresAuth: true,
         children: [
             { href: '/showcases', label: 'Success Stories', icon: 'star' },
-            { href: '/resources', label: 'Knowledge Base', icon: 'book' }
+            { href: '/resources', label: 'Knowledge Base', icon: 'book' },
+            { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
         ]
     },
     { href: '/users', label: 'People', requiresAuth: true },

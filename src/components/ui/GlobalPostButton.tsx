@@ -115,6 +115,21 @@ export function GlobalPostButton() {
                             </div>
                         </div>
                     </DropdownMenu.Item>
+
+                    <DropdownMenu.Separator className="global-post-dropdown-separator" />
+
+                    <DropdownMenu.Item
+                        className="global-post-dropdown-item"
+                        onSelect={() => handleNavigate('/exchanges/new')}
+                    >
+                        <Icon icon="repeat" size={20} className="global-post-dropdown-icon" />
+                        <div className="global-post-dropdown-text">
+                            <div className="global-post-dropdown-label">Exchange</div>
+                            <div className="global-post-dropdown-description">
+                                Offer or request equipment, space, or expertise
+                            </div>
+                        </div>
+                    </DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Portal>
         </DropdownMenu.Root>

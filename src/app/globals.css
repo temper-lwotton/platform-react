@@ -12427,7 +12427,7 @@ button:focus:not(:focus-visible) {
 
 .event-calendar-export-btn:hover {
   background: var(--color-bg-hover);
-  border-color: var(--color-border-hover);
+  border-color: var(--color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13481,7 +13481,7 @@ button:focus:not(:focus-visible) {
 
 .event-week-calendar-export-btn:hover {
   background: var(--color-bg-hover);
-  border-color: var(--color-border-hover);
+  border-color: var(--color-primary);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14232,7 +14232,7 @@ button:focus:not(:focus-visible) {
 
 .task-list-filter-btn:hover {
   background: var(--color-bg-hover);
-  border-color: var(--color-border-hover);
+  border-color: var(--color-primary);
   color: var(--foreground);
 }
 
@@ -14255,7 +14255,7 @@ button:focus:not(:focus-visible) {
 
   .task-list-filter-btn:hover {
     background: var(--color-bg-tertiary);
-    border-color: var(--color-border-hover);
+    border-color: var(--color-primary);
   }
 
   .task-list-filter-btn--active {
@@ -14282,7 +14282,7 @@ button:focus:not(:focus-visible) {
 }
 
 .task-list-sort-select:hover {
-  border-color: var(--color-border-hover);
+  border-color: var(--color-primary);
 }
 
 .task-list-sort-select:focus {
@@ -17976,6 +17976,1065 @@ button:focus:not(:focus-visible) {
   .main-nav-dropdown-item {
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
+  }
+}
+
+/* ============================================
+   Exchange Components
+   ============================================ */
+
+/* Exchange Card */
+.exchange-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.exchange-card {
+  background: var(--background);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.exchange-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.exchange-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 50%;
+  background: var(--color-bg-secondary);
+  overflow: hidden;
+}
+
+.exchange-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.exchange-card-image-count {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  backdrop-filter: blur(4px);
+}
+
+.exchange-card-content {
+  padding: 1.25rem;
+}
+
+.exchange-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.exchange-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.exchange-type-badge--offering {
+  background: var(--green-50);
+  color: var(--green-700);
+}
+
+.exchange-type-badge--request {
+  background: var(--blue-50);
+  color: var(--blue-700);
+}
+
+.exchange-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+.exchange-availability-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.availability-available {
+  background: var(--green-50);
+  color: var(--green-700);
+}
+
+.availability-in-use {
+  background: var(--yellow-50);
+  color: var(--yellow-700);
+}
+
+.availability-fulfilled {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-tertiary);
+}
+
+.availability-expired {
+  background: var(--red-50);
+  color: var(--red-700);
+}
+
+.exchange-card-header {
+  margin-bottom: 0.75rem;
+}
+
+.exchange-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.exchange-card-excerpt {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+}
+
+.exchange-card-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.exchange-card-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.exchange-card-conditions {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 0.75rem;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+.exchange-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-bottom: 1rem;
+}
+
+.exchange-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.exchange-card-avatar--placeholder {
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.exchange-card-author-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.exchange-card-author {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  margin-bottom: 2px;
+}
+
+.exchange-card-meta-details {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.exchange-card-space {
+  color: var(--color-text-secondary);
+}
+
+.exchange-card-separator {
+  color: var(--color-text-tertiary);
+}
+
+.exchange-card-date {
+  color: var(--color-text-tertiary);
+}
+
+.exchange-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.exchange-card-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+}
+
+/* Exchange Browse Page */
+.exchanges-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.exchanges-page-container {
+  width: 100%;
+}
+
+.exchanges-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  gap: 2rem;
+}
+
+.exchanges-page-header-content {
+  flex: 1;
+}
+
+.exchanges-page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.exchanges-page-subtitle {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 1rem 0;
+}
+
+.exchanges-page-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.exchanges-page-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  padding: 0.5rem 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+}
+
+.exchanges-create-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.exchanges-create-button:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.exchanges-controls {
+  background: var(--color-bg-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.exchanges-filter-group,
+.exchanges-sort-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.exchanges-filter-label,
+.exchanges-sort-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exchanges-filter-buttons,
+.exchanges-sort-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.exchanges-filter-btn,
+.exchanges-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1rem;
+  background: var(--background);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exchanges-filter-btn:hover,
+.exchanges-sort-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.exchanges-filter-btn--active,
+.exchanges-sort-btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.exchanges-loading,
+.exchanges-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.exchanges-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.exchanges-empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 1rem 0 0.5rem 0;
+}
+
+.exchanges-empty-description {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  max-width: 500px;
+  margin: 0;
+}
+
+.exchanges-empty-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+}
+
+.exchanges-empty-cta:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.exchanges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Exchange Detail Page */
+.exchange-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.exchange-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s ease;
+}
+
+.exchange-back-link:hover {
+  color: var(--color-primary);
+}
+
+.exchange-article {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.exchange-article-main {
+  min-width: 0;
+}
+
+.exchange-article-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.exchange-article-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.exchange-article-header {
+  margin-bottom: 2rem;
+}
+
+.exchange-article-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+  margin: 0 0 1.5rem 0;
+}
+
+.exchange-article-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.exchange-article-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.exchange-article-avatar--placeholder {
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.exchange-article-author-info {
+  flex: 1;
+}
+
+.exchange-article-author {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.exchange-article-meta-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary);
+}
+
+.exchange-article-space {
+  color: var(--color-text-secondary);
+}
+
+.exchange-article-separator {
+  color: var(--color-text-tertiary);
+}
+
+.exchange-article-date {
+  color: var(--color-text-tertiary);
+}
+
+.exchange-article-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.exchange-article-image-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+}
+
+.exchange-article-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.exchange-article-image-caption {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.exchange-article-content {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  margin-bottom: 2rem;
+}
+
+.exchange-article-conditions {
+  background: var(--color-bg-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.exchange-article-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.exchange-article-conditions-text {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.exchange-article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.exchange-tag {
+  padding: 0.5rem 1rem;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.exchange-article-footer {
+  border-top: 1px solid var(--color-border-primary);
+  padding-top: 2rem;
+}
+
+.exchange-article-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.exchange-interest-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.exchange-interest-btn--primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.exchange-interest-btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.exchange-interest-btn--secondary {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+}
+
+.exchange-interest-btn--secondary:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.exchange-interest-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.exchange-interest-form {
+  background: var(--color-bg-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exchange-interest-form-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.exchange-interest-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  background: var(--background);
+  color: var(--color-text-primary);
+  resize: vertical;
+}
+
+.exchange-interest-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.exchange-interest-date {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  background: var(--background);
+  color: var(--color-text-primary);
+}
+
+.exchange-interest-date:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.exchange-interest-form-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.exchange-info-card,
+.exchange-stats-card,
+.exchange-interested-card {
+  background: var(--background);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.exchange-info-title,
+.exchange-interested-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.exchange-info-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exchange-info-item {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.exchange-info-label {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+  margin-bottom: 2px;
+}
+
+.exchange-info-value {
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.exchange-stats-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.exchange-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.exchange-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.exchange-stat-label {
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+  margin-top: 4px;
+}
+
+.exchange-interested-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exchange-interested-item {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.exchange-interested-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.exchange-interested-avatar--placeholder {
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.exchange-interested-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.exchange-interested-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.exchange-interested-message {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.exchange-comments {
+  background: var(--background);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.exchange-comments-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.exchange-comments-placeholder {
+  color: var(--color-text-tertiary);
+  font-size: 0.9375rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.exchange-loading,
+.exchange-error {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--color-text-secondary);
+}
+
+/* Exchange Form Pages */
+.new-exchange-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.new-exchange-container {
+  background: var(--background);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.new-exchange-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.new-exchange-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.new-exchange-cancel-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: color 0.2s ease;
+}
+
+.new-exchange-cancel-link:hover {
+  color: var(--color-primary);
+}
+
+.new-exchange-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.new-exchange-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: 1rem;
+}
+
+.new-exchange-cancel {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.new-exchange-cancel:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.new-exchange-submit {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.new-exchange-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.new-exchange-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .exchange-article {
+    grid-template-columns: 1fr;
+  }
+
+  .exchange-article-sidebar {
+    order: -1;
+  }
+
+  .exchanges-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .exchanges-page,
+  .exchange-detail,
+  .new-exchange-page {
+    padding: 1rem;
+  }
+
+  .exchanges-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .exchanges-page-title {
+    font-size: 1.5rem;
+  }
+
+  .exchange-article-title {
+    font-size: 1.5rem;
+  }
+
+  .exchanges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exchange-article-images {
+    grid-template-columns: 1fr;
+  }
+
+  .exchanges-controls {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .new-exchange-actions {
+    flex-direction: column-reverse;
+  }
+
+  .new-exchange-cancel,
+  .new-exchange-submit {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .exchange-type-badge--offering {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--green-500);
+  }
+
+  .exchange-type-badge--request {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--blue-400);
+  }
+
+  .availability-available {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--green-500);
+  }
+
+  .availability-in-use {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--yellow-500);
+  }
+
+  .availability-expired {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--red-500);
   }
 }
 
