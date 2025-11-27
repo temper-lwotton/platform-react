@@ -22,6 +22,7 @@ export default function DiscussionPage() {
     const currentUserId = getCurrentUserId();
     const queryClient = useQueryClient();
     const [replyContent, setReplyContent] = useState('');
+    const [replyHtmlContent, setReplyHtmlContent] = useState('');
     const [clearEditor, setClearEditor] = useState(0); // Trigger to clear editor
 
     const { data: discussion, isLoading, error } = useQuery({
@@ -78,9 +79,9 @@ export default function DiscussionPage() {
     }, [comments]);
 
     const commentMutation = useMutation({
-        mutationFn: ({ content, parentId }: { content: string; parentId?: string }) =>
+        mutationFn: ({ content, htmlContent, parentId }: { content: string; htmlContent: string; parentId?: string }) =>
             createComment(discussionId, {
-                content,
+                content: htmlContent, // Use HTML content to preserve mentions
                 author: currentUserId!,
                 parent: parentId
             }),
@@ -88,6 +89,7 @@ export default function DiscussionPage() {
             queryClient.invalidateQueries({ queryKey: ['discussion-comments', discussionId] });
             queryClient.invalidateQueries({ queryKey: ['discussion', discussionId] });
             setReplyContent('');
+            setReplyHtmlContent('');
             setClearEditor(prev => prev + 1); // Trigger editor clear
         },
     });
@@ -111,11 +113,14 @@ export default function DiscussionPage() {
         e.preventDefault();
         if (replyContent.trim() && currentUserId) {
             // Extract mentioned user IDs for notifications
-            const mentionedUserIds = getMentionedUserIds(replyContent.trim(), mentionUsers);
+            const mentionedUserIds = getMentionedUserIds(replyHtmlContent, mentionUsers);
             console.log('Mentioned users:', mentionedUserIds);
 
             // TODO: Pass mentionedUserIds to backend when API supports it
-            commentMutation.mutate({ content: replyContent.trim() });
+            commentMutation.mutate({
+                content: replyContent.trim(),
+                htmlContent: replyHtmlContent
+            });
         }
     };
 
@@ -219,7 +224,10 @@ export default function DiscussionPage() {
                             key={clearEditor}
                             users={mentionUsers}
                             placeholder="Write a reply... Type @ to mention someone"
-                            onChange={(text) => setReplyContent(text)}
+                            onChange={(text, html) => {
+                                setReplyContent(text);
+                                setReplyHtmlContent(html);
+                            }}
                             onMention={(user) => console.log('Mentioned:', user.name)}
                             disabled={commentMutation.isPending}
                         />
@@ -275,6 +283,7 @@ interface CommentItemProps {
 function CommentItem({ comment, depth = 0, currentUserId, commentMutation, mentionUsers }: CommentItemProps) {
     const [isReplying, setIsReplying] = useState(false);
     const [replyText, setReplyText] = useState('');
+    const [replyHtml, setReplyHtml] = useState('');
     const [clearNestedEditor, setClearNestedEditor] = useState(0);
 
     const authorName = (comment.author as any)?.fullName
@@ -302,6 +311,7 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
     const handleCancelReply = () => {
         setIsReplying(false);
         setReplyText('');
+        setReplyHtml('');
     };
 
     const handleSubmitReply = async (e: React.FormEvent) => {
@@ -309,15 +319,17 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
         if (replyText.trim() && currentUserId) {
             try {
                 // Extract mentioned user IDs for notifications
-                const mentionedUserIds = getMentionedUserIds(replyText.trim(), mentionUsers);
+                const mentionedUserIds = getMentionedUserIds(replyHtml, mentionUsers);
                 console.log('Mentioned users in reply:', mentionedUserIds);
 
                 // TODO: Pass mentionedUserIds to backend when API supports it
                 await commentMutation.mutateAsync({
                     content: replyText.trim(),
+                    htmlContent: replyHtml,
                     parentId: comment.id
                 });
                 setReplyText('');
+                setReplyHtml('');
                 setIsReplying(false);
                 setClearNestedEditor(prev => prev + 1);
             } catch (error) {
@@ -346,9 +358,8 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
                 </div>
             </div>
 
-            <MentionContent
+            <RichContent
                 content={comment.content}
-                users={mentionUsers}
                 className="comment-content"
             />
 
@@ -370,7 +381,10 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
                         key={clearNestedEditor}
                         users={mentionUsers}
                         placeholder={`Reply to ${authorName}... Type @ to mention`}
-                        onChange={(text) => setReplyText(text)}
+                        onChange={(text, html) => {
+                            setReplyText(text);
+                            setReplyHtml(html);
+                        }}
                         onMention={(user) => console.log('Mentioned in nested reply:', user.name)}
                         disabled={commentMutation.isPending}
                         autoFocus={true}

@@ -7,6 +7,7 @@ import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { $getRoot, $getSelection, EditorState } from 'lexical';
+import { $generateHtmlFromNodes } from '@lexical/html';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect } from 'react';
 
@@ -82,18 +83,15 @@ export function LexicalCommentEditor({
     editable: !disabled,
   };
 
-  const handleChange = (editorState: EditorState) => {
+  const handleChange = (editorState: EditorState, editor: any) => {
     if (!onChange) return;
 
-    editorState.read(() => {
+    editor.update(() => {
       const root = $getRoot();
       const text = root.getTextContent();
 
       // Generate HTML with mentions as links
-      let html = '';
-      root.getChildren().forEach((node) => {
-        html += node.getTextContent();
-      });
+      const html = $generateHtmlFromNodes(editor, null);
 
       onChange(text, html);
     });
