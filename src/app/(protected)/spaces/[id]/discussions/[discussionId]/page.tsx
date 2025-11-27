@@ -11,6 +11,7 @@ import { LikesDisplay } from '@/components/ui/LikesDisplay';
 import { LexicalCommentEditor } from '@/components/ui/LexicalCommentEditor';
 import { MentionContent } from '@/components/ui/MentionContent';
 import { RichContent } from '@/components/ui/RichContent';
+import { RichContentWithMentions } from '@/components/ui/RichContentWithMentions';
 import { MentionUser } from '@/hooks/useMentions';
 import { getMentionedUserIds } from '@/lib/mentions';
 import { getSpace } from '@/lib/spaces';
@@ -191,8 +192,9 @@ export default function DiscussionPage() {
                 </header>
 
                 {discussion.htmlContent && (
-                    <RichContent
+                    <RichContentWithMentions
                         content={discussion.htmlContent}
+                        users={mentionUsers}
                         className="discussion-article-content"
                     />
                 )}
@@ -358,8 +360,9 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
                 </div>
             </div>
 
-            <RichContent
+            <RichContentWithMentions
                 content={comment.content}
+                users={mentionUsers}
                 className="comment-content"
             />
 
