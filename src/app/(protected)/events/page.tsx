@@ -1,15 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getEvents, Event, EventsQueryParams } from '@/lib/events';
 import { EventCard } from '@/components/ui/EventCard';
+import { EventCalendar } from '@/components/ui/EventCalendar';
+import { EventWeekCalendar } from '@/components/ui/EventWeekCalendar';
+import { Icon } from '@/components/ui/Icon';
 
 export default function EventsPage() {
   const [filterParams, setFilterParams] = useState<EventsQueryParams>({
     sort: 'asc', // Show upcoming events first
   });
   const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');
+  const [view, setView] = useState<'list' | 'calendar' | 'week'>('list');
+
+  // Load saved view preference from localStorage
+  useEffect(() => {
+    const savedView = localStorage.getItem('events-view');
+    if (savedView === 'list' || savedView === 'calendar' || savedView === 'week') {
+      setView(savedView);
+    }
+  }, []);
+
+  // Save view preference to localStorage
+  const handleViewChange = (newView: 'list' | 'calendar' | 'week') => {
+    setView(newView);
+    localStorage.setItem('events-view', newView);
+  };
 
   // Fetch events with filter parameters
   const { data: events, isLoading, error } = useQuery<Event[]>({
@@ -54,29 +72,61 @@ export default function EventsPage() {
             <h1 className="events-title">Events</h1>
             <p className="events-subtitle">Discover and join community events</p>
           </div>
-          {filteredEvents && filteredEvents.length > 0 && (
-            <div className="events-count">
-              {filteredEvents.length} {filteredEvents.length === 1 ? 'event' : 'events'}
+          <div className="events-header-actions">
+            {/* View Toggle */}
+            <div className="events-view-toggle">
+              <button
+                className={`events-view-toggle-btn ${view === 'list' ? 'events-view-toggle-btn--active' : ''}`}
+                onClick={() => handleViewChange('list')}
+                aria-label="List view"
+              >
+                <Icon icon="layoutGrid" size={18} />
+                <span>List</span>
+              </button>
+              <button
+                className={`events-view-toggle-btn ${view === 'calendar' ? 'events-view-toggle-btn--active' : ''}`}
+                onClick={() => handleViewChange('calendar')}
+                aria-label="Calendar view"
+              >
+                <Icon icon="calendar" size={18} />
+                <span>Month</span>
+              </button>
+              <button
+                className={`events-view-toggle-btn ${view === 'week' ? 'events-view-toggle-btn--active' : ''}`}
+                onClick={() => handleViewChange('week')}
+                aria-label="Week view"
+              >
+                <Icon icon="calendar" size={18} />
+                <span>Week</span>
+              </button>
             </div>
-          )}
+
+            {filteredEvents && filteredEvents.length > 0 && view === 'list' && (
+              <div className="events-count">
+                {filteredEvents.length} {filteredEvents.length === 1 ? 'event' : 'events'}
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
-      {/* Tab Navigation */}
-      <div className="events-tabs">
-        <button
-          className={`events-tab ${activeTab === 'upcoming' ? 'events-tab--active' : ''}`}
-          onClick={() => handleTabChange('upcoming')}
-        >
-          Upcoming Events
-        </button>
-        <button
-          className={`events-tab ${activeTab === 'past' ? 'events-tab--active' : ''}`}
-          onClick={() => handleTabChange('past')}
-        >
-          Past Events
-        </button>
-      </div>
+      {/* Tab Navigation - Only show for list view */}
+      {view === 'list' && (
+        <div className="events-tabs">
+          <button
+            className={`events-tab ${activeTab === 'upcoming' ? 'events-tab--active' : ''}`}
+            onClick={() => handleTabChange('upcoming')}
+          >
+            Upcoming Events
+          </button>
+          <button
+            className={`events-tab ${activeTab === 'past' ? 'events-tab--active' : ''}`}
+            onClick={() => handleTabChange('past')}
+          >
+            Past Events
+          </button>
+        </div>
+      )}
 
       {/* Loading State */}
       {isLoading && (
@@ -85,27 +135,46 @@ export default function EventsPage() {
         </div>
       )}
 
-      {/* Events Grid */}
-      {!isLoading && filteredEvents && filteredEvents.length > 0 && (
-        <div className="events-grid">
-          {filteredEvents.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
+      {/* Calendar View */}
+      {!isLoading && view === 'calendar' && events && (
+        <div className="events-calendar-container">
+          <EventCalendar events={events} />
         </div>
       )}
 
-      {/* Empty State */}
-      {showEmpty && (
-        <div className="events-empty">
-          <p className="events-empty-title">
-            No {activeTab} events found
-          </p>
-          <p className="events-empty-description">
-            {activeTab === 'upcoming'
-              ? 'Check back later for new events'
-              : 'No past events to display'}
-          </p>
+      {/* Week View */}
+      {!isLoading && view === 'week' && events && (
+        <div className="events-calendar-container">
+          <EventWeekCalendar events={events} />
         </div>
+      )}
+
+      {/* List View */}
+      {!isLoading && view === 'list' && (
+        <>
+          {/* Events Grid */}
+          {filteredEvents && filteredEvents.length > 0 && (
+            <div className="events-grid">
+              {filteredEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          )}
+
+          {/* Empty State */}
+          {showEmpty && (
+            <div className="events-empty">
+              <p className="events-empty-title">
+                No {activeTab} events found
+              </p>
+              <p className="events-empty-description">
+                {activeTab === 'upcoming'
+                  ? 'Check back later for new events'
+                  : 'No past events to display'}
+              </p>
+            </div>
+          )}
+        </>
       )}
     </main>
   );

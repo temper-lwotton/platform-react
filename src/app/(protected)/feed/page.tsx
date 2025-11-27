@@ -6,9 +6,11 @@ import Link from 'next/link';
 import { getEvents, Event } from '@/lib/events';
 import { EventCard } from '@/components/ui/EventCard';
 import { UpcomingEventsSidebar } from '@/components/ui/UpcomingEventsSidebar';
+import { UrgentTasksSidebar } from '@/components/ui/UrgentTasksSidebar';
 import { DiscussionCard } from '@/components/ui/DiscussionCard';
 import { getDiscussions, Discussion } from '@/lib/discussions';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
+import { MOCK_TASKS } from '@/lib/tasks';
 
 type FeedItem = {
   type: 'discussion' | 'event';
@@ -306,6 +308,7 @@ export default function FeedPage() {
             })}
           />
         )}
+        <UrgentTasksSidebar tasks={MOCK_TASKS} />
       </div>
     </main>
   );

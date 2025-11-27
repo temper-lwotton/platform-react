@@ -2,14 +2,36 @@
 
 import Link from 'next/link';
 import * as Avatar from '@radix-ui/react-avatar';
-import { Space } from '@/lib/spaces';
+import { Space, SpaceUser } from '@/lib/spaces';
 
 interface SpaceCardProps {
     space: Space;
 }
 
 export function SpaceCard({ space }: SpaceCardProps) {
-    const memberCount = space.members.length + space.admins.length;
+    const allMembers = [...space.admins, ...space.members];
+    const memberCount = allMembers.length;
+    const displayMembers = allMembers.slice(0, 5);
+
+    const getUserInitials = (user: SpaceUser): string => {
+        if (user.profile?.fullName) {
+            const names = user.profile.fullName.split(' ');
+            if (names.length >= 2) {
+                return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
+            }
+            return user.profile.fullName.charAt(0).toUpperCase();
+        }
+        if (user.profile?.firstName && user.profile?.lastName) {
+            return `${user.profile.firstName[0]}${user.profile.lastName[0]}`.toUpperCase();
+        }
+        if (user.profile?.firstName) {
+            return user.profile.firstName.charAt(0).toUpperCase();
+        }
+        if (user.email) {
+            return user.email.charAt(0).toUpperCase();
+        }
+        return '?';
+    };
 
     return (
         <Link href={`/spaces/${space.id}`} className="space-card">
@@ -39,9 +61,29 @@ export function SpaceCard({ space }: SpaceCardProps) {
                     >
                         {space.isPublic ? 'Public' : 'Private'}
                     </span>
-                    <span className="space-card-members" aria-label={`${memberCount} members`}>
-                        {memberCount} member{memberCount !== 1 ? 's' : ''}
-                    </span>
+                    <div className="space-card-members-section">
+                        {displayMembers.length > 0 && (
+                            <div className="space-card-avatars" aria-label={`${memberCount} members`}>
+                                {displayMembers.map((member, index) => (
+                                    <Avatar.Root key={member.id} className="space-card-member-avatar">
+                                        {member.profile?.photo && (
+                                            <Avatar.Image
+                                                src={member.profile.photo}
+                                                alt={member.profile.fullName || member.email || 'Member'}
+                                                className="space-card-member-avatar-image"
+                                            />
+                                        )}
+                                        <Avatar.Fallback className="space-card-member-avatar-fallback">
+                                            {getUserInitials(member)}
+                                        </Avatar.Fallback>
+                                    </Avatar.Root>
+                                ))}
+                            </div>
+                        )}
+                        <span className="space-card-members-count">
+                            {memberCount} member{memberCount !== 1 ? 's' : ''}
+                        </span>
+                    </div>
                 </footer>
             </article>
         </Link>

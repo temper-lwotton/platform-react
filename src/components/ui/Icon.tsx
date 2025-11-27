@@ -6,6 +6,8 @@ import {
   Link2,
   Folder,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ArrowLeft,
   Home,
   ExternalLink,
@@ -25,11 +27,15 @@ import {
   Sun,
   Moon,
   Monitor,
+  Bookmark,
+  BookmarkCheck,
+  LayoutGrid,
+  Download,
 } from 'lucide-react';
 import { CSSProperties } from 'react';
 
 interface IconProps {
-  icon: 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'link' | 'folder' | 'chevronDown' | 'arrowLeft' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor';
+  icon: 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download';
   size?: number;
   className?: string;
   style?: CSSProperties;
@@ -44,6 +50,8 @@ export function Icon({ icon, size = 24, className = '', style }: IconProps) {
     link: Link2,
     folder: Folder,
     chevronDown: ChevronDown,
+    chevronLeft: ChevronLeft,
+    chevronRight: ChevronRight,
     arrowLeft: ArrowLeft,
     home: Home,
     external: ExternalLink,
@@ -64,6 +72,10 @@ export function Icon({ icon, size = 24, className = '', style }: IconProps) {
     sun: Sun,
     moon: Moon,
     monitor: Monitor,
+    bookmark: Bookmark,
+    bookmarkFilled: BookmarkCheck,
+    layoutGrid: LayoutGrid,
+    download: Download,
   };
 
   const LucideIcon = iconMap[icon];

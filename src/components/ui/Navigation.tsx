@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { GlobalPostButton } from './GlobalPostButton';
 import { NotificationDropdown } from './NotificationDropdown';
 import { MessagesDropdown } from './MessagesDropdown';
+import { BookmarksDropdown } from './BookmarksDropdown';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -79,6 +80,9 @@ export function Navigation() {
                         <>
                             <li>
                                 <MessagesDropdown />
+                            </li>
+                            <li>
+                                <BookmarksDropdown />
                             </li>
                             <li>
                                 <NotificationDropdown />

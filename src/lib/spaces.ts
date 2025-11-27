@@ -2,7 +2,13 @@ import { apiFetch } from './api-client';
 
 export interface SpaceUser {
     id: string;
-    // Add other user fields as needed
+    email?: string;
+    profile?: {
+        firstName?: string;
+        lastName?: string;
+        fullName?: string;
+        photo?: string;
+    };
 }
 
 export interface SpaceTag {

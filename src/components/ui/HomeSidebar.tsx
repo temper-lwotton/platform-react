@@ -63,6 +63,15 @@ export function HomeSidebar() {
                     <span className="home-sidebar-link-text">Feed</span>
                 </Link>
 
+                {/* Tasks Link */}
+                <Link
+                    href="/tasks"
+                    className={`home-sidebar-link ${isActive('/tasks') ? 'home-sidebar-link--active' : ''}`}
+                >
+                    <Icon icon="clipboard" size={18} className="home-sidebar-link-icon" />
+                    <span className="home-sidebar-link-text">Tasks</span>
+                </Link>
+
                 <Separator.Root className="home-sidebar-separator" />
 
                 {/* My Spaces Section */}

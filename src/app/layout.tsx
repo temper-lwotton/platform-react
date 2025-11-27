@@ -4,6 +4,7 @@ import './globals.css';
 import { QueryClientWrapper } from './query-client-provider';
 import { Navigation } from '@/components/ui/Navigation';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ToastProvider } from '@/components/ui/ToastProvider';
 
 const geist = Geist({
     subsets: ['latin'],
@@ -27,8 +28,10 @@ export default function RootLayout({
         <body className={geist.className}>
         <ThemeProvider>
             <QueryClientWrapper>
-                <Navigation />
-                {children}
+                <ToastProvider>
+                    <Navigation />
+                    {children}
+                </ToastProvider>
             </QueryClientWrapper>
         </ThemeProvider>
         </body>

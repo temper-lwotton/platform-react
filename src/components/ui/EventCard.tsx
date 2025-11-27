@@ -5,6 +5,7 @@ import Link from 'next/link';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Event, formatEventDateRange, isUpcoming, isOngoing, isPast } from '@/lib/events';
 import { Icon } from './Icon';
+import { useToast } from './ToastProvider';
 
 type RSVPStatus = 'going' | 'maybe' | 'not_going' | null;
 
@@ -16,6 +17,8 @@ interface EventCardProps {
 export function EventCard({ event, showRSVP = false }: EventCardProps) {
   const [rsvpStatus, setRsvpStatus] = useState<RSVPStatus>(null);
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { showToast } = useToast();
 
   const dateRange = formatEventDateRange(event.eventStart, event.eventEnd);
   const status = isOngoing(event.eventStart, event.eventEnd)
@@ -61,6 +64,19 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
     if (rsvpStatus === 'maybe') return `${base} ${base}--maybe`;
     if (rsvpStatus === 'not_going') return `${base} ${base}--not-going`;
     return base;
+  };
+
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const newBookmarkState = !isBookmarked;
+    setIsBookmarked(newBookmarkState);
+
+    if (newBookmarkState) {
+      showToast(`Bookmarked "${event.title}" - you can find it later in your bookmarks`);
+    } else {
+      showToast(`Removed "${event.title}" from bookmarks`);
+    }
   };
 
   return (
@@ -228,6 +244,18 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
             )}
+
+            <button
+              onClick={handleBookmark}
+              className="event-card-bookmark"
+              aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+            >
+              <Icon
+                icon={isBookmarked ? 'bookmarkFilled' : 'bookmark'}
+                size={18}
+                className="event-card-bookmark-icon"
+              />
+            </button>
           </div>
         </div>
       </div>

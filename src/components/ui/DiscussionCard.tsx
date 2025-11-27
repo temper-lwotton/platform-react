@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Discussion } from '@/lib/discussions';
 import { Icon } from './Icon';
+import { useToast } from './ToastProvider';
 
 interface DiscussionCardProps {
     discussion: Discussion;
@@ -10,6 +12,9 @@ interface DiscussionCardProps {
 }
 
 export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    const { showToast } = useToast();
+
     const authorName = discussion.author?.profile?.fullName
         || `${discussion.author?.profile?.firstName || ''} ${discussion.author?.profile?.lastName || ''}`.trim()
         || 'Unknown';
@@ -31,6 +36,19 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
     const spaceName = typeof discussion.space === 'object'
         ? discussion.space?.title
         : undefined;
+
+    const handleBookmark = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const newBookmarkState = !isBookmarked;
+        setIsBookmarked(newBookmarkState);
+
+        if (newBookmarkState) {
+            showToast(`Bookmarked "${discussion.title}" - you can find it later in your bookmarks`);
+        } else {
+            showToast(`Removed "${discussion.title}" from bookmarks`);
+        }
+    };
 
     return (
         <article className="discussion-card">
@@ -84,6 +102,17 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
                         {discussion.commentsCount ?? 0}
                     </span>
                 </div>
+                <button
+                    onClick={handleBookmark}
+                    className="discussion-card-bookmark"
+                    aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                >
+                    <Icon
+                        icon={isBookmarked ? 'bookmarkFilled' : 'bookmark'}
+                        size={18}
+                        className="discussion-card-bookmark-icon"
+                    />
+                </button>
             </div>
         </article>
     );
