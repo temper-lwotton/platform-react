@@ -2,28 +2,36 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import * as Popover from '@radix-ui/react-popover';
 import { GlobalPostButton } from './GlobalPostButton';
 import { NotificationDropdown } from './NotificationDropdown';
 import { MessagesDropdown } from './MessagesDropdown';
 import { BookmarksDropdown } from './BookmarksDropdown';
 import { UserMenu } from './UserMenu';
 import { useAuth } from '@/hooks/useAuth';
+import { Icon } from './Icon';
 
 interface NavItem {
-    href: string;
+    href?: string;
     label: string;
-    requiresAuth?: boolean; // Optional: only show when logged in
-    hideWhenAuth?: boolean; // Optional: only show when logged out
+    requiresAuth?: boolean;
+    hideWhenAuth?: boolean;
+    children?: { href: string; label: string; icon?: string }[];
 }
 
 const navItems: NavItem[] = [
-    { href: '/feed', label: 'Home',  requiresAuth: true },
-    { href: '/events', label: 'Events',  requiresAuth: true },
+    { href: '/feed', label: 'Home', requiresAuth: true },
+    { href: '/events', label: 'Events', requiresAuth: true },
+    {
+        label: 'Discover',
+        requiresAuth: true,
+        children: [
+            { href: '/showcases', label: 'Success Stories', icon: 'star' },
+            { href: '/resources', label: 'Knowledge Base', icon: 'book' }
+        ]
+    },
     { href: '/users', label: 'People', requiresAuth: true },
-    { href: '/learning', label: 'Learning', requiresAuth: true },
     { href: '/login', label: 'Login', hideWhenAuth: true },
-    // Example of auth-only link:
-    // { href: '/my-profile', label: 'My Profile', requiresAuth: true },
 ];
 
 export function Navigation() {
@@ -58,15 +66,59 @@ export function Navigation() {
                     </svg>
                 </Link>
                 <ul className="main-nav-links">
-                    {visibleNavItems.map((item) => {
+                    {visibleNavItems.map((item, index) => {
+                        // Handle dropdown items
+                        if (item.children) {
+                            const isActive = item.children.some(child => pathname.startsWith(child.href));
+
+                            return (
+                                <li key={`${item.label}-${index}`}>
+                                    <Popover.Root>
+                                        <Popover.Trigger asChild>
+                                            <button
+                                                className={`main-nav-link main-nav-link--dropdown ${isActive ? 'main-nav-link--active' : ''}`}
+                                            >
+                                                {item.label}
+                                                <Icon icon="chevronDown" size={14} />
+                                            </button>
+                                        </Popover.Trigger>
+                                        <Popover.Portal>
+                                            <Popover.Content
+                                                className="main-nav-dropdown"
+                                                align="start"
+                                                sideOffset={8}
+                                            >
+                                                <div className="main-nav-dropdown-items">
+                                                    {item.children.map((child) => {
+                                                        const isChildActive = pathname.startsWith(child.href);
+                                                        return (
+                                                            <Link
+                                                                key={child.href}
+                                                                href={child.href}
+                                                                className={`main-nav-dropdown-item ${isChildActive ? 'main-nav-dropdown-item--active' : ''}`}
+                                                            >
+                                                                {child.icon && <Icon icon={child.icon} size={16} />}
+                                                                <span>{child.label}</span>
+                                                            </Link>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </Popover.Content>
+                                        </Popover.Portal>
+                                    </Popover.Root>
+                                </li>
+                            );
+                        }
+
+                        // Handle regular nav items
                         const isActive = item.href === '/'
                             ? pathname === '/'
-                            : pathname.startsWith(item.href);
+                            : pathname.startsWith(item.href!);
 
                         return (
                             <li key={item.href}>
                                 <Link
-                                    href={item.href}
+                                    href={item.href!}
                                     className={`main-nav-link ${isActive ? 'main-nav-link--active' : ''}`}
                                 >
                                     {item.label}

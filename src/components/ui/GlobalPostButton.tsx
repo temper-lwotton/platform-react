@@ -72,6 +72,49 @@ export function GlobalPostButton() {
                             </div>
                         </div>
                     </DropdownMenu.Item>
+
+                    <DropdownMenu.Separator className="global-post-dropdown-separator" />
+
+                    <DropdownMenu.Item
+                        className="global-post-dropdown-item"
+                        onSelect={() => handleNavigate('/updates/new')}
+                    >
+                        <Icon icon="bell" size={20} className="global-post-dropdown-icon" />
+                        <div className="global-post-dropdown-text">
+                            <div className="global-post-dropdown-label">Update</div>
+                            <div className="global-post-dropdown-description">
+                                Share an important announcement
+                            </div>
+                        </div>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Separator className="global-post-dropdown-separator" />
+
+                    <DropdownMenu.Item
+                        className="global-post-dropdown-item"
+                        onSelect={() => handleNavigate('/showcases/new')}
+                    >
+                        <Icon icon="star" size={20} className="global-post-dropdown-icon" />
+                        <div className="global-post-dropdown-text">
+                            <div className="global-post-dropdown-label">Showcase</div>
+                            <div className="global-post-dropdown-description">
+                                Share a success story or case study
+                            </div>
+                        </div>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Item
+                        className="global-post-dropdown-item"
+                        onSelect={() => handleNavigate('/resources/new')}
+                    >
+                        <Icon icon="book" size={20} className="global-post-dropdown-icon" />
+                        <div className="global-post-dropdown-text">
+                            <div className="global-post-dropdown-label">Resource</div>
+                            <div className="global-post-dropdown-description">
+                                Add a guide, template, or documentation
+                            </div>
+                        </div>
+                    </DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Portal>
         </DropdownMenu.Root>

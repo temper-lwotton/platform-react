@@ -9,14 +9,20 @@ import { UpcomingEventsSidebar } from '@/components/ui/UpcomingEventsSidebar';
 import { UrgentTasksSidebar } from '@/components/ui/UrgentTasksSidebar';
 import { DiscussionCard } from '@/components/ui/DiscussionCard';
 import { getDiscussions, Discussion } from '@/lib/discussions';
+import { getUpdates, Update } from '@/lib/updates';
+import { getShowcases, Showcase } from '@/lib/showcases';
+import { getResources, Resource } from '@/lib/resources';
+import { UpdateCard } from '@/components/ui/UpdateCard';
+import { ShowcaseCard } from '@/components/ui/ShowcaseCard';
+import { ResourceCard } from '@/components/ui/ResourceCard';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { MOCK_TASKS } from '@/lib/tasks';
 import { Icon } from '@/components/ui/Icon';
 import { getSpace } from '@/lib/spaces';
 
 type FeedItem = {
-  type: 'discussion' | 'event';
-  data: Discussion | Event;
+  type: 'discussion' | 'event' | 'update' | 'showcase' | 'resource';
+  data: Discussion | Event | Update | Showcase | Resource;
   createdAt: string;
 };
 
@@ -29,7 +35,7 @@ export default function FeedPage() {
 
   // Filter states
   const [selectedSpaces, setSelectedSpaces] = useState<Set<number>>(new Set());
-  const [contentType, setContentType] = useState<'all' | 'discussions' | 'events'>('all');
+  const [contentType, setContentType] = useState<'all' | 'discussions' | 'events' | 'updates' | 'showcases' | 'resources'>('all');
   const [timePeriod, setTimePeriod] = useState<'all' | 'today' | 'week' | 'month'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'active'>('newest');
 
@@ -106,6 +112,78 @@ export default function FeedPage() {
     enabled: accessibleSpaceIds.size > 0, // Only fetch when we know accessible spaces
   });
 
+  // Fetch updates with infinite scroll
+  const {
+    data: updatesData,
+    fetchNextPage: fetchNextUpdates,
+    hasNextPage: hasNextUpdates,
+    isFetchingNextPage: isFetchingNextUpdates,
+    isLoading: updatesLoading,
+  } = useInfiniteQuery({
+    queryKey: ['feed-updates'],
+    queryFn: ({ pageParam = 0 }) =>
+      getUpdates({
+        limit: ITEMS_PER_PAGE,
+        offset: pageParam,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < ITEMS_PER_PAGE) {
+        return undefined;
+      }
+      return allPages.reduce((acc, page) => acc + page.length, 0);
+    },
+    initialPageParam: 0,
+    enabled: accessibleSpaceIds.size > 0,
+  });
+
+  // Fetch showcases with infinite scroll
+  const {
+    data: showcasesData,
+    fetchNextPage: fetchNextShowcases,
+    hasNextPage: hasNextShowcases,
+    isFetchingNextPage: isFetchingNextShowcases,
+    isLoading: showcasesLoading,
+  } = useInfiniteQuery({
+    queryKey: ['feed-showcases'],
+    queryFn: ({ pageParam = 0 }) =>
+      getShowcases({
+        limit: ITEMS_PER_PAGE,
+        offset: pageParam,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < ITEMS_PER_PAGE) {
+        return undefined;
+      }
+      return allPages.reduce((acc, page) => acc + page.length, 0);
+    },
+    initialPageParam: 0,
+    enabled: accessibleSpaceIds.size > 0,
+  });
+
+  // Fetch resources with infinite scroll
+  const {
+    data: resourcesData,
+    fetchNextPage: fetchNextResources,
+    hasNextPage: hasNextResources,
+    isFetchingNextPage: isFetchingNextResources,
+    isLoading: resourcesLoading,
+  } = useInfiniteQuery({
+    queryKey: ['feed-resources'],
+    queryFn: ({ pageParam = 0 }) =>
+      getResources({
+        limit: ITEMS_PER_PAGE,
+        offset: pageParam,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < ITEMS_PER_PAGE) {
+        return undefined;
+      }
+      return allPages.reduce((acc, page) => acc + page.length, 0);
+    },
+    initialPageParam: 0,
+    enabled: accessibleSpaceIds.size > 0,
+  });
+
   // Fetch all events for sidebar (without pagination)
   const { data: allEvents } = useQuery<Event[]>({
     queryKey: ['sidebar-events'],
@@ -131,9 +209,9 @@ export default function FeedPage() {
     enabled: userSpaceIds.length > 0,
   });
 
-  const isLoading = userLoading || discussionsLoading || eventsLoading;
-  const hasMore = hasNextDiscussions || hasNextEvents;
-  const isFetchingMore = isFetchingNextDiscussions || isFetchingNextEvents;
+  const isLoading = userLoading || discussionsLoading || eventsLoading || updatesLoading || showcasesLoading || resourcesLoading;
+  const hasMore = hasNextDiscussions || hasNextEvents || hasNextUpdates || hasNextShowcases || hasNextResources;
+  const isFetchingMore = isFetchingNextDiscussions || isFetchingNextEvents || isFetchingNextUpdates || isFetchingNextShowcases || isFetchingNextResources;
 
   // Filter handlers
   const toggleSpace = (spaceId: number) => {
@@ -155,9 +233,12 @@ export default function FeedPage() {
   // Flatten and combine all discussions and events
   const allDiscussions = discussionsData?.pages.flat() ?? [];
   const allEventItems = eventsData?.pages.flat() ?? [];
+  const allUpdateItems = updatesData?.pages.flat() ?? [];
+  const allShowcaseItems = showcasesData?.pages.flat() ?? [];
+  const allResourceItems = resourcesData?.pages.flat() ?? [];
 
-  // Helper function to extract space ID from discussion or event
-  const getSpaceId = (item: Discussion | Event): number | null => {
+  // Helper function to extract space ID from any content type
+  const getSpaceId = (item: Discussion | Event | Update | Showcase | Resource): number | null => {
     if ('space' in item && item.space) {
       const space = item.space as any;
       // For discussions, space can be an object or ID
@@ -208,6 +289,54 @@ export default function FeedPage() {
       });
     }
 
+    // Add updates if content type allows
+    if (contentType === 'all' || contentType === 'updates') {
+      allUpdateItems.forEach(update => {
+        const spaceId = getSpaceId(update);
+        if (spaceId && accessibleSpaceIds.has(spaceId)) {
+          if (selectedSpaces.size === 0 || selectedSpaces.has(spaceId)) {
+            items.push({
+              type: 'update',
+              data: update,
+              createdAt: update.createdAt,
+            });
+          }
+        }
+      });
+    }
+
+    // Add showcases if content type allows
+    if (contentType === 'all' || contentType === 'showcases') {
+      allShowcaseItems.forEach(showcase => {
+        const spaceId = getSpaceId(showcase);
+        if (spaceId && accessibleSpaceIds.has(spaceId)) {
+          if (selectedSpaces.size === 0 || selectedSpaces.has(spaceId)) {
+            items.push({
+              type: 'showcase',
+              data: showcase,
+              createdAt: showcase.createdAt,
+            });
+          }
+        }
+      });
+    }
+
+    // Add resources if content type allows
+    if (contentType === 'all' || contentType === 'resources') {
+      allResourceItems.forEach(resource => {
+        const spaceId = getSpaceId(resource);
+        if (spaceId && accessibleSpaceIds.has(spaceId)) {
+          if (selectedSpaces.size === 0 || selectedSpaces.has(spaceId)) {
+            items.push({
+              type: 'resource',
+              data: resource,
+              createdAt: resource.createdAt,
+            });
+          }
+        }
+      });
+    }
+
     // Filter by time period
     const now = new Date();
     const filteredByTime = items.filter(item => {
@@ -241,20 +370,41 @@ export default function FeedPage() {
       } else if (sortBy === 'oldest') {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
       } else if (sortBy === 'active') {
-        // Sort by reply count for discussions, participant count for events
-        const aCount = a.type === 'discussion'
-          ? (a.data as Discussion).replyCount || 0
-          : (a.data as Event).participantCount || 0;
-        const bCount = b.type === 'discussion'
-          ? (b.data as Discussion).replyCount || 0
-          : (b.data as Event).participantCount || 0;
+        // Sort by engagement metrics based on content type
+        let aCount = 0;
+        let bCount = 0;
+
+        if (a.type === 'discussion') {
+          aCount = (a.data as Discussion).replyCount || 0;
+        } else if (a.type === 'event') {
+          aCount = (a.data as Event).participantCount || 0;
+        } else if (a.type === 'update') {
+          aCount = (a.data as Update).likesCount || 0;
+        } else if (a.type === 'showcase') {
+          aCount = (a.data as Showcase).likesCount || 0;
+        } else if (a.type === 'resource') {
+          aCount = (a.data as Resource).viewCount || 0;
+        }
+
+        if (b.type === 'discussion') {
+          bCount = (b.data as Discussion).replyCount || 0;
+        } else if (b.type === 'event') {
+          bCount = (b.data as Event).participantCount || 0;
+        } else if (b.type === 'update') {
+          bCount = (b.data as Update).likesCount || 0;
+        } else if (b.type === 'showcase') {
+          bCount = (b.data as Showcase).likesCount || 0;
+        } else if (b.type === 'resource') {
+          bCount = (b.data as Resource).viewCount || 0;
+        }
+
         return bCount - aCount;
       }
       return 0;
     });
 
     return sorted;
-  }, [allDiscussions, allEventItems, accessibleSpaceIds, selectedSpaces, contentType, timePeriod, sortBy]);
+  }, [allDiscussions, allEventItems, allUpdateItems, allShowcaseItems, allResourceItems, accessibleSpaceIds, selectedSpaces, contentType, timePeriod, sortBy]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -264,12 +414,21 @@ export default function FeedPage() {
       entries => {
         const [entry] = entries;
         if (entry.isIntersecting && !isFetchingMore) {
-          // Fetch both discussions and events if they have more pages
+          // Fetch all content types if they have more pages
           if (hasNextDiscussions) {
             fetchNextDiscussions();
           }
           if (hasNextEvents) {
             fetchNextEvents();
+          }
+          if (hasNextUpdates) {
+            fetchNextUpdates();
+          }
+          if (hasNextShowcases) {
+            fetchNextShowcases();
+          }
+          if (hasNextResources) {
+            fetchNextResources();
           }
         }
       },
@@ -293,8 +452,14 @@ export default function FeedPage() {
     isLoading,
     hasNextDiscussions,
     hasNextEvents,
+    hasNextUpdates,
+    hasNextShowcases,
+    hasNextResources,
     fetchNextDiscussions,
     fetchNextEvents,
+    fetchNextUpdates,
+    fetchNextShowcases,
+    fetchNextResources,
   ]);
 
   if (isLoading) {
@@ -410,6 +575,27 @@ export default function FeedPage() {
                   <Icon icon="calendar" size={14} />
                   Events
                 </button>
+                <button
+                  onClick={() => setContentType('updates')}
+                  className={`feed-filter-btn ${contentType === 'updates' ? 'feed-filter-btn--active' : ''}`}
+                >
+                  <Icon icon="bell" size={14} />
+                  Updates
+                </button>
+                <button
+                  onClick={() => setContentType('showcases')}
+                  className={`feed-filter-btn ${contentType === 'showcases' ? 'feed-filter-btn--active' : ''}`}
+                >
+                  <Icon icon="star" size={14} />
+                  Showcases
+                </button>
+                <button
+                  onClick={() => setContentType('resources')}
+                  className={`feed-filter-btn ${contentType === 'resources' ? 'feed-filter-btn--active' : ''}`}
+                >
+                  <Icon icon="book" size={14} />
+                  Resources
+                </button>
               </div>
             </div>
 
@@ -464,7 +650,7 @@ export default function FeedPage() {
           <div className="feed-empty">
             <p className="feed-empty-title">No activity yet</p>
             <p className="feed-empty-description">
-              When people share discussions or create events in your spaces, they'll appear here
+              When people share discussions, create events, post updates, publish showcases, or add resources in your spaces, they'll appear here
             </p>
           </div>
         ) : (
@@ -486,14 +672,36 @@ export default function FeedPage() {
                       />
                     </div>
                   );
-                } else {
+                } else if (item.type === 'event') {
                   const event = item.data as Event;
                   return (
                     <div key={`event-${event.id}-${index}`} className="feed-item">
                       <EventCard event={event} showRSVP={true} />
                     </div>
                   );
+                } else if (item.type === 'update') {
+                  const update = item.data as Update;
+                  return (
+                    <div key={`update-${update.id}-${index}`} className="feed-item">
+                      <UpdateCard update={update} />
+                    </div>
+                  );
+                } else if (item.type === 'showcase') {
+                  const showcase = item.data as Showcase;
+                  return (
+                    <div key={`showcase-${showcase.id}-${index}`} className="feed-item">
+                      <ShowcaseCard showcase={showcase} />
+                    </div>
+                  );
+                } else if (item.type === 'resource') {
+                  const resource = item.data as Resource;
+                  return (
+                    <div key={`resource-${resource.id}-${index}`} className="feed-item">
+                      <ResourceCard resource={resource} />
+                    </div>
+                  );
                 }
+                return null;
               })}
             </div>
 
