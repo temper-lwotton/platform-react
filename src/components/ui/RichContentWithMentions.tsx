@@ -29,23 +29,13 @@ export function RichContentWithMentions({ content, users, className = '' }: Rich
             // Find all mention links
             const mentionLinks = contentRef.current.querySelectorAll('a.mention-link[data-user-id]');
 
-            console.log('Found mention links:', mentionLinks.length);
-            console.log('Available users:', users);
-
             mentionLinks.forEach((link) => {
                 const userId = link.getAttribute('data-user-id');
-                console.log('Processing mention with userId:', userId);
-
                 if (!userId) return;
 
                 // Match user - handle both string and number IDs
                 const user = users.find(u => String(u.id) === String(userId));
-                console.log('Found user:', user);
-
-                if (!user) {
-                    console.warn('User not found for userId:', userId);
-                    return;
-                }
+                if (!user) return;
 
                 // Create a wrapper span for the hover card
                 const wrapper = document.createElement('span');
@@ -60,8 +50,6 @@ export function RichContentWithMentions({ content, users, className = '' }: Rich
                 // Create a React root and render the HoverCard
                 const root = createRoot(wrapper);
                 hoverCardRootsRef.current.set(wrapper, root);
-
-                console.log('Rendering HoverCard for user:', user.name);
 
                 root.render(
                     <MentionHoverCard user={user}>

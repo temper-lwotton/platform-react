@@ -9,7 +9,14 @@ interface SpaceCardProps {
 }
 
 export function SpaceCard({ space }: SpaceCardProps) {
-    const allMembers = [...space.admins, ...space.members];
+    // Deduplicate members by ID
+    const allMembersMap = new Map();
+    [...space.admins, ...space.members].forEach(member => {
+        if (member.id && !allMembersMap.has(member.id)) {
+            allMembersMap.set(member.id, member);
+        }
+    });
+    const allMembers = Array.from(allMembersMap.values());
     const memberCount = allMembers.length;
     const displayMembers = allMembers.slice(0, 5);
 
