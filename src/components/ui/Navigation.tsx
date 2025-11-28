@@ -47,9 +47,11 @@ const navItems: NavItem[] = [
         children: [
             { href: '/showcases', label: 'Success Stories', icon: 'star' },
             { href: '/resources', label: 'Knowledge Base', icon: 'book' },
-            { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
+            { href: '/events', label: 'Events', icon: 'book' },
         ]
-    },    {
+    },
+    { href: '/users', label: 'Contribute', requiresAuth: true },
+    {
         label: 'Exchange',
         requiresAuth: true,
         children: [
@@ -58,7 +60,6 @@ const navItems: NavItem[] = [
             { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
         ]
     },
-    { href: '/events', label: 'Events', requiresAuth: true },
     { href: '/login', label: 'Login', hideWhenAuth: true },
 ];
 
