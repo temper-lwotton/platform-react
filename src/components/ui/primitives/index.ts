@@ -18,5 +18,11 @@ export type { AvatarProps, AvatarSize } from './Avatar';
 export { Badge } from './Badge';
 export type { BadgeProps, BadgeVariant, BadgeSize } from './Badge';
 
+export { Button } from './Button';
+export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
+
 export { Card, CardHeader, CardContent, CardFooter } from './Card';
 export type { CardProps, CardSectionProps, CardVariant } from './Card';
+
+export { Input } from './Input';
+export type { InputProps, InputSize, InputVariant } from './Input';
