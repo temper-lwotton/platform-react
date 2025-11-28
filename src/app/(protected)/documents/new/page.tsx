@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/ui/Icon';
+import { Input, Textarea, Checkbox, RadioGroup, Button } from '@/components/ui/primitives';
 import Link from 'next/link';
 
 export default function NewDocumentPage() {
@@ -46,20 +47,16 @@ export default function NewDocumentPage() {
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="document-new-form">
                     {/* Title */}
-                    <div className="document-new-field">
-                        <label htmlFor="title" className="document-new-label">
-                            Document Title *
-                        </label>
-                        <input
-                            type="text"
-                            id="title"
-                            value={formData.title}
-                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            placeholder="Enter document title..."
-                            className="document-new-input"
-                            required
-                        />
-                    </div>
+                    <Input
+                        type="text"
+                        id="title"
+                        label="Document Title"
+                        value={formData.title}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        placeholder="Enter document title..."
+                        required
+                        fullWidth
+                    />
 
                     {/* Space Selection */}
                     <div className="document-new-field">
@@ -81,144 +78,86 @@ export default function NewDocumentPage() {
                     </div>
 
                     {/* Visibility */}
-                    <div className="document-new-field">
-                        <label className="document-new-label">
-                            Visibility *
-                        </label>
-                        <div className="document-new-visibility-options">
-                            <label className={`document-new-visibility-option ${formData.visibility === 'public' ? 'document-new-visibility-option--active' : ''}`}>
-                                <input
-                                    type="radio"
-                                    name="visibility"
-                                    value="public"
-                                    checked={formData.visibility === 'public'}
-                                    onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
-                                />
-                                <div className="document-new-visibility-content">
-                                    <Icon icon="globe" size={20} />
-                                    <div>
-                                        <div className="document-new-visibility-title">Public</div>
-                                        <div className="document-new-visibility-description">
-                                            Anyone on the internet can view
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-
-                            <label className={`document-new-visibility-option ${formData.visibility === 'members' ? 'document-new-visibility-option--active' : ''}`}>
-                                <input
-                                    type="radio"
-                                    name="visibility"
-                                    value="members"
-                                    checked={formData.visibility === 'members'}
-                                    onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
-                                />
-                                <div className="document-new-visibility-content">
-                                    <Icon icon="users" size={20} />
-                                    <div>
-                                        <div className="document-new-visibility-title">Space Members</div>
-                                        <div className="document-new-visibility-description">
-                                            Only members of the space can view
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-
-                            <label className={`document-new-visibility-option ${formData.visibility === 'private' ? 'document-new-visibility-option--active' : ''}`}>
-                                <input
-                                    type="radio"
-                                    name="visibility"
-                                    value="private"
-                                    checked={formData.visibility === 'private'}
-                                    onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
-                                />
-                                <div className="document-new-visibility-content">
-                                    <Icon icon="lock" size={20} />
-                                    <div>
-                                        <div className="document-new-visibility-title">Private</div>
-                                        <div className="document-new-visibility-description">
-                                            Only you and invited collaborators
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
+                    <RadioGroup
+                        label="Visibility"
+                        value={formData.visibility}
+                        onValueChange={(value) => setFormData({ ...formData, visibility: value as any })}
+                        required
+                        options={[
+                            {
+                                value: 'public',
+                                label: 'Public',
+                                helperText: 'Anyone on the internet can view'
+                            },
+                            {
+                                value: 'members',
+                                label: 'Space Members',
+                                helperText: 'Only members of the space can view'
+                            },
+                            {
+                                value: 'private',
+                                label: 'Private',
+                                helperText: 'Only you and invited collaborators'
+                            }
+                        ]}
+                    />
 
                     {/* Content */}
-                    <div className="document-new-field">
-                        <label htmlFor="content" className="document-new-label">
-                            Content
-                        </label>
-                        <textarea
-                            id="content"
-                            value={formData.content}
-                            onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                            placeholder="Start writing... (You can also add content later in the editor)"
-                            className="document-new-textarea"
-                            rows={12}
-                        />
-                        <div className="document-new-hint">
-                            Supports Markdown formatting
-                        </div>
-                    </div>
+                    <Textarea
+                        id="content"
+                        label="Content"
+                        value={formData.content}
+                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                        placeholder="Start writing... (You can also add content later in the editor)"
+                        rows={12}
+                        helperText="Supports Markdown formatting"
+                        fullWidth
+                    />
 
                     {/* Tags */}
-                    <div className="document-new-field">
-                        <label htmlFor="tags" className="document-new-label">
-                            Tags
-                        </label>
-                        <input
-                            type="text"
-                            id="tags"
-                            value={formData.tags}
-                            onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                            placeholder="e.g., research, planning, strategy (comma-separated)"
-                            className="document-new-input"
-                        />
-                    </div>
+                    <Input
+                        type="text"
+                        id="tags"
+                        label="Tags"
+                        value={formData.tags}
+                        onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                        placeholder="e.g., research, planning, strategy (comma-separated)"
+                        fullWidth
+                    />
 
                     {/* Publish Option */}
-                    <div className="document-new-field">
-                        <label className="document-new-checkbox-label">
-                            <input
-                                type="checkbox"
-                                checked={formData.publishNow}
-                                onChange={(e) => setFormData({ ...formData, publishNow: e.target.checked })}
-                                className="document-new-checkbox"
-                            />
-                            <span>Publish immediately</span>
-                        </label>
-                        <div className="document-new-hint">
-                            If unchecked, document will be saved as a draft
-                        </div>
-                    </div>
+                    <Checkbox
+                        checked={formData.publishNow}
+                        onCheckedChange={(checked) => setFormData({ ...formData, publishNow: checked as boolean })}
+                        label="Publish immediately"
+                        helperText="If unchecked, document will be saved as a draft"
+                    />
 
                     {/* Actions */}
                     <div className="document-new-actions">
-                        <button
+                        <Button
                             type="button"
                             onClick={() => router.push('/documents')}
-                            className="document-new-cancel"
+                            variant="outline"
                         >
                             Cancel
-                        </button>
+                        </Button>
                         <div className="document-new-actions-right">
-                            <button
+                            <Button
                                 type="button"
                                 onClick={handleSaveDraft}
-                                className="document-new-draft"
+                                variant="secondary"
                             >
                                 <Icon icon="bookmark" size={18} />
                                 Save as Draft
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 type="submit"
-                                className="document-new-submit"
+                                variant="primary"
                             >
                                 <Icon icon="check" size={18} />
                                 {formData.publishNow ? 'Create & Publish' : 'Create Document'}
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </form>

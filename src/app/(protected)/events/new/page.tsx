@@ -5,14 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Popover from '@radix-ui/react-popover';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import * as Label from '@radix-ui/react-label';
-import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Separator from '@radix-ui/react-separator';
 import Link from 'next/link';
 import { createEventWithPhoto } from '@/lib/events';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { getSpace, Space } from '@/lib/spaces';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
+import { Input, Checkbox, Button } from '@/components/ui/primitives';
 
 export default function NewGlobalEventPage() {
   const router = useRouter();
@@ -208,9 +207,9 @@ export default function NewGlobalEventPage() {
       <form className="new-event-form" onSubmit={handleSubmit}>
         {/* Space Selection */}
         <div className="form-field">
-          <Label.Root className="form-label">
+          <label className="form-label">
             Space <span className="form-required">*</span>
-          </Label.Root>
+          </label>
           <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
             <Popover.Trigger asChild>
               <button
@@ -295,38 +294,35 @@ export default function NewGlobalEventPage() {
         </div>
 
         {/* Title */}
-        <div className="form-field">
-          <Label.Root htmlFor="title" className="form-label">
-            Event Title <span className="form-required">*</span>
-          </Label.Root>
-          <input
-            id="title"
-            type="text"
-            className="form-input"
-            placeholder="Enter event title..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            disabled={createMutation.isPending}
-            required
-          />
-        </div>
+        <Input
+          id="title"
+          type="text"
+          label="Event Title"
+          placeholder="Enter event title..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          disabled={createMutation.isPending}
+          required
+          fullWidth
+        />
 
         {/* Event Photo */}
         <div className="form-field">
-          <Label.Root htmlFor="photo" className="form-label">
+          <label htmlFor="photo" className="form-label">
             Event Photo
-          </Label.Root>
+          </label>
           {photoPreview ? (
             <div className="photo-preview-container">
               <img src={photoPreview} alt="Event preview" className="photo-preview" />
-              <button
+              <Button
                 type="button"
                 onClick={handleRemovePhoto}
-                className="photo-remove-button"
+                variant="outline"
+                size="sm"
                 disabled={createMutation.isPending}
               >
                 Remove Photo
-              </button>
+              </Button>
             </div>
           ) : (
             <input
@@ -348,111 +344,79 @@ export default function NewGlobalEventPage() {
         <h2 className="form-section-title">Date & Time</h2>
 
         <div className="form-row">
-          <div className="form-field form-field--half">
-            <Label.Root htmlFor="startDateTime" className="form-label">
-              Start Date & Time <span className="form-required">*</span>
-            </Label.Root>
-            <input
-              id="startDateTime"
-              type="datetime-local"
-              className="form-input"
-              value={startDateTime}
-              onChange={(e) => setStartDateTime(e.target.value)}
-              disabled={createMutation.isPending}
-              required
-            />
-          </div>
-
-          <div className="form-field form-field--half">
-            <Label.Root htmlFor="endDateTime" className="form-label">
-              End Date & Time <span className="form-required">*</span>
-            </Label.Root>
-            <input
-              id="endDateTime"
-              type="datetime-local"
-              className="form-input"
-              value={endDateTime}
-              onChange={(e) => setEndDateTime(e.target.value)}
-              disabled={createMutation.isPending}
-              required
-              min={startDateTime}
-            />
-          </div>
+          <Input
+            id="startDateTime"
+            type="datetime-local"
+            label="Start Date & Time"
+            value={startDateTime}
+            onChange={(e) => setStartDateTime(e.target.value)}
+            disabled={createMutation.isPending}
+            required
+            fullWidth
+          />
+          <Input
+            id="endDateTime"
+            type="datetime-local"
+            label="End Date & Time"
+            value={endDateTime}
+            onChange={(e) => setEndDateTime(e.target.value)}
+            disabled={createMutation.isPending}
+            required
+            min={startDateTime}
+            fullWidth
+          />
         </div>
 
         {/* Location */}
         <Separator.Root className="form-separator" />
         <h2 className="form-section-title">Location</h2>
 
-        <div className="form-field">
-          <div className="form-checkbox-wrapper">
-            <Checkbox.Root
-              id="isOnline"
-              className="form-checkbox"
-              checked={isOnline}
-              onCheckedChange={(checked) => setIsOnline(checked === true)}
-              disabled={createMutation.isPending}
-            >
-              <Checkbox.Indicator className="form-checkbox-indicator">
-                ✓
-              </Checkbox.Indicator>
-            </Checkbox.Root>
-            <Label.Root htmlFor="isOnline" className="form-checkbox-label">
-              This is an online event
-            </Label.Root>
-          </div>
-        </div>
+        <Checkbox
+          id="isOnline"
+          checked={isOnline}
+          onCheckedChange={(checked) => setIsOnline(checked === true)}
+          disabled={createMutation.isPending}
+          label="This is an online event"
+        />
 
         {!isOnline && (
-          <div className="form-field">
-            <Label.Root htmlFor="location" className="form-label">
-              Physical Location <span className="form-required">*</span>
-            </Label.Root>
-            <input
-              id="location"
-              type="text"
-              className="form-input"
-              placeholder="Enter venue address or location..."
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              disabled={createMutation.isPending}
-              required={!isOnline}
-            />
-            <p className="form-help-text">
-              Provide the full address or location details for attendees
-            </p>
-          </div>
+          <Input
+            id="location"
+            type="text"
+            label="Physical Location"
+            placeholder="Enter venue address or location..."
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            disabled={createMutation.isPending}
+            required={!isOnline}
+            helperText="Provide the full address or location details for attendees"
+            fullWidth
+          />
         )}
 
         {/* Event Link */}
-        <div className="form-field">
-          <Label.Root htmlFor="link" className="form-label">
-            Event Link
-          </Label.Root>
-          <input
-            id="link"
-            type="url"
-            className="form-input"
-            placeholder="https://example.com/event"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            disabled={createMutation.isPending}
-          />
-          <p className="form-help-text">
-            {isOnline
-              ? 'Meeting link, Zoom URL, or event registration page'
-              : 'Event website, registration page, or additional information'}
-          </p>
-        </div>
+        <Input
+          id="link"
+          type="url"
+          label="Event Link"
+          placeholder="https://example.com/event"
+          value={link}
+          onChange={(e) => setLink(e.target.value)}
+          disabled={createMutation.isPending}
+          helperText={isOnline
+            ? 'Meeting link, Zoom URL, or event registration page'
+            : 'Event website, registration page, or additional information'}
+          fullWidth
+        />
 
         {/* Description */}
         <Separator.Root className="form-separator" />
         <h2 className="form-section-title">Event Description</h2>
 
         <div className="form-field">
-          <Label.Root htmlFor="description" className="form-label">
+          <label htmlFor="description" className="form-label">
             Description <span className="form-required">*</span>
-          </Label.Root>
+          </label>
           <div className="form-editor-wrapper">
             <LexicalEditor
               value={content}
@@ -481,13 +445,15 @@ export default function NewGlobalEventPage() {
           <Link href="/events" className="new-event-cancel">
             Cancel
           </Link>
-          <button
+          <Button
             type="submit"
-            className="form-button new-event-submit"
-            disabled={!isFormValid || createMutation.isPending}
+            variant="primary"
+            size="lg"
+            disabled={!isFormValid}
+            loading={createMutation.isPending}
           >
-            {createMutation.isPending ? 'Creating Event...' : 'Create Event'}
-          </button>
+            Create Event
+          </Button>
         </div>
       </form>
     </div>
