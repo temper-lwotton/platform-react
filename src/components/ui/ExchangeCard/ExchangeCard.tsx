@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { Exchange } from '@/lib/exchanges';
-import { Icon } from './Icon';
-import { Avatar, Badge } from './primitives';
+import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
+import styles from './ExchangeCard.module.scss';
 
 interface ExchangeCardProps {
     exchange: Exchange;
@@ -89,17 +90,17 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
     const locationLabel = getLocationLabel();
 
     return (
-        <Link href={`/exchanges/${exchange.id}`} className="exchange-card-link">
-            <article className="exchange-card">
+        <Link href={`/exchanges/${exchange.id}`} className={styles.link}>
+            <article className={styles.card}>
                 {exchange.images && exchange.images.length > 0 && (
-                    <div className="exchange-card-image-wrapper">
+                    <div className={styles.imageWrapper}>
                         <img
                             src={exchange.images[0].url}
                             alt={exchange.images[0].caption || exchange.title}
-                            className="exchange-card-image"
+                            className={styles.image}
                         />
                         {exchange.images.length > 1 && (
-                            <Badge variant="default" size="sm" className="exchange-card-image-count">
+                            <Badge variant="default" size="sm" className={styles.imageCount}>
                                 <Icon icon="eye" size={14} />
                                 {exchange.images.length}
                             </Badge>
@@ -107,17 +108,16 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
                     </div>
                 )}
 
-                <div className="exchange-card-content">
-                    <div className="exchange-card-badges">
+                <div className={styles.content}>
+                    <div className={styles.badges}>
                         <Badge
                             variant={exchange.type === 'offering' ? 'success' : 'primary'}
                             size="sm"
-                            className="exchange-type-badge"
                         >
                             <Icon icon={exchange.type === 'offering' ? 'arrowUp' : 'arrowDown'} size={14} />
                             {exchange.type === 'offering' ? 'Offering' : 'Request'}
                         </Badge>
-                        <Badge variant="outline" size="sm" className="exchange-category-badge">
+                        <Badge variant="outline" size="sm">
                             <Icon icon={getCategoryIcon(exchange.category)} size={14} />
                             {exchange.category}
                         </Badge>
@@ -128,31 +128,30 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
                                 exchange.availability === 'fulfilled' ? 'info' : 'default'
                             }
                             size="sm"
-                            className="exchange-availability-badge"
                         >
                             {getAvailabilityLabel(exchange.availability)}
                         </Badge>
                     </div>
 
-                    <div className="exchange-card-header">
-                        <h3 className="exchange-card-title">{exchange.title}</h3>
+                    <div className={styles.header}>
+                        <h3 className={styles.title}>{exchange.title}</h3>
                     </div>
 
-                    <p className="exchange-card-excerpt">{getExcerpt()}</p>
+                    <p className={styles.excerpt}>{getExcerpt()}</p>
 
-                    <div className="exchange-card-details">
-                        <span className="exchange-card-detail">
+                    <div className={styles.details}>
+                        <span className={styles.detail}>
                             <Icon icon={getTermsIcon(exchange.terms)} size={16} />
                             {getTermsLabel(exchange.terms)}
                         </span>
                         {locationLabel && (
-                            <span className="exchange-card-detail">
+                            <span className={styles.detail}>
                                 <Icon icon="mapPin" size={16} />
                                 {locationLabel}
                             </span>
                         )}
                         {exchange.schedule && (
-                            <span className="exchange-card-detail">
+                            <span className={styles.detail}>
                                 <Icon icon="calendar" size={16} />
                                 {exchange.schedule}
                             </span>
@@ -160,40 +159,39 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
                     </div>
 
                     {exchange.conditions && (
-                        <div className="exchange-card-conditions">
+                        <div className={styles.conditions}>
                             <Icon icon="info" size={14} />
                             <span>{exchange.conditions}</span>
                         </div>
                     )}
 
-                    <div className="exchange-card-meta">
+                    <div className={styles.meta}>
                         <Avatar
                             src={exchange.author.profile?.photo}
                             alt={exchange.author.fullName}
                             fallback={exchange.author.fullName.charAt(0).toUpperCase()}
                             size="sm"
-                            className="exchange-card-avatar"
                         />
-                        <div className="exchange-card-author-info">
-                            <span className="exchange-card-author">{exchange.author.fullName}</span>
-                            <div className="exchange-card-meta-details">
-                                <span className="exchange-card-space">{exchange.space.title}</span>
-                                <span className="exchange-card-separator">•</span>
-                                <span className="exchange-card-date">{formatDate(exchange.createdAt)}</span>
+                        <div className={styles.authorInfo}>
+                            <span className={styles.author}>{exchange.author.fullName}</span>
+                            <div className={styles.metaDetails}>
+                                <span className={styles.space}>{exchange.space.title}</span>
+                                <span className={styles.separator}>•</span>
+                                <span className={styles.date}>{formatDate(exchange.createdAt)}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="exchange-card-footer">
-                        <span className="exchange-card-stat">
+                    <div className={styles.footer}>
+                        <span className={styles.stat}>
                             <Icon icon="users" size={16} />
                             {exchange.interestedCount} interested
                         </span>
-                        <span className="exchange-card-stat">
+                        <span className={styles.stat}>
                             <Icon icon="heart" size={16} />
                             {exchange.likesCount}
                         </span>
-                        <span className="exchange-card-stat">
+                        <span className={styles.stat}>
                             <Icon icon="comment" size={16} />
                             {exchange.commentsCount}
                         </span>

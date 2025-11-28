@@ -4,9 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Event, formatEventDateRange, isUpcoming, isOngoing, isPast } from '@/lib/events';
-import { Icon } from './Icon';
-import { useToast } from './ToastProvider';
-import { Avatar, Badge } from './primitives';
+import { Icon } from '../Icon';
+import { useToast } from '../ToastProvider';
+import { Avatar, Badge } from '../primitives';
+import styles from './EventCard.module.scss';
 
 type RSVPStatus = 'going' | 'maybe' | 'not_going' | null;
 

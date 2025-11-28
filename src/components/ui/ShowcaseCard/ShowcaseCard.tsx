@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { Showcase } from '@/lib/showcases';
-import { Icon } from './Icon';
-import { Avatar, Badge } from './primitives';
+import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
+import styles from './ShowcaseCard.module.scss';
 
 interface ShowcaseCardProps {
     showcase: Showcase;
@@ -37,17 +38,17 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
     const duration = getProjectDuration();
 
     return (
-        <Link href={`/showcases/${showcase.id}`} className="showcase-card-link">
-            <article className="showcase-card">
+        <Link href={`/showcases/${showcase.id}`} className={styles.link}>
+            <article className={styles.card}>
                 {showcase.media && showcase.media.length > 0 && (
-                    <div className="showcase-card-image-wrapper">
+                    <div className={styles.imageWrapper}>
                         <img
                             src={showcase.media[0].url}
                             alt={showcase.media[0].caption || showcase.title}
-                            className="showcase-card-image"
+                            className={styles.image}
                         />
                         {showcase.media.length > 1 && (
-                            <span className="showcase-card-image-count">
+                            <span className={styles.imageCount}>
                                 <Icon icon="eye" size={14} />
                                 {showcase.media.length}
                             </span>
@@ -55,35 +56,35 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
                     </div>
                 )}
 
-                <div className="showcase-card-content">
-                    <div className="showcase-card-header">
+                <div className={styles.content}>
+                    <div className={styles.header}>
                         {showcase.isPinned && (
-                            <Badge variant="warning" size="sm" className="pinned-badge">
+                            <Badge variant="warning" size="sm">
                                 <Icon icon="pin" size={14} />
                                 Featured
                             </Badge>
                         )}
                     </div>
 
-                    <h3 className="showcase-card-title">{showcase.title}</h3>
+                    <h3 className={styles.title}>{showcase.title}</h3>
 
-                    <p className="showcase-card-excerpt">{getExcerpt()}</p>
+                    <p className={styles.excerpt}>{getExcerpt()}</p>
 
                     {showcase.impactMetrics && showcase.impactMetrics.length > 0 && (
-                        <div className="showcase-card-metrics">
+                        <div className={styles.metrics}>
                             {showcase.impactMetrics.slice(0, 3).map((metric, index) => (
-                                <div key={index} className="showcase-card-metric">
-                                    <span className="showcase-card-metric-value">{metric.value}</span>
-                                    <span className="showcase-card-metric-label">{metric.label}</span>
+                                <div key={index} className={styles.metric}>
+                                    <span className={styles.metricValue}>{metric.value}</span>
+                                    <span className={styles.metricLabel}>{metric.label}</span>
                                 </div>
                             ))}
                         </div>
                     )}
 
                     {showcase.teamMembers && showcase.teamMembers.length > 0 && (
-                        <div className="showcase-card-team">
-                            <span className="showcase-card-team-label">Team:</span>
-                            <div className="showcase-card-team-avatars">
+                        <div className={styles.team}>
+                            <span className={styles.teamLabel}>Team:</span>
+                            <div className={styles.teamAvatars}>
                                 {showcase.teamMembers.slice(0, 4).map((member) => (
                                     <Avatar
                                         key={member.id}
@@ -91,11 +92,11 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
                                         alt={member.fullName}
                                         fallback={member.fullName.charAt(0).toUpperCase()}
                                         size="xs"
-                                        className="showcase-card-team-avatar"
+                                        className={styles.teamAvatar}
                                     />
                                 ))}
                                 {showcase.teamMembers.length > 4 && (
-                                    <Badge variant="default" size="sm" className="showcase-card-team-more">
+                                    <Badge variant="default" size="sm" className={styles.teamMore}>
                                         +{showcase.teamMembers.length - 4}
                                     </Badge>
                                 )}
@@ -103,18 +104,17 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
                         </div>
                     )}
 
-                    <div className="showcase-card-meta">
+                    <div className={styles.meta}>
                         <Avatar
                             src={showcase.author.profile?.photo}
                             alt={showcase.author.fullName}
                             fallback={showcase.author.fullName.charAt(0).toUpperCase()}
                             size="sm"
-                            className="showcase-card-avatar"
                         />
-                        <div className="showcase-card-author-info">
-                            <span className="showcase-card-author">{showcase.author.fullName}</span>
+                        <div className={styles.authorInfo}>
+                            <span className={styles.author}>{showcase.author.fullName}</span>
                             {duration && (
-                                <span className="showcase-card-duration">
+                                <span className={styles.duration}>
                                     <Icon icon="clock" size={14} />
                                     {duration}
                                 </span>
@@ -122,12 +122,12 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
                         </div>
                     </div>
 
-                    <div className="showcase-card-footer">
-                        <span className="showcase-card-stat">
+                    <div className={styles.footer}>
+                        <span className={styles.stat}>
                             <Icon icon="heart" size={16} />
                             {showcase.likesCount}
                         </span>
-                        <span className="showcase-card-stat">
+                        <span className={styles.stat}>
                             <Icon icon="comment" size={16} />
                             {showcase.commentsCount}
                         </span>

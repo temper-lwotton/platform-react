@@ -1,0 +1,182 @@
+@use '../../../styles/abstracts' as *;
+
+// Exchange Card Component
+.card {
+  @include card-base;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 50%;
+  background: var(--color-bg-secondary);
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageCount {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  backdrop-filter: blur(4px);
+}
+
+.content {
+  padding: 1.25rem;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.header {
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.excerpt {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+}
+
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.conditions {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 0.75rem;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+
+  &Placeholder {
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}
+
+.authorInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.author {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  margin-bottom: 2px;
+}
+
+.metaDetails {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.space {
+  color: var(--color-text-secondary);
+}
+
+.separator {
+  color: var(--color-text-tertiary);
+}
+
+.date {
+  color: var(--color-text-tertiary);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+}
