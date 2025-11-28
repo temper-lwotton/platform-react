@@ -15,6 +15,7 @@ import { RichContentWithMentions } from '@/components/ui/RichContentWithMentions
 import { MentionUser } from '@/hooks/useMentions';
 import { getMentionedUserIds } from '@/lib/mentions';
 import { getSpace } from '@/lib/spaces';
+import { Button } from '@/components/ui/primitives';
 
 export default function DiscussionPage() {
     const params = useParams();
@@ -234,13 +235,14 @@ export default function DiscussionPage() {
                             disabled={commentMutation.isPending}
                         />
                         <div className="discussion-reply-actions">
-                            <button
+                            <Button
                                 type="submit"
-                                className="discussion-reply-submit"
-                                disabled={!replyContent.trim() || commentMutation.isPending}
+                                variant="primary"
+                                disabled={!replyContent.trim()}
+                                loading={commentMutation.isPending}
                             >
-                                {commentMutation.isPending ? 'Posting...' : 'Post Reply'}
-                            </button>
+                                Post Reply
+                            </Button>
                         </div>
                         {commentMutation.isError && (
                             <p className="discussion-reply-error">
@@ -393,21 +395,22 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
                         autoFocus={true}
                     />
                     <div className="comment-reply-actions">
-                        <button
+                        <Button
                             type="button"
-                            className="comment-reply-cancel"
                             onClick={handleCancelReply}
                             disabled={commentMutation.isPending}
+                            variant="outline"
                         >
                             Cancel
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             type="submit"
-                            className="comment-reply-submit"
-                            disabled={!replyText.trim() || commentMutation.isPending}
+                            disabled={!replyText.trim()}
+                            loading={commentMutation.isPending}
+                            variant="primary"
                         >
-                            {commentMutation.isPending ? 'Posting...' : 'Reply'}
-                        </button>
+                            Reply
+                        </Button>
                     </div>
                     {commentMutation.isError && (
                         <p className="comment-reply-error">

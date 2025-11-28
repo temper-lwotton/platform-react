@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUsers, User } from '@/lib/users';
 import { startConversation } from '@/lib/conversations';
 import { getCurrentUserId } from '@/lib/auth';
+import { Input, Textarea, Button } from '@/components/ui/primitives';
 
 function useCurrentUserId(): string | null {
     if (typeof window === 'undefined') return null;
@@ -102,12 +103,12 @@ export default function NewConversationPage() {
                                 </button>
                             </span>
                         ))}
-                        <input
+                        <Input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder={selectedUsers.length === 0 ? 'Search for people...' : ''}
-                            className="new-conversation-search"
+                            fullWidth
                         />
                     </div>
                 </div>
@@ -147,22 +148,24 @@ export default function NewConversationPage() {
                 )}
 
                 <div className="new-conversation-message">
-                    <textarea
+                    <Textarea
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder="Write your message..."
-                        className="new-conversation-textarea"
                         rows={4}
+                        fullWidth
                     />
                 </div>
 
-                <button
+                <Button
                     type="submit"
-                    className="new-conversation-submit"
-                    disabled={selectedUsers.length === 0 || !message.trim() || createMutation.isPending}
+                    variant="primary"
+                    size="lg"
+                    disabled={selectedUsers.length === 0 || !message.trim()}
+                    loading={createMutation.isPending}
                 >
-                    {createMutation.isPending ? 'Sending...' : 'Send Message'}
-                </button>
+                    Send Message
+                </Button>
             </form>
         </div>
     );

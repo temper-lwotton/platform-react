@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/ui/Icon';
+import { Input, Textarea, Checkbox, Button } from '@/components/ui/primitives';
 import Link from 'next/link';
 
 type ScheduleType = 'now' | 'later';
@@ -96,34 +97,26 @@ export default function NewWebinarPage() {
                         {scheduleType === 'later' && (
                             <div className="webinar-schedule-fields">
                                 <div className="webinar-form-row">
-                                    <div className="webinar-form-field">
-                                        <label htmlFor="scheduledDate" className="webinar-form-label">
-                                            Date
-                                        </label>
-                                        <input
-                                            type="date"
-                                            id="scheduledDate"
-                                            name="scheduledDate"
-                                            value={formData.scheduledDate}
-                                            onChange={handleChange}
-                                            className="webinar-form-input"
-                                            required={scheduleType === 'later'}
-                                        />
-                                    </div>
-                                    <div className="webinar-form-field">
-                                        <label htmlFor="scheduledTime" className="webinar-form-label">
-                                            Time
-                                        </label>
-                                        <input
-                                            type="time"
-                                            id="scheduledTime"
-                                            name="scheduledTime"
-                                            value={formData.scheduledTime}
-                                            onChange={handleChange}
-                                            className="webinar-form-input"
-                                            required={scheduleType === 'later'}
-                                        />
-                                    </div>
+                                    <Input
+                                        type="date"
+                                        id="scheduledDate"
+                                        name="scheduledDate"
+                                        label="Date"
+                                        value={formData.scheduledDate}
+                                        onChange={handleChange}
+                                        required={scheduleType === 'later'}
+                                        fullWidth
+                                    />
+                                    <Input
+                                        type="time"
+                                        id="scheduledTime"
+                                        name="scheduledTime"
+                                        label="Time"
+                                        value={formData.scheduledTime}
+                                        onChange={handleChange}
+                                        required={scheduleType === 'later'}
+                                        fullWidth
+                                    />
                                 </div>
                             </div>
                         )}
@@ -133,36 +126,28 @@ export default function NewWebinarPage() {
                     <section className="webinar-create-section">
                         <h2 className="webinar-create-section-title">Basic Information</h2>
 
-                        <div className="webinar-form-field">
-                            <label htmlFor="title" className="webinar-form-label">
-                                Webinar Title <span className="webinar-form-required">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="title"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleChange}
-                                className="webinar-form-input"
-                                placeholder="e.g., Future of Urban Mobility"
-                                required
-                            />
-                        </div>
+                        <Input
+                            type="text"
+                            id="title"
+                            name="title"
+                            label="Webinar Title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            placeholder="e.g., Future of Urban Mobility"
+                            required
+                            fullWidth
+                        />
 
-                        <div className="webinar-form-field">
-                            <label htmlFor="description" className="webinar-form-label">
-                                Description
-                            </label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                className="webinar-form-textarea"
-                                placeholder="Provide details about your webinar..."
-                                rows={4}
-                            />
-                        </div>
+                        <Textarea
+                            id="description"
+                            name="description"
+                            label="Description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            placeholder="Provide details about your webinar..."
+                            rows={4}
+                            fullWidth
+                        />
 
                         <div className="webinar-form-row">
                             <div className="webinar-form-field">
@@ -208,69 +193,37 @@ export default function NewWebinarPage() {
                         <h2 className="webinar-create-section-title">Settings</h2>
 
                         <div className="webinar-settings-grid">
-                            <label className="webinar-setting-item">
-                                <input
-                                    type="checkbox"
-                                    name="enableChat"
-                                    checked={formData.enableChat}
-                                    onChange={handleChange}
-                                    className="webinar-setting-checkbox"
-                                />
-                                <div className="webinar-setting-content">
-                                    <div className="webinar-setting-title">Enable Chat</div>
-                                    <div className="webinar-setting-description">
-                                        Allow attendees to chat during the webinar
-                                    </div>
-                                </div>
-                            </label>
+                            <Checkbox
+                                name="enableChat"
+                                checked={formData.enableChat}
+                                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, enableChat: checked as boolean }))}
+                                label="Enable Chat"
+                                helperText="Allow attendees to chat during the webinar"
+                            />
 
-                            <label className="webinar-setting-item">
-                                <input
-                                    type="checkbox"
-                                    name="enableQA"
-                                    checked={formData.enableQA}
-                                    onChange={handleChange}
-                                    className="webinar-setting-checkbox"
-                                />
-                                <div className="webinar-setting-content">
-                                    <div className="webinar-setting-title">Enable Q&A</div>
-                                    <div className="webinar-setting-description">
-                                        Allow attendees to ask questions
-                                    </div>
-                                </div>
-                            </label>
+                            <Checkbox
+                                name="enableQA"
+                                checked={formData.enableQA}
+                                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, enableQA: checked as boolean }))}
+                                label="Enable Q&A"
+                                helperText="Allow attendees to ask questions"
+                            />
 
-                            <label className="webinar-setting-item">
-                                <input
-                                    type="checkbox"
-                                    name="enableRecording"
-                                    checked={formData.enableRecording}
-                                    onChange={handleChange}
-                                    className="webinar-setting-checkbox"
-                                />
-                                <div className="webinar-setting-content">
-                                    <div className="webinar-setting-title">Record Webinar</div>
-                                    <div className="webinar-setting-description">
-                                        Save a recording for later viewing
-                                    </div>
-                                </div>
-                            </label>
+                            <Checkbox
+                                name="enableRecording"
+                                checked={formData.enableRecording}
+                                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, enableRecording: checked as boolean }))}
+                                label="Record Webinar"
+                                helperText="Save a recording for later viewing"
+                            />
 
-                            <label className="webinar-setting-item">
-                                <input
-                                    type="checkbox"
-                                    name="requireRegistration"
-                                    checked={formData.requireRegistration}
-                                    onChange={handleChange}
-                                    className="webinar-setting-checkbox"
-                                />
-                                <div className="webinar-setting-content">
-                                    <div className="webinar-setting-title">Require Registration</div>
-                                    <div className="webinar-setting-description">
-                                        Attendees must register before joining
-                                    </div>
-                                </div>
-                            </label>
+                            <Checkbox
+                                name="requireRegistration"
+                                checked={formData.requireRegistration}
+                                onCheckedChange={(checked) => setFormData(prev => ({ ...prev, requireRegistration: checked as boolean }))}
+                                label="Require Registration"
+                                helperText="Attendees must register before joining"
+                            />
                         </div>
                     </section>
 
@@ -279,10 +232,10 @@ export default function NewWebinarPage() {
                         <Link href="/webinars" className="webinar-create-cancel">
                             Cancel
                         </Link>
-                        <button type="submit" className="webinar-create-submit">
+                        <Button type="submit" variant="primary" size="lg">
                             <Icon icon="video" size={20} />
                             {scheduleType === 'now' ? 'Start Webinar' : 'Schedule Webinar'}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>

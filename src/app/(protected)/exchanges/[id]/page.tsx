@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
 import { LikesDisplay } from '@/components/ui/LikesDisplay';
 import { RichContent } from '@/components/ui/RichContent';
+import { Input, Textarea, Button } from '@/components/ui/primitives';
 
 export default function ExchangeDetailPage() {
     const params = useParams();
@@ -255,36 +256,36 @@ export default function ExchangeDetailPage() {
                             {showInterestForm && (
                                 <div className="exchange-interest-form">
                                     <h3 className="exchange-interest-form-title">Express Your Interest</h3>
-                                    <textarea
+                                    <Textarea
                                         value={interestMessage}
                                         onChange={(e) => setInterestMessage(e.target.value)}
                                         placeholder="Tell them why you're interested..."
-                                        className="exchange-interest-textarea"
                                         rows={4}
+                                        fullWidth
                                     />
                                     {exchange.schedule && (
-                                        <input
+                                        <Input
                                             type="date"
                                             value={requestedDate}
                                             onChange={(e) => setRequestedDate(e.target.value)}
-                                            className="exchange-interest-date"
-                                            placeholder="Preferred date"
+                                            label="Preferred date"
+                                            fullWidth
                                         />
                                     )}
                                     <div className="exchange-interest-form-actions">
-                                        <button
+                                        <Button
                                             onClick={handleExpressInterest}
-                                            disabled={expressInterestMutation.isPending}
-                                            className="exchange-interest-btn exchange-interest-btn--primary"
+                                            loading={expressInterestMutation.isPending}
+                                            variant="primary"
                                         >
                                             Send Interest
-                                        </button>
-                                        <button
+                                        </Button>
+                                        <Button
                                             onClick={() => setShowInterestForm(false)}
-                                            className="exchange-interest-btn exchange-interest-btn--secondary"
+                                            variant="outline"
                                         >
                                             Cancel
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             )}

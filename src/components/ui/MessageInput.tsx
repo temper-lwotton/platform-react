@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { getToken } from '@/lib/auth';
+import { Textarea, Button } from './primitives';
 
 interface MessageInputProps {
     onSend: (content: string, attachments?: File[]) => void;
@@ -144,24 +145,24 @@ export function MessageInput({
                     style={{ display: 'none' }}
                 />
 
-                <textarea
-                    className="message-input-field"
+                <Textarea
                     value={content}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
                     disabled={disabled}
                     rows={1}
+                    fullWidth
                 />
 
-                <button
+                <Button
                     type="button"
-                    className="message-input-send"
                     onClick={handleSend}
                     disabled={disabled || (!content.trim() && attachments.length === 0)}
+                    variant="primary"
                 >
                     Send
-                </button>
+                </Button>
             </div>
         </div>
     );

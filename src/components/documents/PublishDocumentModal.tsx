@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon } from '@/components/ui/Icon';
+import { Input, Textarea, RadioGroup, Checkbox, Button } from '@/components/ui/primitives';
 import { Document } from '@/lib/documents';
 
 interface PublishDocumentModalProps {
@@ -111,113 +112,59 @@ export function PublishDocumentModal({ open, onOpenChange, document }: PublishDo
                         </div>
 
                         {/* Visibility */}
-                        <div className="publish-modal-field">
-                            <label className="publish-modal-label">
-                                Visibility *
-                            </label>
-                            <div className="publish-modal-visibility-options">
-                                <label className={`publish-modal-visibility-option ${publishData.visibility === 'public' ? 'publish-modal-visibility-option--active' : ''}`}>
-                                    <input
-                                        type="radio"
-                                        name="visibility"
-                                        value="public"
-                                        checked={publishData.visibility === 'public'}
-                                        onChange={(e) => setPublishData({ ...publishData, visibility: e.target.value as any })}
-                                    />
-                                    <div className="publish-modal-visibility-content">
-                                        <Icon icon="globe" size={20} />
-                                        <div>
-                                            <div className="publish-modal-visibility-title">Public</div>
-                                            <div className="publish-modal-visibility-description">
-                                                Anyone can view this document
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
-
-                                <label className={`publish-modal-visibility-option ${publishData.visibility === 'members' ? 'publish-modal-visibility-option--active' : ''}`}>
-                                    <input
-                                        type="radio"
-                                        name="visibility"
-                                        value="members"
-                                        checked={publishData.visibility === 'members'}
-                                        onChange={(e) => setPublishData({ ...publishData, visibility: e.target.value as any })}
-                                    />
-                                    <div className="publish-modal-visibility-content">
-                                        <Icon icon="users" size={20} />
-                                        <div>
-                                            <div className="publish-modal-visibility-title">Space Members</div>
-                                            <div className="publish-modal-visibility-description">
-                                                Only space members can view
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
-
-                                <label className={`publish-modal-visibility-option ${publishData.visibility === 'private' ? 'publish-modal-visibility-option--active' : ''}`}>
-                                    <input
-                                        type="radio"
-                                        name="visibility"
-                                        value="private"
-                                        checked={publishData.visibility === 'private'}
-                                        onChange={(e) => setPublishData({ ...publishData, visibility: e.target.value as any })}
-                                    />
-                                    <div className="publish-modal-visibility-content">
-                                        <Icon icon="lock" size={20} />
-                                        <div>
-                                            <div className="publish-modal-visibility-title">Private</div>
-                                            <div className="publish-modal-visibility-description">
-                                                Only collaborators can view
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
+                        <RadioGroup
+                            label="Visibility"
+                            value={publishData.visibility}
+                            onValueChange={(value) => setPublishData({ ...publishData, visibility: value as any })}
+                            required
+                            options={[
+                                {
+                                    value: 'public',
+                                    label: 'Public',
+                                    helperText: 'Anyone can view this document'
+                                },
+                                {
+                                    value: 'members',
+                                    label: 'Space Members',
+                                    helperText: 'Only space members can view'
+                                },
+                                {
+                                    value: 'private',
+                                    label: 'Private',
+                                    helperText: 'Only collaborators can view'
+                                }
+                            ]}
+                        />
 
                         {/* Schedule Publishing */}
-                        <div className="publish-modal-field">
-                            <label className="publish-modal-checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={publishData.schedulePublish}
-                                    onChange={(e) => setPublishData({ ...publishData, schedulePublish: e.target.checked })}
-                                    className="publish-modal-checkbox"
-                                />
-                                <span>Schedule for later</span>
-                            </label>
-                        </div>
+                        <Checkbox
+                            checked={publishData.schedulePublish}
+                            onCheckedChange={(checked) => setPublishData({ ...publishData, schedulePublish: checked as boolean })}
+                            label="Schedule for later"
+                        />
 
                         {publishData.schedulePublish && (
                             <div className="publish-modal-schedule">
                                 <div className="publish-modal-schedule-fields">
-                                    <div className="publish-modal-field">
-                                        <label htmlFor="publish-date" className="publish-modal-label">
-                                            Date
-                                        </label>
-                                        <input
-                                            type="date"
-                                            id="publish-date"
-                                            value={publishData.scheduledDate}
-                                            onChange={(e) => setPublishData({ ...publishData, scheduledDate: e.target.value })}
-                                            className="publish-modal-input"
-                                            required={publishData.schedulePublish}
-                                            min={new Date().toISOString().split('T')[0]}
-                                        />
-                                    </div>
-                                    <div className="publish-modal-field">
-                                        <label htmlFor="publish-time" className="publish-modal-label">
-                                            Time
-                                        </label>
-                                        <input
-                                            type="time"
-                                            id="publish-time"
-                                            value={publishData.scheduledTime}
-                                            onChange={(e) => setPublishData({ ...publishData, scheduledTime: e.target.value })}
-                                            className="publish-modal-input"
-                                            required={publishData.schedulePublish}
-                                        />
-                                    </div>
+                                    <Input
+                                        type="date"
+                                        id="publish-date"
+                                        label="Date"
+                                        value={publishData.scheduledDate}
+                                        onChange={(e) => setPublishData({ ...publishData, scheduledDate: e.target.value })}
+                                        required={publishData.schedulePublish}
+                                        min={new Date().toISOString().split('T')[0]}
+                                        fullWidth
+                                    />
+                                    <Input
+                                        type="time"
+                                        id="publish-time"
+                                        label="Time"
+                                        value={publishData.scheduledTime}
+                                        onChange={(e) => setPublishData({ ...publishData, scheduledTime: e.target.value })}
+                                        required={publishData.schedulePublish}
+                                        fullWidth
+                                    />
                                 </div>
                             </div>
                         )}
@@ -226,107 +173,90 @@ export function PublishDocumentModal({ open, onOpenChange, document }: PublishDo
                         <div className="publish-modal-section">
                             <div className="publish-modal-section-title">Notifications</div>
                             <div className="publish-modal-options">
-                                <label className="publish-modal-option">
-                                    <input
-                                        type="checkbox"
-                                        checked={publishData.notifyCollaborators}
-                                        onChange={(e) => setPublishData({ ...publishData, notifyCollaborators: e.target.checked })}
-                                        className="publish-modal-checkbox"
-                                    />
-                                    <div className="publish-modal-option-content">
-                                        <div className="publish-modal-option-title">
-                                            <Icon icon="users" size={16} />
-                                            Notify collaborators
+                                <Checkbox
+                                    name="notifyCollaborators"
+                                    checked={publishData.notifyCollaborators}
+                                    onCheckedChange={(checked) => setPublishData({ ...publishData, notifyCollaborators: checked as boolean })}
+                                    label={
+                                        <div className="publish-modal-option-content">
+                                            <div className="publish-modal-option-title">
+                                                <Icon icon="users" size={16} />
+                                                Notify collaborators
+                                            </div>
+                                            <div className="publish-modal-option-description">
+                                                Send notification to all {document.collaborators.length} collaborator{document.collaborators.length !== 1 ? 's' : ''}
+                                            </div>
                                         </div>
-                                        <div className="publish-modal-option-description">
-                                            Send notification to all {document.collaborators.length} collaborator{document.collaborators.length !== 1 ? 's' : ''}
-                                        </div>
-                                    </div>
-                                </label>
+                                    }
+                                />
 
-                                <label className="publish-modal-option">
-                                    <input
-                                        type="checkbox"
-                                        checked={publishData.notifySpace}
-                                        onChange={(e) => setPublishData({ ...publishData, notifySpace: e.target.checked })}
-                                        className="publish-modal-checkbox"
-                                    />
-                                    <div className="publish-modal-option-content">
-                                        <div className="publish-modal-option-title">
-                                            <Icon icon="bell" size={16} />
-                                            Notify space members
+                                <Checkbox
+                                    name="notifySpace"
+                                    checked={publishData.notifySpace}
+                                    onCheckedChange={(checked) => setPublishData({ ...publishData, notifySpace: checked as boolean })}
+                                    label={
+                                        <div className="publish-modal-option-content">
+                                            <div className="publish-modal-option-title">
+                                                <Icon icon="bell" size={16} />
+                                                Notify space members
+                                            </div>
+                                            <div className="publish-modal-option-description">
+                                                Send notification to space members about this new document
+                                            </div>
                                         </div>
-                                        <div className="publish-modal-option-description">
-                                            Send notification to space members about this new document
-                                        </div>
-                                    </div>
-                                </label>
+                                    }
+                                />
 
-                                <label className="publish-modal-option">
-                                    <input
-                                        type="checkbox"
-                                        checked={publishData.publishToFeed}
-                                        onChange={(e) => setPublishData({ ...publishData, publishToFeed: e.target.checked })}
-                                        className="publish-modal-checkbox"
-                                    />
-                                    <div className="publish-modal-option-content">
-                                        <div className="publish-modal-option-title">
-                                            <Icon icon="rss" size={16} />
-                                            Publish to space feed
+                                <Checkbox
+                                    name="publishToFeed"
+                                    checked={publishData.publishToFeed}
+                                    onCheckedChange={(checked) => setPublishData({ ...publishData, publishToFeed: checked as boolean })}
+                                    label={
+                                        <div className="publish-modal-option-content">
+                                            <div className="publish-modal-option-title">
+                                                <Icon icon="rss" size={16} />
+                                                Publish to space feed
+                                            </div>
+                                            <div className="publish-modal-option-description">
+                                                Share this document in the space activity feed
+                                            </div>
                                         </div>
-                                        <div className="publish-modal-option-description">
-                                            Share this document in the space activity feed
-                                        </div>
-                                    </div>
-                                </label>
+                                    }
+                                />
                             </div>
                         </div>
 
                         {/* Custom Message */}
-                        <div className="publish-modal-field">
-                            <label htmlFor="publish-message" className="publish-modal-label">
-                                Message (optional)
-                            </label>
-                            <textarea
-                                id="publish-message"
-                                value={publishData.customMessage}
-                                onChange={(e) => setPublishData({ ...publishData, customMessage: e.target.value })}
-                                placeholder="Add a message to accompany this document..."
-                                className="publish-modal-textarea"
-                                rows={3}
-                            />
-                            <div className="publish-modal-hint">
-                                This message will be shown in notifications and the feed
-                            </div>
-                        </div>
+                        <Textarea
+                            id="publish-message"
+                            label="Message (optional)"
+                            value={publishData.customMessage}
+                            onChange={(e) => setPublishData({ ...publishData, customMessage: e.target.value })}
+                            placeholder="Add a message to accompany this document..."
+                            rows={3}
+                            helperText="This message will be shown in notifications and the feed"
+                            fullWidth
+                        />
 
                         {/* Actions */}
                         <div className="publish-modal-actions">
-                            <button
+                            <Button
                                 type="button"
                                 onClick={handleCancel}
-                                className="publish-modal-cancel"
+                                variant="outline"
                                 disabled={isPublishing}
                             >
                                 Cancel
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 type="submit"
-                                className="publish-modal-submit"
+                                variant="primary"
                                 disabled={isPublishing || !publishData.spaceId}
+                                loading={isPublishing}
                             >
-                                {isPublishing ? (
-                                    <>
-                                        <div className="publish-modal-spinner" />
-                                        {publishData.schedulePublish ? 'Scheduling...' : 'Publishing...'}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Icon icon="send" size={18} />
-                                        {publishData.schedulePublish ? 'Schedule Publish' : 'Publish Now'}
-                                    </>
-                                )}
-                            </button>
+                                <Icon icon="send" size={18} />
+                                {publishData.schedulePublish ? 'Schedule Publish' : 'Publish Now'}
+                            </Button>
                         </div>
                     </form>
                 </Dialog.Content>

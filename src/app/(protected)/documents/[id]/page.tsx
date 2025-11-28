@@ -6,6 +6,7 @@ import { mockDocuments, mockComments } from '@/lib/mock-documents';
 import { Icon } from '@/components/ui/Icon';
 import { PublishDocumentModal } from '@/components/documents/PublishDocumentModal';
 import Link from 'next/link';
+import { Textarea, Button } from '@/components/ui/primitives';
 
 type SidebarTab = 'comments' | 'collaborators' | 'versions';
 
@@ -274,21 +275,21 @@ export default function DocumentEditorPage() {
                                         ))}
                                     </div>
                                     <form onSubmit={handleAddComment} className="document-editor-comment-form">
-                                        <textarea
+                                        <Textarea
                                             value={newComment}
                                             onChange={(e) => setNewComment(e.target.value)}
                                             placeholder="Add a comment..."
-                                            className="document-editor-comment-input"
                                             rows={3}
+                                            fullWidth
                                         />
-                                        <button
+                                        <Button
                                             type="submit"
                                             disabled={!newComment.trim()}
-                                            className="document-editor-comment-submit"
+                                            variant="primary"
                                         >
                                             <Icon icon="send" size={16} />
                                             Comment
-                                        </button>
+                                        </Button>
                                     </form>
                                 </div>
                             )}

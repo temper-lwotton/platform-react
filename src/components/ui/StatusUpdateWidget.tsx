@@ -7,6 +7,7 @@ import { getCurrentUserStatus, QUICK_TEMPLATES, COMMON_EMOJIS, formatTimeAgo, ty
 import { getSpace } from '@/lib/spaces';
 import { Icon } from './Icon';
 import * as Popover from '@radix-ui/react-popover';
+import { Textarea, Input, Button } from './primitives';
 
 export function StatusUpdateWidget() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -150,14 +151,14 @@ export function StatusUpdateWidget() {
                         </button>
                     ) : (
                         <div className="status-update-input-expanded">
-                            <textarea
-                                className="status-update-textarea"
+                            <Textarea
                                 placeholder={selectedTemplate?.placeholder || "Share what you're working on..."}
                                 value={statusText}
                                 onChange={(e) => setStatusText(e.target.value)}
                                 maxLength={280}
                                 rows={3}
                                 autoFocus
+                                fullWidth
                             />
                             <div className="status-update-char-count">
                                 {statusText.length}/280
@@ -237,21 +238,21 @@ export function StatusUpdateWidget() {
             {/* Link Input */}
             {isExpanded && showLinkInput && (
                 <div className="status-update-link-input">
-                    <input
+                    <Input
                         type="url"
                         placeholder="Paste a link..."
                         value={linkUrl}
                         onChange={(e) => setLinkUrl(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddLink()}
-                        className="status-link-input"
                         autoFocus
+                        fullWidth
                     />
-                    <button onClick={handleAddLink} className="status-link-add-btn">
+                    <Button onClick={handleAddLink} variant="primary" size="sm">
                         Add
-                    </button>
-                    <button onClick={() => setShowLinkInput(false)} className="status-link-cancel-btn">
+                    </Button>
+                    <Button onClick={() => setShowLinkInput(false)} variant="outline" size="sm">
                         Cancel
-                    </button>
+                    </Button>
                 </div>
             )}
 
@@ -328,19 +329,19 @@ export function StatusUpdateWidget() {
 
                     {/* Action Buttons */}
                     <div className="status-update-actions">
-                        <button
-                            className="status-update-btn status-update-btn--cancel"
+                        <Button
                             onClick={handleCancel}
+                            variant="outline"
                         >
                             Cancel
-                        </button>
-                        <button
-                            className="status-update-btn status-update-btn--post"
+                        </Button>
+                        <Button
                             onClick={handlePost}
                             disabled={!canPost}
+                            variant="primary"
                         >
                             Share
-                        </button>
+                        </Button>
                     </div>
                 </div>
             )}

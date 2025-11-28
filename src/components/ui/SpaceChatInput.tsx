@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { Icon } from './Icon';
 import { COMMON_EMOJIS, type MediaAttachment } from '@/lib/status-updates';
 import * as Popover from '@radix-ui/react-popover';
+import { Textarea, Input, Button } from './primitives';
 
 interface SpaceChatInputProps {
     spaceId: string;
@@ -86,13 +87,13 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
         <div className="space-chat-input">
             {/* Text Input */}
             <div className="space-chat-input-container">
-                <textarea
-                    className="space-chat-textarea"
+                <Textarea
                     placeholder={`Share an update in ${spaceTitle}...`}
                     value={statusText}
                     onChange={(e) => setStatusText(e.target.value)}
                     maxLength={280}
                     rows={3}
+                    fullWidth
                 />
                 <div className="space-chat-char-count">
                     {statusText.length}/280
@@ -136,21 +137,21 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
             {/* Link Input */}
             {showLinkInput && (
                 <div className="space-chat-link-input">
-                    <input
+                    <Input
                         type="url"
                         placeholder="Paste a link..."
                         value={linkUrl}
                         onChange={(e) => setLinkUrl(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddLink()}
-                        className="space-chat-link-field"
                         autoFocus
+                        fullWidth
                     />
-                    <button onClick={handleAddLink} className="space-chat-link-add">
+                    <Button onClick={handleAddLink} variant="primary" size="sm">
                         Add
-                    </button>
-                    <button onClick={() => setShowLinkInput(false)} className="space-chat-link-cancel">
+                    </Button>
+                    <Button onClick={() => setShowLinkInput(false)} variant="outline" size="sm">
                         Cancel
-                    </button>
+                    </Button>
                 </div>
             )}
 
@@ -210,13 +211,13 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
                 </div>
 
                 {/* Post Button */}
-                <button
-                    className="space-chat-post-btn"
+                <Button
                     onClick={handlePost}
                     disabled={!canPost}
+                    variant="primary"
                 >
                     Post
-                </button>
+                </Button>
             </div>
         </div>
     );
