@@ -13,6 +13,8 @@ export interface UserProfile {
     trigProjectTitle?: string;
     transportModesOfInterest?: string;
     photo?: string;
+    bio?: string;
+    interests?: string[];
 }
 
 export interface UserSpace {
@@ -216,4 +218,70 @@ export async function enrichUsersWithConnectionStatus(
         // Return users without connection status on error
         return users.map(user => ({ ...user, connectionStatus: 'none' as const }));
     }
+}
+
+// User Stats Interface
+export interface UserStats {
+    discussionsStarted: number;
+    repliesMade: number;
+    eventsCreated: number;
+    resourcesShared: number;
+    showcasesPublished: number;
+    updatesPosted: number;
+    totalConnections: number;
+    spacesJoined: number;
+    spacesAdministered: number;
+    likesGiven: number;
+    likesReceived: number;
+    memberSince: string;
+    lastActive: string;
+    mostActiveSpace?: {
+        id: string;
+        title: string;
+    };
+}
+
+// User Content Interface
+export interface UserContent {
+    discussions: any[];
+    resources: any[];
+    showcases: any[];
+    updates: any[];
+    events: any[];
+}
+
+// Get user stats (mock for now - will be replaced with API call)
+export function getUserStats(userId: string): Promise<UserStats> {
+    // TODO: Replace with actual API call
+    return Promise.resolve({
+        discussionsStarted: Math.floor(Math.random() * 50) + 5,
+        repliesMade: Math.floor(Math.random() * 200) + 20,
+        eventsCreated: Math.floor(Math.random() * 10) + 1,
+        resourcesShared: Math.floor(Math.random() * 30) + 5,
+        showcasesPublished: Math.floor(Math.random() * 8) + 1,
+        updatesPosted: Math.floor(Math.random() * 100) + 10,
+        totalConnections: Math.floor(Math.random() * 150) + 10,
+        spacesJoined: Math.floor(Math.random() * 12) + 3,
+        spacesAdministered: Math.floor(Math.random() * 3),
+        likesGiven: Math.floor(Math.random() * 300) + 50,
+        likesReceived: Math.floor(Math.random() * 400) + 30,
+        memberSince: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
+        lastActive: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        mostActiveSpace: {
+            id: '1',
+            title: 'AI & Machine Learning',
+        },
+    });
+}
+
+// Get user content (mock for now - will be replaced with API calls)
+export function getUserContent(userId: string): Promise<UserContent> {
+    // TODO: Replace with actual API calls to fetch user's content
+    return Promise.resolve({
+        discussions: [],
+        resources: [],
+        showcases: [],
+        updates: [],
+        events: [],
+    });
 }
