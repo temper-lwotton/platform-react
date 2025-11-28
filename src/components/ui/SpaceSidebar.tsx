@@ -22,8 +22,9 @@ export function SpaceSidebar({ spaceId, spaceTitle }: SpaceSidebarProps) {
     return (
         <aside className="space-sidebar">
             <div className="space-sidebar-header">
-                <Link href={basePath} className="space-sidebar-title">
-                    {spaceTitle}
+                <Link href="/feed" className="space-sidebar-back">
+                    <Icon icon="arrowLeft" size={18} />
+                    Back to Home
                 </Link>
             </div>
             <nav className="space-sidebar-nav">

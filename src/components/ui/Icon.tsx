@@ -31,11 +31,36 @@ import {
   BookmarkCheck,
   LayoutGrid,
   Download,
+  Video,
+  VideoOff,
+  Mic,
+  MicOff,
+  Monitor as MonitorShare,
+  Users,
+  Circle,
+  Hand,
+  ThumbsUp,
+  Send,
+  MoreVertical,
+  X,
+  Check,
+  AlertCircle,
+  Clock,
+  Play,
+  Square,
+  UserPlus,
+  Repeat,
+  Star,
+  Book,
+  CheckCircle,
+  Briefcase,
+  Building,
+  Sparkles,
 } from 'lucide-react';
 import { CSSProperties } from 'react';
 
 interface IconProps {
-  icon: 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download';
+  icon: 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles';
   size?: number;
   className?: string;
   style?: CSSProperties;
@@ -76,6 +101,31 @@ export function Icon({ icon, size = 24, className = '', style }: IconProps) {
     bookmarkFilled: BookmarkCheck,
     layoutGrid: LayoutGrid,
     download: Download,
+    video: Video,
+    videoOff: VideoOff,
+    microphone: Mic,
+    microphoneOff: MicOff,
+    screenShare: MonitorShare,
+    users: Users,
+    circle: Circle,
+    handRaised: Hand,
+    thumbsUp: ThumbsUp,
+    send: Send,
+    moreVertical: MoreVertical,
+    x: X,
+    check: Check,
+    alertCircle: AlertCircle,
+    clock: Clock,
+    play: Play,
+    stop: Square,
+    userPlus: UserPlus,
+    repeat: Repeat,
+    star: Star,
+    book: Book,
+    checkCircle: CheckCircle,
+    briefcase: Briefcase,
+    building: Building,
+    sparkles: Sparkles,
   };
 
   const LucideIcon = iconMap[icon];

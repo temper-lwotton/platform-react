@@ -77,6 +77,21 @@ export function GlobalPostButton() {
 
                     <DropdownMenu.Item
                         className="global-post-dropdown-item"
+                        onSelect={() => handleNavigate('/webinars/new')}
+                    >
+                        <Icon icon="video" size={20} className="global-post-dropdown-icon" />
+                        <div className="global-post-dropdown-text">
+                            <div className="global-post-dropdown-label">Webinar</div>
+                            <div className="global-post-dropdown-description">
+                                Host a live or scheduled webinar
+                            </div>
+                        </div>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Separator className="global-post-dropdown-separator" />
+
+                    <DropdownMenu.Item
+                        className="global-post-dropdown-item"
                         onSelect={() => handleNavigate('/updates/new')}
                     >
                         <Icon icon="bell" size={20} className="global-post-dropdown-icon" />

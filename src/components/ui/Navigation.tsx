@@ -8,6 +8,7 @@ import { NotificationDropdown } from './NotificationDropdown';
 import { MessagesDropdown } from './MessagesDropdown';
 import { BookmarksDropdown } from './BookmarksDropdown';
 import { UserMenu } from './UserMenu';
+import { GoLiveButton } from './GoLiveButton';
 import { useAuth } from '@/hooks/useAuth';
 import { Icon } from './Icon';
 
@@ -139,6 +140,9 @@ export function Navigation() {
                             </li>
                             <li>
                                 <NotificationDropdown />
+                            </li>
+                            <li>
+                                <GoLiveButton />
                             </li>
                             <li>
                                 <GlobalPostButton />

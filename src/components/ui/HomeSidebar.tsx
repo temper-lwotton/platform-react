@@ -8,6 +8,7 @@ import * as Separator from '@radix-ui/react-separator';
 import { getSpace, Space } from '@/lib/spaces';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { Icon } from './Icon';
+import { SpaceSettingsPopover } from './SpaceSettingsPopover';
 
 export function HomeSidebar() {
     const pathname = usePathname();
@@ -47,6 +48,15 @@ export function HomeSidebar() {
     const mySpaces = spaceQueries.data || [];
     const spacesLoading = userLoading || spaceQueries.isLoading;
 
+    // Mock function to generate activity count - replace with real API call later
+    const getSpaceActivityCount = (spaceId: string | number): number => {
+        // Generate consistent mock data based on space ID
+        const idString = String(spaceId);
+        const hash = idString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const count = hash % 15; // Random count between 0-14
+        return count > 2 ? count : 0; // Only show badge if count > 2
+    };
+
     if (!isClient) return null;
 
     const isActive = (path: string) => pathname === path;
@@ -84,20 +94,33 @@ export function HomeSidebar() {
                             <p className="home-sidebar-empty">No spaces yet</p>
                         ) : (
                             <>
-                                {mySpaces.slice(0, 10).map((space) => (
-                                    <Link
-                                        key={space.id}
-                                        href={`/spaces/${space.id}`}
-                                        className={`home-sidebar-link home-sidebar-link--secondary ${
-                                            pathname === `/spaces/${space.id}` ? 'home-sidebar-link--active' : ''
-                                        }`}
-                                    >
-                                        <span className="home-sidebar-space-icon">
-                                            {space.title.charAt(0).toUpperCase()}
-                                        </span>
-                                        <span className="home-sidebar-link-text">{space.title}</span>
-                                    </Link>
-                                ))}
+                                {mySpaces.slice(0, 10).map((space) => {
+                                    const activityCount = getSpaceActivityCount(space.id);
+                                    return (
+                                        <div key={space.id} className="home-sidebar-space-item">
+                                            <Link
+                                                href={`/spaces/${space.id}`}
+                                                className={`home-sidebar-link home-sidebar-link--secondary ${
+                                                    pathname === `/spaces/${space.id}` ? 'home-sidebar-link--active' : ''
+                                                }`}
+                                            >
+                                                <span className="home-sidebar-space-icon">
+                                                    {space.title.charAt(0).toUpperCase()}
+                                                </span>
+                                                <span className="home-sidebar-link-text">{space.title}</span>
+                                                {activityCount > 0 && (
+                                                    <span className="home-sidebar-activity-badge">
+                                                        {activityCount}
+                                                    </span>
+                                                )}
+                                            </Link>
+                                            <SpaceSettingsPopover
+                                                spaceId={space.id}
+                                                spaceName={space.title}
+                                            />
+                                        </div>
+                                    );
+                                })}
                                 <Link
                                     href="/spaces"
                                     className="home-sidebar-link home-sidebar-link--tertiary"
