@@ -169,7 +169,7 @@ export default function DocumentEditorPage() {
                             onClick={() => setActiveTab('comments')}
                             className={`document-editor-tab ${activeTab === 'comments' ? 'document-editor-tab--active' : ''}`}
                         >
-                            <Icon icon="message" size={18} />
+                            <Icon icon="comment" size={18} />
                             <span>Comments</span>
                             {document.comments && document.comments.length > 0 && (
                                 <span className="document-editor-tab-badge">
@@ -188,7 +188,7 @@ export default function DocumentEditorPage() {
                             onClick={() => setActiveTab('versions')}
                             className={`document-editor-tab ${activeTab === 'versions' ? 'document-editor-tab--active' : ''}`}
                         >
-                            <Icon icon="history" size={18} />
+                            <Icon icon="clock" size={18} />
                             <span>History</span>
                         </button>
                         <button
@@ -260,7 +260,7 @@ export default function DocumentEditorPage() {
                                                 )}
                                                 <div className="document-editor-comment-actions">
                                                     <button className="document-editor-comment-action">
-                                                        <Icon icon="reply" size={14} />
+                                                        <Icon icon="repeat" size={14} />
                                                         Reply
                                                     </button>
                                                     {!comment.resolved && (
