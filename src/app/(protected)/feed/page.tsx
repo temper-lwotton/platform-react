@@ -21,6 +21,10 @@ import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { MOCK_TASKS } from '@/lib/tasks';
 import { Icon } from '@/components/ui/Icon';
 import { getSpace } from '@/lib/spaces';
+import { StatusUpdateWidget } from '@/components/ui/StatusUpdateWidget';
+import { StatusUpdateCard } from '@/components/ui/StatusUpdateCard';
+import { mockStatusUpdates } from '@/lib/status-updates';
+import { SuggestedCarousel } from '@/components/ui/SuggestedCarousel';
 
 type FeedItem = {
   type: 'discussion' | 'event' | 'update' | 'showcase' | 'resource' | 'exchange';
@@ -554,6 +558,12 @@ export default function FeedPage() {
           <p className="feed-subtitle">Stay up to date with your community</p>
         </header>
 
+        {/* Status Update Widget */}
+        <StatusUpdateWidget />
+
+        {/* Suggested Content Carousel */}
+        <SuggestedCarousel />
+
         {/* Filters */}
         <div className="feed-filters">
           <div className="feed-filters-row">
@@ -715,6 +725,18 @@ export default function FeedPage() {
         ) : (
           <>
             <div className="feed-list">
+              {/* Status Updates (Mock Data) */}
+              {mockStatusUpdates.map((statusUpdate, index) => (
+                <div key={`status-${statusUpdate.id}-${index}`} className="feed-item">
+                  <StatusUpdateCard
+                    statusUpdate={statusUpdate}
+                    isAdmin={false}
+                    isPinned={index === 0}
+                    currentSpaceId={statusUpdate.space.id}
+                  />
+                </div>
+              ))}
+
               {feedItems.map((item, index) => {
                 if (item.type === 'discussion') {
                   const discussion = item.data as Discussion;

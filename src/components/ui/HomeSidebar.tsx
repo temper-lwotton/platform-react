@@ -82,6 +82,24 @@ export function HomeSidebar() {
                     <span className="home-sidebar-link-text">Tasks</span>
                 </Link>
 
+                {/* Calendar Link */}
+                <Link
+                    href="/calendar"
+                    className={`home-sidebar-link ${isActive('/calendar') ? 'home-sidebar-link--active' : ''}`}
+                >
+                    <Icon icon="calendar" size={18} className="home-sidebar-link-icon" />
+                    <span className="home-sidebar-link-text">Calendar</span>
+                </Link>
+
+                {/* Suggestions Link */}
+                <Link
+                    href="/suggestions"
+                    className={`home-sidebar-link ${isActive('/suggestions') ? 'home-sidebar-link--active' : ''}`}
+                >
+                    <Icon icon="sparkles" size={18} className="home-sidebar-link-icon" />
+                    <span className="home-sidebar-link-text">Suggestions</span>
+                </Link>
+
                 <Separator.Root className="home-sidebar-separator" />
 
                 {/* My Spaces Section */}
