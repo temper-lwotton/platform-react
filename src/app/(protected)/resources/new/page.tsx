@@ -3,13 +3,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as Label from '@radix-ui/react-label';
 import * as Select from '@radix-ui/react-select';
 import Link from 'next/link';
 import { createResource } from '@/lib/resources';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
 import { Icon } from '@/components/ui/Icon';
+import { Input, Textarea, Button } from '@/components/ui/primitives';
 import { MentionUser } from '@/hooks/useMentions';
 import { getSpace } from '@/lib/spaces';
 
@@ -135,9 +135,9 @@ export default function NewResourcePage() {
 
                 <form className="new-resource-form" onSubmit={handleSubmit}>
                     <div className="form-field">
-                        <Label.Root htmlFor="resource-space" className="form-label">
+                        <label htmlFor="resource-space" className="form-label">
                             Space *
-                        </Label.Root>
+                        </label>
                         <Select.Root value={selectedSpaceId} onValueChange={setSelectedSpaceId}>
                             <Select.Trigger className="select-trigger" id="resource-space">
                                 <Select.Value placeholder="Select a space..." />
@@ -159,40 +159,32 @@ export default function NewResourcePage() {
                         </Select.Root>
                     </div>
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="resource-title" className="form-label">
-                            Title *
-                        </Label.Root>
-                        <input
-                            id="resource-title"
-                            type="text"
-                            className="form-input"
-                            placeholder="E.g. Innovation Proposal Template"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                    </div>
+                    <Input
+                        id="resource-title"
+                        type="text"
+                        label="Title"
+                        placeholder="E.g. Innovation Proposal Template"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                        fullWidth
+                    />
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="resource-excerpt" className="form-label">
-                            Excerpt (Optional)
-                        </Label.Root>
-                        <textarea
-                            id="resource-excerpt"
-                            className="form-textarea"
-                            placeholder="A brief summary of what this resource provides (recommended 1-2 sentences)"
-                            value={excerpt}
-                            onChange={(e) => setExcerpt(e.target.value)}
-                            rows={3}
-                        />
-                    </div>
+                    <Textarea
+                        id="resource-excerpt"
+                        label="Excerpt (Optional)"
+                        placeholder="A brief summary of what this resource provides (recommended 1-2 sentences)"
+                        value={excerpt}
+                        onChange={(e) => setExcerpt(e.target.value)}
+                        rows={3}
+                        fullWidth
+                    />
 
                     <div className="form-row">
                         <div className="form-field">
-                            <Label.Root htmlFor="resource-type" className="form-label">
+                            <label htmlFor="resource-type" className="form-label">
                                 Resource Type *
-                            </Label.Root>
+                            </label>
                             <Select.Root value={resourceType} onValueChange={(value: any) => setResourceType(value)}>
                                 <Select.Trigger className="select-trigger" id="resource-type">
                                     <Select.Value />
@@ -225,9 +217,9 @@ export default function NewResourcePage() {
                         </div>
 
                         <div className="form-field">
-                            <Label.Root htmlFor="resource-difficulty" className="form-label">
+                            <label htmlFor="resource-difficulty" className="form-label">
                                 Difficulty Level (Optional)
-                            </Label.Root>
+                            </label>
                             <Select.Root value={difficulty} onValueChange={(value: any) => setDifficulty(value)}>
                                 <Select.Trigger className="select-trigger" id="resource-difficulty">
                                     <Select.Value placeholder="Select difficulty..." />
@@ -255,46 +247,33 @@ export default function NewResourcePage() {
                     </div>
 
                     <div className="form-row">
-                        <div className="form-field">
-                            <Label.Root htmlFor="resource-time" className="form-label">
-                                Est. Time (minutes)
-                            </Label.Root>
-                            <input
-                                id="resource-time"
-                                type="number"
-                                className="form-input"
-                                placeholder="30"
-                                value={estimatedTime}
-                                onChange={(e) => setEstimatedTime(e.target.value)}
-                                min="1"
-                            />
-                            <p className="form-field-hint">
-                                How long it typically takes to use this resource
-                            </p>
-                        </div>
-
-                        <div className="form-field">
-                            <Label.Root htmlFor="resource-version" className="form-label">
-                                Version (Optional)
-                            </Label.Root>
-                            <input
-                                id="resource-version"
-                                type="text"
-                                className="form-input"
-                                placeholder="1.0"
-                                value={version}
-                                onChange={(e) => setVersion(e.target.value)}
-                            />
-                            <p className="form-field-hint">
-                                E.g., 1.0, 2.1, etc.
-                            </p>
-                        </div>
+                        <Input
+                            id="resource-time"
+                            type="number"
+                            label="Est. Time (minutes)"
+                            placeholder="30"
+                            value={estimatedTime}
+                            onChange={(e) => setEstimatedTime(e.target.value)}
+                            min="1"
+                            helperText="How long it typically takes to use this resource"
+                            fullWidth
+                        />
+                        <Input
+                            id="resource-version"
+                            type="text"
+                            label="Version (Optional)"
+                            placeholder="1.0"
+                            value={version}
+                            onChange={(e) => setVersion(e.target.value)}
+                            helperText="E.g., 1.0, 2.1, etc."
+                            fullWidth
+                        />
                     </div>
 
                     <div className="form-field">
-                        <Label.Root htmlFor="resource-content" className="form-label">
+                        <label htmlFor="resource-content" className="form-label">
                             Content *
-                        </Label.Root>
+                        </label>
                         <LexicalEditor
                             value={content}
                             onChange={handleEditorChange}
@@ -330,13 +309,15 @@ export default function NewResourcePage() {
                         >
                             Cancel
                         </Link>
-                        <button
+                        <Button
                             type="submit"
-                            className="form-button new-resource-submit"
-                            disabled={!isFormValid || createMutation.isPending}
+                            variant="primary"
+                            size="lg"
+                            disabled={!isFormValid}
+                            loading={createMutation.isPending}
                         >
-                            {createMutation.isPending ? 'Publishing...' : 'Publish Resource'}
-                        </button>
+                            Publish Resource
+                        </Button>
                     </div>
                 </form>
             </div>
