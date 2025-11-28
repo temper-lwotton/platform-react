@@ -8,6 +8,7 @@ import * as Label from '@radix-ui/react-label';
 import * as Separator from '@radix-ui/react-separator';
 import { MagnifyingGlassIcon, MixerHorizontalIcon, Cross2Icon, ChevronDownIcon } from '@radix-ui/react-icons';
 import type { UsersQueryParams } from '@/lib/users';
+import { Input, Button } from './primitives';
 
 interface UsersFilterProps {
     companyTypes: string[];
@@ -57,23 +58,24 @@ export function UsersFilter({ companyTypes, transportModes, onFilterChange, isLo
             {/* Search Bar */}
             <div className="users-filter-search">
                 <MagnifyingGlassIcon className="users-filter-search-icon" />
-                <input
+                <Input
                     type="text"
-                    className="users-filter-search-input"
                     placeholder="Search by name, company, or job title..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     disabled={isLoading}
+                    fullWidth
                 />
                 {search && (
-                    <button
+                    <Button
                         type="button"
-                        className="users-filter-search-clear"
                         onClick={() => setSearch('')}
                         aria-label="Clear search"
+                        variant="ghost"
+                        size="sm"
                     >
                         <Cross2Icon />
-                    </button>
+                    </Button>
                 )}
             </div>
 

@@ -9,6 +9,7 @@ import * as Label from '@radix-ui/react-label';
 import * as Separator from '@radix-ui/react-separator';
 import { MagnifyingGlassIcon, MixerHorizontalIcon, Cross2Icon, ChevronDownIcon } from '@radix-ui/react-icons';
 import type { SpaceTag, SpacesQueryParams } from '@/lib/spaces';
+import { Input, Button } from './primitives';
 
 interface SpacesFilterProps {
     tags: SpaceTag[];
@@ -65,23 +66,24 @@ export function SpacesFilter({ tags, onFilterChange, isLoading }: SpacesFilterPr
             {/* Search Bar */}
             <div className="spaces-filter-search">
                 <MagnifyingGlassIcon className="spaces-filter-search-icon" />
-                <input
+                <Input
                     type="text"
-                    className="spaces-filter-search-input"
                     placeholder="Search spaces..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     disabled={isLoading}
+                    fullWidth
                 />
                 {search && (
-                    <button
+                    <Button
                         type="button"
-                        className="spaces-filter-search-clear"
                         onClick={() => setSearch('')}
                         aria-label="Clear search"
+                        variant="ghost"
+                        size="sm"
                     >
                         <Cross2Icon />
-                    </button>
+                    </Button>
                 )}
             </div>
 

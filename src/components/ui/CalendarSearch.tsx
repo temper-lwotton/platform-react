@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Icon } from './Icon';
+import { Input, Button } from './primitives';
 
 interface CalendarSearchProps {
   onSearch: (query: string) => void;
@@ -49,25 +50,26 @@ export function CalendarSearch({ onSearch, placeholder = 'Search events...' }: C
   return (
     <div className={`calendar-search ${isFocused ? 'calendar-search--focused' : ''}`}>
       <Icon icon="zap" size={16} className="calendar-search-icon" />
-      <input
+      <Input
         ref={inputRef}
         type="text"
-        className="calendar-search-input"
         placeholder={placeholder}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         aria-label="Search events"
+        fullWidth
       />
       {query && (
-        <button
-          className="calendar-search-clear"
+        <Button
           onClick={handleClear}
           aria-label="Clear search"
+          variant="ghost"
+          size="sm"
         >
           ×
-        </button>
+        </Button>
       )}
       {!query && !isFocused && (
         <kbd className="calendar-search-kbd">/</kbd>
