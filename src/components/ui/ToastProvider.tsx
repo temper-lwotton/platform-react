@@ -2,14 +2,28 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 import * as Toast from '@radix-ui/react-toast';
+import { Icon } from './Icon';
+
+interface ToastOptions {
+  title: string;
+  description?: string;
+  type?: 'success' | 'error' | 'info';
+  duration?: number;
+}
 
 interface ToastContextType {
-  showToast: (message: string) => void;
+  showToast: (options: ToastOptions | string) => void;
+  success: (title: string, description?: string) => void;
+  error: (title: string, description?: string) => void;
+  info: (title: string, description?: string) => void;
 }
 
 interface ToastItem {
   id: string;
-  message: string;
+  title: string;
+  description?: string;
+  type: 'success' | 'error' | 'info';
+  duration: number;
   open: boolean;
 }
 
@@ -30,9 +44,41 @@ interface ToastProviderProps {
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
-  const showToast = (msg: string) => {
+  const showToast = (options: ToastOptions | string) => {
     const id = Date.now().toString() + Math.random().toString(36);
-    setToasts((prev) => [...prev, { id, message: msg, open: true }]);
+
+    // Support legacy string messages
+    if (typeof options === 'string') {
+      setToasts((prev) => [...prev, {
+        id,
+        title: options,
+        type: 'info',
+        duration: 3000,
+        open: true
+      }]);
+      return;
+    }
+
+    setToasts((prev) => [...prev, {
+      id,
+      title: options.title,
+      description: options.description,
+      type: options.type || 'info',
+      duration: options.duration || 3000,
+      open: true
+    }]);
+  };
+
+  const success = (title: string, description?: string) => {
+    showToast({ title, description, type: 'success' });
+  };
+
+  const error = (title: string, description?: string) => {
+    showToast({ title, description, type: 'error', duration: 5000 });
+  };
+
+  const info = (title: string, description?: string) => {
+    showToast({ title, description, type: 'info' });
   };
 
   const handleOpenChange = (id: string, open: boolean) => {
@@ -43,19 +89,37 @@ export function ToastProvider({ children }: ToastProviderProps) {
   };
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
-      <Toast.Provider swipeDirection="right" duration={3000}>
+    <ToastContext.Provider value={{ showToast, success, error, info }}>
+      <Toast.Provider swipeDirection="right">
         {children}
         {toasts.map((toast) => (
           <Toast.Root
             key={toast.id}
-            className="toast-root"
+            className={`toast-root toast-root--${toast.type}`}
             open={toast.open}
+            duration={toast.duration}
             onOpenChange={(open) => handleOpenChange(toast.id, open)}
           >
-            <Toast.Description className="toast-description">
-              {toast.message}
-            </Toast.Description>
+            <div className="toast-content">
+              <div className="toast-icon">
+                {toast.type === 'success' && <Icon icon="check" size={20} />}
+                {toast.type === 'error' && <Icon icon="alertCircle" size={20} />}
+                {toast.type === 'info' && <Icon icon="bell" size={20} />}
+              </div>
+              <div className="toast-text">
+                <Toast.Title className="toast-title">
+                  {toast.title}
+                </Toast.Title>
+                {toast.description && (
+                  <Toast.Description className="toast-description">
+                    {toast.description}
+                  </Toast.Description>
+                )}
+              </div>
+              <Toast.Close className="toast-close">
+                <Icon icon="x" size={16} />
+              </Toast.Close>
+            </div>
           </Toast.Root>
         ))}
         <Toast.Viewport className="toast-viewport" />

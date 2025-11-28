@@ -1,15 +1,18 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getUsers, User, UsersQueryParams } from '@/lib/users';
+import { useState, useMemo, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getUsers, User, UsersQueryParams, enrichUsersWithConnectionStatus } from '@/lib/users';
+import { getCurrentUserId } from '@/lib/auth';
 import { UserCard } from '@/components/ui/UserCard';
 import { UsersFilter } from '@/components/ui/UsersFilter';
 import { NewestMembers } from '@/components/ui/NewestMembers';
 import { UserStats } from '@/components/ui/UserStats';
 
 export default function UsersPage() {
+    const queryClient = useQueryClient();
     const [filterParams, setFilterParams] = useState<UsersQueryParams>({});
+    const currentUserId = getCurrentUserId();
 
     // Fetch all users WITHOUT filters (for stats calculation)
     const { data: allUsers, isLoading: isLoadingAllUsers } = useQuery<User[]>({
@@ -17,16 +20,24 @@ export default function UsersPage() {
         queryFn: () => getUsers(),
     });
 
-    // Fetch filtered users (for display)
+    // Fetch filtered users (for display) and enrich with connection status
     const { data: users, isLoading, error } = useQuery<User[]>({
-        queryKey: ['users', filterParams],
-        queryFn: () => getUsers(filterParams),
+        queryKey: ['users', filterParams, currentUserId],
+        queryFn: async () => {
+            const fetchedUsers = await getUsers(filterParams);
+            if (!currentUserId) return fetchedUsers;
+            return enrichUsersWithConnectionStatus(fetchedUsers, currentUserId);
+        },
     });
 
-    // Fetch newest users for sidebar (limit 5)
+    // Fetch newest users for sidebar (limit 5) and enrich with connection status
     const { data: newestUsers, isLoading: isLoadingNewest } = useQuery<User[]>({
-        queryKey: ['users', 'newest'],
-        queryFn: () => getUsers({ sort: 'newest', limit: 5 }),
+        queryKey: ['users', 'newest', currentUserId],
+        queryFn: async () => {
+            const fetchedUsers = await getUsers({ sort: 'newest', limit: 5 });
+            if (!currentUserId) return fetchedUsers;
+            return enrichUsersWithConnectionStatus(fetchedUsers, currentUserId);
+        },
     });
 
     // Calculate stats from ALL users (not filtered)
@@ -94,6 +105,11 @@ export default function UsersPage() {
         setFilterParams(params);
     };
 
+    // Callback when connection status changes - refresh user data
+    const handleConnectionChange = useCallback(() => {
+        queryClient.invalidateQueries({ queryKey: ['users'] });
+    }, [queryClient]);
+
     if (error) {
         return (
             <main className="users-page">
@@ -143,7 +159,11 @@ export default function UsersPage() {
                     {!isLoading && users && users.length > 0 && (
                         <div className="users-grid">
                             {users.map((user) => (
-                                <UserCard key={user.id} user={user} />
+                                <UserCard
+                                    key={user.id}
+                                    user={user}
+                                    onConnectionChange={handleConnectionChange}
+                                />
                             ))}
                         </div>
                     )}
