@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { Icon } from './Icon';
+import { RadioGroup } from './primitives';
 
 interface SpaceSettingsPopoverProps {
     spaceId: string;
@@ -55,58 +56,27 @@ export function SpaceSettingsPopover({ spaceId, spaceName }: SpaceSettingsPopove
                             <Icon icon="bell" size={16} />
                             Notifications
                         </div>
-                        <div className="space-settings-options">
-                            <label className="space-settings-option">
-                                <input
-                                    type="radio"
-                                    name={`notifications-${spaceId}`}
-                                    value="all"
-                                    checked={notificationSetting === 'all'}
-                                    onChange={() => handleNotificationChange('all')}
-                                    className="space-settings-radio"
-                                />
-                                <div className="space-settings-option-content">
-                                    <div className="space-settings-option-label">All notifications</div>
-                                    <div className="space-settings-option-description">
-                                        Get notified for all activity in this space
-                                    </div>
-                                </div>
-                            </label>
-
-                            <label className="space-settings-option">
-                                <input
-                                    type="radio"
-                                    name={`notifications-${spaceId}`}
-                                    value="mentions"
-                                    checked={notificationSetting === 'mentions'}
-                                    onChange={() => handleNotificationChange('mentions')}
-                                    className="space-settings-radio"
-                                />
-                                <div className="space-settings-option-content">
-                                    <div className="space-settings-option-label">Only @mentions</div>
-                                    <div className="space-settings-option-description">
-                                        Get notified only when someone mentions you
-                                    </div>
-                                </div>
-                            </label>
-
-                            <label className="space-settings-option">
-                                <input
-                                    type="radio"
-                                    name={`notifications-${spaceId}`}
-                                    value="none"
-                                    checked={notificationSetting === 'none'}
-                                    onChange={() => handleNotificationChange('none')}
-                                    className="space-settings-radio"
-                                />
-                                <div className="space-settings-option-content">
-                                    <div className="space-settings-option-label">Nothing</div>
-                                    <div className="space-settings-option-description">
-                                        Don't send notifications from this space
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
+                        <RadioGroup
+                            value={notificationSetting}
+                            onValueChange={(value) => handleNotificationChange(value as NotificationSetting)}
+                            options={[
+                                {
+                                    value: 'all',
+                                    label: 'All notifications',
+                                    helperText: 'Get notified for all activity in this space'
+                                },
+                                {
+                                    value: 'mentions',
+                                    label: 'Only @mentions',
+                                    helperText: 'Get notified only when someone mentions you'
+                                },
+                                {
+                                    value: 'none',
+                                    label: 'Nothing',
+                                    helperText: "Don't send notifications from this space"
+                                }
+                            ]}
+                        />
                     </div>
 
                     <Popover.Arrow className="space-settings-arrow" />

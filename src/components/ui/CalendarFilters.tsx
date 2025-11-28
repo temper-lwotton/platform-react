@@ -5,6 +5,7 @@ import * as Popover from '@radix-ui/react-popover';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { Event, Space, Tag } from '@/lib/events';
 import { Icon } from './Icon';
+import { RadioGroup } from './primitives';
 
 interface CalendarFiltersProps {
   events: Event[];
@@ -115,39 +116,20 @@ export function CalendarFilters({ events, onFilterChange }: CalendarFiltersProps
           <div className="calendar-filter-content">
             {/* Location Filter */}
             <div className="calendar-filter-section">
-              <h4 className="calendar-filter-section-title">Location</h4>
-              <div className="calendar-filter-options">
-                <label className="calendar-filter-option">
-                  <input
-                    type="radio"
-                    name="location"
-                    checked={filters.isOnline === null}
-                    onChange={() => handleLocationFilter(null)}
-                    className="calendar-filter-radio"
-                  />
-                  <span>All events</span>
-                </label>
-                <label className="calendar-filter-option">
-                  <input
-                    type="radio"
-                    name="location"
-                    checked={filters.isOnline === true}
-                    onChange={() => handleLocationFilter(true)}
-                    className="calendar-filter-radio"
-                  />
-                  <span>Online only</span>
-                </label>
-                <label className="calendar-filter-option">
-                  <input
-                    type="radio"
-                    name="location"
-                    checked={filters.isOnline === false}
-                    onChange={() => handleLocationFilter(false)}
-                    className="calendar-filter-radio"
-                  />
-                  <span>In-person only</span>
-                </label>
-              </div>
+              <RadioGroup
+                label="Location"
+                value={filters.isOnline === null ? 'all' : filters.isOnline ? 'online' : 'inperson'}
+                onValueChange={(value) => {
+                  if (value === 'all') handleLocationFilter(null);
+                  else if (value === 'online') handleLocationFilter(true);
+                  else handleLocationFilter(false);
+                }}
+                options={[
+                  { value: 'all', label: 'All events' },
+                  { value: 'online', label: 'Online only' },
+                  { value: 'inperson', label: 'In-person only' }
+                ]}
+              />
             </div>
 
             {/* Space Filter */}
