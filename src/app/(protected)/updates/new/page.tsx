@@ -3,13 +3,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as Label from '@radix-ui/react-label';
 import * as Select from '@radix-ui/react-select';
 import Link from 'next/link';
 import { createUpdate } from '@/lib/updates';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
 import { Icon } from '@/components/ui/Icon';
+import { Input, Button } from '@/components/ui/primitives';
 import { MentionUser } from '@/hooks/useMentions';
 import { getSpace } from '@/lib/spaces';
 
@@ -134,9 +134,9 @@ export default function NewUpdatePage() {
 
                 <form className="new-update-form" onSubmit={handleSubmit}>
                     <div className="form-field">
-                        <Label.Root htmlFor="update-space" className="form-label">
+                        <label htmlFor="update-space" className="form-label">
                             Space *
-                        </Label.Root>
+                        </label>
                         <Select.Root value={selectedSpaceId} onValueChange={setSelectedSpaceId}>
                             <Select.Trigger className="select-trigger" id="update-space">
                                 <Select.Value placeholder="Select a space..." />
@@ -158,26 +158,22 @@ export default function NewUpdatePage() {
                         </Select.Root>
                     </div>
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="update-title" className="form-label">
-                            Title *
-                        </Label.Root>
-                        <input
-                            id="update-title"
-                            type="text"
-                            className="form-input"
-                            placeholder="Brief, clear title for your update"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                    </div>
+                    <Input
+                        id="update-title"
+                        type="text"
+                        label="Title"
+                        placeholder="Brief, clear title for your update"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                        fullWidth
+                    />
 
                     <div className="form-row">
                         <div className="form-field">
-                            <Label.Root htmlFor="update-priority" className="form-label">
+                            <label htmlFor="update-priority" className="form-label">
                                 Priority
-                            </Label.Root>
+                            </label>
                             <Select.Root value={priority} onValueChange={(value: any) => setPriority(value)}>
                                 <Select.Trigger className="select-trigger" id="update-priority">
                                     <Select.Value />
@@ -207,9 +203,9 @@ export default function NewUpdatePage() {
                         </div>
 
                         <div className="form-field">
-                            <Label.Root htmlFor="update-category" className="form-label">
+                            <label htmlFor="update-category" className="form-label">
                                 Category
-                            </Label.Root>
+                            </label>
                             <Select.Root value={category} onValueChange={(value: any) => setCategory(value)}>
                                 <Select.Trigger className="select-trigger" id="update-category">
                                     <Select.Value />
@@ -242,27 +238,21 @@ export default function NewUpdatePage() {
                         </div>
                     </div>
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="update-expiry" className="form-label">
-                            Expiry Date (Optional)
-                        </Label.Root>
-                        <input
-                            id="update-expiry"
-                            type="date"
-                            className="form-input"
-                            value={expiresAt}
-                            onChange={(e) => setExpiresAt(e.target.value)}
-                            min={new Date().toISOString().split('T')[0]}
-                        />
-                        <p className="form-field-hint">
-                            Set an expiry date for time-sensitive updates
-                        </p>
-                    </div>
+                    <Input
+                        id="update-expiry"
+                        type="date"
+                        label="Expiry Date (Optional)"
+                        value={expiresAt}
+                        onChange={(e) => setExpiresAt(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
+                        helperText="Set an expiry date for time-sensitive updates"
+                        fullWidth
+                    />
 
                     <div className="form-field">
-                        <Label.Root htmlFor="update-content" className="form-label">
+                        <label htmlFor="update-content" className="form-label">
                             Content *
-                        </Label.Root>
+                        </label>
                         <LexicalEditor
                             value={content}
                             onChange={handleEditorChange}
@@ -288,13 +278,15 @@ export default function NewUpdatePage() {
                         >
                             Cancel
                         </Link>
-                        <button
+                        <Button
                             type="submit"
-                            className="form-button new-update-submit"
-                            disabled={!isFormValid || createMutation.isPending}
+                            variant="primary"
+                            size="lg"
+                            disabled={!isFormValid}
+                            loading={createMutation.isPending}
                         >
-                            {createMutation.isPending ? 'Publishing...' : 'Publish Update'}
-                        </button>
+                            Publish Update
+                        </Button>
                     </div>
                 </form>
             </div>
