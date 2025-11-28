@@ -79,11 +79,11 @@ export default function ResourceDetailPage() {
     const getResourceTypeIcon = (type: string) => {
         switch (type) {
             case 'guide': return 'book';
-            case 'template': return 'document';
-            case 'documentation': return 'file';
+            case 'template': return 'fileText';
+            case 'documentation': return 'fileText';
             case 'best-practice': return 'star';
             case 'tool': return 'settings';
-            default: return 'file';
+            default: return 'fileText';
         }
     };
 
@@ -239,7 +239,7 @@ export default function ResourceDetailPage() {
                                 className={`resource-helpful-btn ${resource.isHelpful ? 'resource-helpful-btn--active' : ''}`}
                                 disabled={helpfulMutation.isPending}
                             >
-                                <Icon icon={resource.isHelpful ? 'thumbsUpFilled' : 'thumbsUp'} size={18} />
+                                <Icon icon={resource.isHelpful ? 'checkCircle' : 'thumbsUp'} size={18} />
                                 {resource.isHelpful ? 'Marked as helpful' : 'Was this helpful?'}
                             </button>
                             <LikesDisplay
@@ -267,7 +267,7 @@ export default function ResourceDetailPage() {
                             )}
                             {resource.version && (
                                 <div className="resource-info-item">
-                                    <Icon icon="tag" size={16} />
+                                    <Icon icon="package" size={16} />
                                     <div>
                                         <div className="resource-info-label">Version</div>
                                         <div className="resource-info-value">{resource.version}</div>

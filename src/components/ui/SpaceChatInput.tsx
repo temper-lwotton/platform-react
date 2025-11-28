@@ -171,7 +171,7 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
                         onClick={() => fileInputRef.current?.click()}
                         title="Add image or video"
                     >
-                        <Icon icon="image" size={18} />
+                        <Icon icon="video" size={18} />
                     </button>
 
                     {/* Link */}

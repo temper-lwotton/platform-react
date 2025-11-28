@@ -6,6 +6,7 @@ import { User, sendConnectionRequest, removeConnection } from '@/lib/users';
 import { getCurrentUserId } from '@/lib/auth';
 import { useToast } from '../ToastProvider';
 import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
 import styles from './UserCard.module.scss';
 
 interface UserCardProps {
@@ -33,9 +34,6 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
     const joinDate = new Date(user.createdAt);
     const daysAgo = Math.floor((Date.now() - joinDate.getTime()) / (1000 * 60 * 60 * 24));
     const isNewUser = daysAgo <= 7;
-
-    // Generate a stable color variation based on user ID
-    const colorVariation = getColorVariation(user.id);
 
     const currentUserId = getCurrentUserId();
 
@@ -162,17 +160,13 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
             {/* 4:3 Cover Image Section */}
             <Link href={`/users/${user.id}`} className={styles.coverLink}>
                 <div className={styles.cover}>
-                    {profile.photo ? (
-                        <img
-                            src={profile.photo}
-                            alt={displayName}
-                            className={styles.coverImage}
-                        />
-                    ) : (
-                        <div className={`${styles.coverPlaceholder} ${styles[`coverPlaceholder--${colorVariation}`]}`}>
-                            <span className={styles.coverInitials}>{initials}</span>
-                        </div>
-                    )}
+                    <Avatar
+                        src={profile.photo}
+                        alt={displayName}
+                        fallback={initials}
+                        size="2xl"
+                        className={styles.coverAvatar}
+                    />
                 </div>
             </Link>
 
@@ -184,10 +178,10 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
                         <h3 className={styles.name}>{displayName}</h3>
                     </Link>
                     {isNewUser && (
-                        <span className={styles.newBadge}>
+                        <Badge variant="success" size="sm">
                             <Icon icon="sparkles" size={12} />
                             New
-                        </span>
+                        </Badge>
                     )}
                 </div>
 
@@ -267,12 +261,4 @@ function getInitials(name: string): string {
         .join('')
         .toUpperCase()
         .slice(0, 2);
-}
-
-// Generate color variation based on user ID (for consistent placeholder colors)
-function getColorVariation(userId: string | number): number {
-    const hash = String(userId).split('').reduce((acc, char) => {
-        return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
-    return Math.abs(hash) % 5; // 5 color variations
 }

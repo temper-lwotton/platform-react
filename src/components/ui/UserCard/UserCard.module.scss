@@ -37,58 +37,17 @@
 
 .cover {
   @include aspect-ratio(4, 3);
+  @include flex-center;
   overflow: hidden;
   background: var(--color-bg-secondary);
 }
 
-.coverImage {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.coverAvatar {
+  width: 96px !important;
+  height: 96px !important;
+  font-size: 2rem !important;
+  border-width: 3px;
   transition: transform 0.3s ease;
-}
-
-.coverPlaceholder {
-  @include flex-center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-  transition: transform 0.3s ease;
-}
-
-// Color Variations for Placeholder
-.coverPlaceholder--0 {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-}
-
-.coverPlaceholder--1 {
-  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);
-}
-
-.coverPlaceholder--2 {
-  background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ef4444 100%);
-}
-
-.coverPlaceholder--3 {
-  background: linear-gradient(135deg, #ec4899 0%, #d946ef 50%, #a855f7 100%);
-}
-
-.coverPlaceholder--4 {
-  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
-}
-
-.coverInitials {
-  font-size: 4rem;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  user-select: none;
 }
 
 // Card Content
@@ -133,32 +92,7 @@
   transition: color 0.2s ease;
 }
 
-.newBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
-  animation: badgeSlideIn 0.4s ease-out;
-}
-
-@keyframes badgeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+// Badge animation is now handled by the Badge primitive
 
 // Job Title
 .jobTitle {

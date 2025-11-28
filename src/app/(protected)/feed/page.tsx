@@ -413,9 +413,9 @@ export default function FeedPage() {
         let bCount = 0;
 
         if (a.type === 'discussion') {
-          aCount = (a.data as Discussion).replyCount || 0;
+          aCount = (a.data as Discussion).commentsCount || 0;
         } else if (a.type === 'event') {
-          aCount = (a.data as Event).participantCount || 0;
+          aCount = 0; // Events don't have engagement count
         } else if (a.type === 'update') {
           aCount = (a.data as Update).likesCount || 0;
         } else if (a.type === 'showcase') {
@@ -427,9 +427,9 @@ export default function FeedPage() {
         }
 
         if (b.type === 'discussion') {
-          bCount = (b.data as Discussion).replyCount || 0;
+          bCount = (b.data as Discussion).commentsCount || 0;
         } else if (b.type === 'event') {
-          bCount = (b.data as Event).participantCount || 0;
+          bCount = 0; // Events don't have engagement count
         } else if (b.type === 'update') {
           bCount = (b.data as Update).likesCount || 0;
         } else if (b.type === 'showcase') {
@@ -563,7 +563,7 @@ export default function FeedPage() {
               <label className="feed-filter-label">Spaces</label>
               <div className="feed-filter-dropdown-wrapper">
                 <button className="feed-filter-dropdown-btn">
-                  <Icon icon="filter" size={16} />
+                  <Icon icon="arrowUpDown" size={16} />
                   <span>
                     {selectedSpaces.size === 0
                       ? 'All Spaces'

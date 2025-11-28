@@ -47,7 +47,7 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
                         />
                         {showcase.media.length > 1 && (
                             <span className="showcase-card-image-count">
-                                <Icon icon="image" size={14} />
+                                <Icon icon="eye" size={14} />
                                 {showcase.media.length}
                             </span>
                         )}

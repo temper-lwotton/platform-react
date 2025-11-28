@@ -276,7 +276,7 @@ export default function NewShowcasePage() {
                                         className="form-remove-button"
                                         aria-label="Remove metric"
                                     >
-                                        <Icon icon="close" size={16} />
+                                        <Icon icon="x" size={16} />
                                     </button>
                                 )}
                             </div>

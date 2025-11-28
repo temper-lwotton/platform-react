@@ -273,7 +273,7 @@ export function StatusUpdateWidget() {
                             onClick={() => fileInputRef.current?.click()}
                             title="Add image or video"
                         >
-                            <Icon icon="image" size={18} />
+                            <Icon icon="video" size={18} />
                         </button>
                         <button
                             className="status-update-control-btn"

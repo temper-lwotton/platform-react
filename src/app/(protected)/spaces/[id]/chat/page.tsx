@@ -49,7 +49,7 @@ export default function SpaceChatPage() {
                 {/* Channel Header */}
                 <header className="space-chat-channel-header">
                     <div className="space-chat-channel-name">
-                        <Icon icon="hash" size={20} />
+                        <Icon icon="comment" size={20} />
                         <h1>general-chat</h1>
                     </div>
                     <div className="space-chat-channel-description">
@@ -62,7 +62,7 @@ export default function SpaceChatPage() {
                     {statusUpdates.length === 0 ? (
                         <div className="space-chat-empty">
                             <div className="space-chat-empty-icon">
-                                <Icon icon="hash" size={48} />
+                                <Icon icon="comment" size={48} />
                             </div>
                             <h2 className="space-chat-empty-title">Welcome to #general-chat</h2>
                             <p className="space-chat-empty-description">

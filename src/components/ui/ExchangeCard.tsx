@@ -109,7 +109,7 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
                         />
                         {exchange.images.length > 1 && (
                             <span className="exchange-card-image-count">
-                                <Icon icon="image" size={14} />
+                                <Icon icon="eye" size={14} />
                                 {exchange.images.length}
                             </span>
                         )}

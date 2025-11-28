@@ -1,0 +1,71 @@
+@use '../../../styles/abstracts' as *;
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  overflow: hidden;
+  user-select: none;
+  border-radius: 50%;
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-border-primary);
+  flex-shrink: 0;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.avatarFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+// Size variants
+.avatar--xs {
+  width: 24px;
+  height: 24px;
+  font-size: 0.625rem;
+  border-width: 1px;
+}
+
+.avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: 0.75rem;
+}
+
+.avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: 0.875rem;
+}
+
+.avatar--lg {
+  width: 48px;
+  height: 48px;
+  font-size: 1rem;
+}
+
+.avatar--xl {
+  width: 64px;
+  height: 64px;
+  font-size: 1.25rem;
+}
+
+.avatar--2xl {
+  width: 96px;
+  height: 96px;
+  font-size: 1.875rem;
+}

@@ -136,7 +136,7 @@ export default function UpdatesPage() {
                                 onClick={() => setCategoryFilter('policy')}
                                 className={`updates-filter-btn ${categoryFilter === 'policy' ? 'updates-filter-btn--active' : ''}`}
                             >
-                                <Icon icon="file" size={14} />
+                                <Icon icon="fileText" size={14} />
                                 Policy
                             </button>
                         </div>

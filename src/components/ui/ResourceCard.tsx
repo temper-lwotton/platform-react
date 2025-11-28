@@ -17,11 +17,11 @@ export function ResourceCard({ resource }: ResourceCardProps) {
     const getResourceTypeIcon = (type: string) => {
         switch (type) {
             case 'guide': return 'book';
-            case 'template': return 'document';
-            case 'documentation': return 'file';
+            case 'template': return 'fileText';
+            case 'documentation': return 'fileText';
             case 'best-practice': return 'star';
             case 'tool': return 'settings';
-            default: return 'file';
+            default: return 'fileText';
         }
     };
 

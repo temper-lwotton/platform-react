@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import * as Avatar from '@radix-ui/react-avatar';
 import { Space, SpaceUser } from '@/lib/spaces';
+import { Avatar, Badge } from '../primitives';
 import styles from './SpaceCard.module.scss';
 
 interface SpaceCardProps {
@@ -45,11 +45,11 @@ export function SpaceCard({ space }: SpaceCardProps) {
         <Link href={`/spaces/${space.id}`} className={styles.card}>
             <article className={styles.content}>
                 <header className={styles.header}>
-                    <Avatar.Root className={styles.icon}>
-                        <Avatar.Fallback className={styles.iconFallback}>
-                            {space.title.charAt(0).toUpperCase()}
-                        </Avatar.Fallback>
-                    </Avatar.Root>
+                    <Avatar
+                        fallback={space.title.charAt(0).toUpperCase()}
+                        size="lg"
+                        className={styles.icon}
+                    />
                     <div className={styles.titleGroup}>
                         <h3 className={styles.title}>{space.title}</h3>
                         {space.subtitle && (
@@ -61,30 +61,26 @@ export function SpaceCard({ space }: SpaceCardProps) {
                     <p className={styles.description}>{space.description}</p>
                 )}
                 <footer className={styles.footer}>
-                    <span
-                        className={styles.badge}
-                        data-public={space.isPublic}
+                    <Badge
+                        variant={space.isPublic ? 'outline' : 'default'}
+                        size="sm"
                         role="status"
                         aria-label={space.isPublic ? 'Public space' : 'Private space'}
                     >
                         {space.isPublic ? 'Public' : 'Private'}
-                    </span>
+                    </Badge>
                     <div className={styles.membersSection}>
                         {displayMembers.length > 0 && (
                             <div className={styles.avatars} aria-label={`${memberCount} members`}>
-                                {displayMembers.map((member, index) => (
-                                    <Avatar.Root key={member.id} className={styles.memberAvatar}>
-                                        {member.profile?.photo && (
-                                            <Avatar.Image
-                                                src={member.profile.photo}
-                                                alt={member.profile.fullName || member.email || 'Member'}
-                                                className={styles.memberAvatarImage}
-                                            />
-                                        )}
-                                        <Avatar.Fallback className={styles.memberAvatarFallback}>
-                                            {getUserInitials(member)}
-                                        </Avatar.Fallback>
-                                    </Avatar.Root>
+                                {displayMembers.map((member) => (
+                                    <Avatar
+                                        key={member.id}
+                                        src={member.profile?.photo}
+                                        alt={member.profile?.fullName || member.email || 'Member'}
+                                        fallback={getUserInitials(member)}
+                                        size="sm"
+                                        className={styles.memberAvatar}
+                                    />
                                 ))}
                             </div>
                         )}

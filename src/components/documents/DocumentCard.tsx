@@ -134,11 +134,11 @@ export function DocumentCard({ document, viewType = 'grid' }: DocumentCardProps)
                     <span>{document.stats?.views || 0}</span>
                 </div>
                 <div className="document-card-stat">
-                    <Icon icon="edit" size={14} />
+                    <Icon icon="pencil" size={14} />
                     <span>{document.stats?.edits || 0}</span>
                 </div>
                 <div className="document-card-stat">
-                    <Icon icon="message" size={14} />
+                    <Icon icon="comment" size={14} />
                     <span>{document.stats?.comments || 0}</span>
                 </div>
                 <div className="document-card-stat">

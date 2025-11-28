@@ -28,7 +28,7 @@ export default function ShowcasesPage() {
 
     const { data: showcasesData, isLoading: showcasesLoading } = useQuery({
         queryKey: ['all-showcases', sortBy],
-        queryFn: () => getShowcases({ limit: 100, offset: 0 }),
+        queryFn: () => getShowcases(),
         enabled: isClient && !!currentUserId,
     });
 
@@ -91,7 +91,7 @@ export default function ShowcasesPage() {
                                 onClick={() => setSortBy('oldest')}
                                 className={`showcases-sort-btn ${sortBy === 'oldest' ? 'showcases-sort-btn--active' : ''}`}
                             >
-                                <Icon icon="history" size={14} />
+                                <Icon icon="clock" size={14} />
                                 Oldest
                             </button>
                         </div>

@@ -73,8 +73,9 @@
 }
 
 .memberAvatar {
-  // Avatar primitive now handles base styling
+  @include avatar(28px);
   border: 2px solid var(--background);
+  background: var(--color-bg-tertiary);
   margin-left: -8px;
   transition: all 0.2s ease;
   position: relative;
@@ -94,6 +95,21 @@
 
   @include dark-mode {
     border-color: var(--color-bg-secondary);
+  }
+}
+
+.memberAvatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.memberAvatarFallback {
+  @include avatar-placeholder(28px, 0.6875rem);
+  text-transform: uppercase;
+
+  @include dark-mode {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
   }
 }
 

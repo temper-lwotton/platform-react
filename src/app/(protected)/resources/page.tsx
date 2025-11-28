@@ -30,7 +30,7 @@ export default function ResourcesPage() {
 
     const { data: resourcesData, isLoading: resourcesLoading } = useQuery({
         queryKey: ['all-resources'],
-        queryFn: () => getResources({ limit: 100, offset: 0 }),
+        queryFn: () => getResources(),
         enabled: isClient && !!currentUserId,
     });
 
@@ -99,14 +99,14 @@ export default function ResourcesPage() {
                                 onClick={() => setResourceTypeFilter('template')}
                                 className={`resources-filter-btn ${resourceTypeFilter === 'template' ? 'resources-filter-btn--active' : ''}`}
                             >
-                                <Icon icon="document" size={14} />
+                                <Icon icon="fileText" size={14} />
                                 Templates
                             </button>
                             <button
                                 onClick={() => setResourceTypeFilter('documentation')}
                                 className={`resources-filter-btn ${resourceTypeFilter === 'documentation' ? 'resources-filter-btn--active' : ''}`}
                             >
-                                <Icon icon="file" size={14} />
+                                <Icon icon="fileText" size={14} />
                                 Docs
                             </button>
                             <button
