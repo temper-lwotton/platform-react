@@ -3,13 +3,12 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as Label from '@radix-ui/react-label';
-import * as Select from '@radix-ui/react-select';
 import Link from 'next/link';
 import { createShowcase } from '@/lib/showcases';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
 import { Icon } from '@/components/ui/Icon';
+import { Input, Textarea, Button } from '@/components/ui/primitives';
 import { MentionUser } from '@/hooks/useMentions';
 import { getSpace } from '@/lib/spaces';
 
@@ -149,144 +148,123 @@ export default function NewShowcasePage() {
                 </header>
 
                 <form className="new-showcase-form" onSubmit={handleSubmit}>
+                    {/* Space selector - keeping Radix UI for now */}
                     <div className="form-field">
-                        <Label.Root htmlFor="showcase-space" className="form-label">
+                        <label htmlFor="showcase-space" className="form-label">
                             Space *
-                        </Label.Root>
-                        <Select.Root value={selectedSpaceId} onValueChange={setSelectedSpaceId}>
-                            <Select.Trigger className="select-trigger" id="showcase-space">
-                                <Select.Value placeholder="Select a space..." />
-                                <Select.Icon className="select-icon">
-                                    <Icon icon="chevronDown" size={16} />
-                                </Select.Icon>
-                            </Select.Trigger>
-                            <Select.Portal>
-                                <Select.Content className="select-content">
-                                    <Select.Viewport className="select-viewport">
-                                        {userSpaces.map((space) => (
-                                            <Select.Item key={space.id} value={String(space.id)} className="select-item">
-                                                <Select.ItemText>{space.title}</Select.ItemText>
-                                            </Select.Item>
-                                        ))}
-                                    </Select.Viewport>
-                                </Select.Content>
-                            </Select.Portal>
-                        </Select.Root>
+                        </label>
+                        <div className="select-wrapper">
+                            <select
+                                id="showcase-space"
+                                className="form-select"
+                                value={selectedSpaceId}
+                                onChange={(e) => setSelectedSpaceId(e.target.value)}
+                                required
+                            >
+                                <option value="">Select a space...</option>
+                                {userSpaces.map((space) => (
+                                    <option key={space.id} value={String(space.id)}>
+                                        {space.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="showcase-title" className="form-label">
-                            Title *
-                        </Label.Root>
-                        <input
-                            id="showcase-title"
-                            type="text"
-                            className="form-input"
-                            placeholder="E.g. Electric Bus Pilot: A Sustainable Success"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                    </div>
+                    <Input
+                        id="showcase-title"
+                        type="text"
+                        label="Title"
+                        placeholder="E.g. Electric Bus Pilot: A Sustainable Success"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                        fullWidth
+                    />
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="showcase-excerpt" className="form-label">
-                            Excerpt (Optional)
-                        </Label.Root>
-                        <textarea
-                            id="showcase-excerpt"
-                            className="form-textarea"
-                            placeholder="A brief summary that appears in cards and previews (recommended 1-2 sentences)"
-                            value={excerpt}
-                            onChange={(e) => setExcerpt(e.target.value)}
-                            rows={3}
-                        />
-                    </div>
+                    <Textarea
+                        id="showcase-excerpt"
+                        label="Excerpt (Optional)"
+                        placeholder="A brief summary that appears in cards and previews (recommended 1-2 sentences)"
+                        value={excerpt}
+                        onChange={(e) => setExcerpt(e.target.value)}
+                        rows={3}
+                        fullWidth
+                    />
 
                     <div className="form-row">
-                        <div className="form-field">
-                            <Label.Root htmlFor="showcase-start" className="form-label">
-                                Project Start Date (Optional)
-                            </Label.Root>
-                            <input
-                                id="showcase-start"
-                                type="date"
-                                className="form-input"
-                                value={projectStart}
-                                onChange={(e) => setProjectStart(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <Label.Root htmlFor="showcase-end" className="form-label">
-                                Project End Date (Optional)
-                            </Label.Root>
-                            <input
-                                id="showcase-end"
-                                type="date"
-                                className="form-input"
-                                value={projectEnd}
-                                onChange={(e) => setProjectEnd(e.target.value)}
-                                min={projectStart || undefined}
-                            />
-                        </div>
+                        <Input
+                            id="showcase-start"
+                            type="date"
+                            label="Project Start Date (Optional)"
+                            value={projectStart}
+                            onChange={(e) => setProjectStart(e.target.value)}
+                            fullWidth
+                        />
+                        <Input
+                            id="showcase-end"
+                            type="date"
+                            label="Project End Date (Optional)"
+                            value={projectEnd}
+                            onChange={(e) => setProjectEnd(e.target.value)}
+                            min={projectStart || undefined}
+                            fullWidth
+                        />
                     </div>
 
                     <div className="form-section">
                         <div className="form-section-header">
-                            <Label.Root className="form-label">
+                            <label className="form-label">
                                 Impact Metrics (Optional)
-                            </Label.Root>
-                            <button
+                            </label>
+                            <Button
                                 type="button"
                                 onClick={addImpactMetric}
-                                className="form-add-button"
+                                variant="outline"
+                                size="sm"
                             >
                                 <Icon icon="plus" size={16} />
                                 Add Metric
-                            </button>
+                            </Button>
                         </div>
                         <p className="form-field-hint">
                             Add key metrics that demonstrate the impact of this project (e.g., "60%" "Carbon Reduction")
                         </p>
                         {impactMetrics.map((metric, index) => (
                             <div key={index} className="form-row">
-                                <div className="form-field">
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="Metric value (e.g., 60%, $50k, 2x)"
-                                        value={metric.value}
-                                        onChange={(e) => updateImpactMetric(index, 'value', e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-field">
-                                    <input
-                                        type="text"
-                                        className="form-input"
-                                        placeholder="Metric label (e.g., Carbon Reduction)"
-                                        value={metric.label}
-                                        onChange={(e) => updateImpactMetric(index, 'label', e.target.value)}
-                                    />
-                                </div>
+                                <Input
+                                    type="text"
+                                    placeholder="Metric value (e.g., 60%, $50k, 2x)"
+                                    value={metric.value}
+                                    onChange={(e) => updateImpactMetric(index, 'value', e.target.value)}
+                                    fullWidth
+                                />
+                                <Input
+                                    type="text"
+                                    placeholder="Metric label (e.g., Carbon Reduction)"
+                                    value={metric.label}
+                                    onChange={(e) => updateImpactMetric(index, 'label', e.target.value)}
+                                    fullWidth
+                                />
                                 {impactMetrics.length > 1 && (
-                                    <button
+                                    <Button
                                         type="button"
                                         onClick={() => removeImpactMetric(index)}
-                                        className="form-remove-button"
+                                        variant="ghost"
+                                        size="sm"
                                         aria-label="Remove metric"
                                     >
                                         <Icon icon="x" size={16} />
-                                    </button>
+                                    </Button>
                                 )}
                             </div>
                         ))}
                     </div>
 
                     <div className="form-field">
-                        <Label.Root htmlFor="showcase-content" className="form-label">
+                        <label htmlFor="showcase-content" className="form-label">
                             Content *
-                        </Label.Root>
+                        </label>
                         <LexicalEditor
                             value={content}
                             onChange={handleEditorChange}
@@ -322,13 +300,15 @@ export default function NewShowcasePage() {
                         >
                             Cancel
                         </Link>
-                        <button
+                        <Button
                             type="submit"
-                            className="form-button new-showcase-submit"
-                            disabled={!isFormValid || createMutation.isPending}
+                            variant="primary"
+                            size="lg"
+                            disabled={!isFormValid}
+                            loading={createMutation.isPending}
                         >
-                            {createMutation.isPending ? 'Publishing...' : 'Publish Showcase'}
-                        </button>
+                            Publish Showcase
+                        </Button>
                     </div>
                 </form>
             </div>

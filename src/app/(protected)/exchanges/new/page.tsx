@@ -3,13 +3,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as Label from '@radix-ui/react-label';
 import * as Select from '@radix-ui/react-select';
 import Link from 'next/link';
 import { createExchange, ExchangeType, ExchangeCategory, ExchangeTerms, LocationType } from '@/lib/exchanges';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
 import { Icon } from '@/components/ui/Icon';
+import { Input, Textarea, Button } from '@/components/ui/primitives';
 import { MentionUser } from '@/hooks/useMentions';
 import { getSpace } from '@/lib/spaces';
 
@@ -148,9 +148,9 @@ export default function NewExchangePage() {
 
                 <form className="new-exchange-form" onSubmit={handleSubmit}>
                     <div className="form-field">
-                        <Label.Root htmlFor="exchange-space" className="form-label">
+                        <label htmlFor="exchange-space" className="form-label">
                             Space *
-                        </Label.Root>
+                        </label>
                         <Select.Root value={selectedSpaceId} onValueChange={setSelectedSpaceId}>
                             <Select.Trigger className="select-trigger" id="exchange-space">
                                 <Select.Value placeholder="Select a space..." />
@@ -174,9 +174,9 @@ export default function NewExchangePage() {
 
                     <div className="form-row">
                         <div className="form-field">
-                            <Label.Root htmlFor="exchange-type" className="form-label">
+                            <label htmlFor="exchange-type" className="form-label">
                                 Exchange Type *
-                            </Label.Root>
+                            </label>
                             <Select.Root value={exchangeType} onValueChange={(value: ExchangeType) => setExchangeType(value)}>
                                 <Select.Trigger className="select-trigger" id="exchange-type">
                                     <Select.Value />
@@ -200,9 +200,9 @@ export default function NewExchangePage() {
                         </div>
 
                         <div className="form-field">
-                            <Label.Root htmlFor="exchange-category" className="form-label">
+                            <label htmlFor="exchange-category" className="form-label">
                                 Category *
-                            </Label.Root>
+                            </label>
                             <Select.Root value={category} onValueChange={(value: ExchangeCategory) => setCategory(value)}>
                                 <Select.Trigger className="select-trigger" id="exchange-category">
                                     <Select.Value />
@@ -238,40 +238,32 @@ export default function NewExchangePage() {
                         </div>
                     </div>
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="exchange-title" className="form-label">
-                            Title *
-                        </Label.Root>
-                        <input
-                            id="exchange-title"
-                            type="text"
-                            className="form-input"
-                            placeholder={exchangeType === 'offering' ? 'E.g. 3D Printer Available for Projects' : 'E.g. Looking for UX Design Feedback'}
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                    </div>
+                    <Input
+                        id="exchange-title"
+                        type="text"
+                        label="Title"
+                        placeholder={exchangeType === 'offering' ? 'E.g. 3D Printer Available for Projects' : 'E.g. Looking for UX Design Feedback'}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                        fullWidth
+                    />
 
-                    <div className="form-field">
-                        <Label.Root htmlFor="exchange-excerpt" className="form-label">
-                            Excerpt (Optional)
-                        </Label.Root>
-                        <textarea
-                            id="exchange-excerpt"
-                            className="form-textarea"
-                            placeholder="A brief summary (recommended 1-2 sentences)"
-                            value={excerpt}
-                            onChange={(e) => setExcerpt(e.target.value)}
-                            rows={2}
-                        />
-                    </div>
+                    <Textarea
+                        id="exchange-excerpt"
+                        label="Excerpt (Optional)"
+                        placeholder="A brief summary (recommended 1-2 sentences)"
+                        value={excerpt}
+                        onChange={(e) => setExcerpt(e.target.value)}
+                        rows={2}
+                        fullWidth
+                    />
 
                     <div className="form-row">
                         <div className="form-field">
-                            <Label.Root htmlFor="exchange-terms" className="form-label">
+                            <label htmlFor="exchange-terms" className="form-label">
                                 Terms *
-                            </Label.Root>
+                            </label>
                             <Select.Root value={terms} onValueChange={(value: ExchangeTerms) => setTerms(value)}>
                                 <Select.Trigger className="select-trigger" id="exchange-terms">
                                     <Select.Value />
@@ -298,29 +290,26 @@ export default function NewExchangePage() {
                         </div>
 
                         {terms === 'paid' && (
-                            <div className="form-field">
-                                <Label.Root htmlFor="exchange-price" className="form-label">
-                                    Price *
-                                </Label.Root>
-                                <input
-                                    id="exchange-price"
-                                    type="number"
-                                    className="form-input"
-                                    placeholder="0.00"
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    min="0"
-                                    step="0.01"
-                                />
-                            </div>
+                            <Input
+                                id="exchange-price"
+                                type="number"
+                                label="Price"
+                                placeholder="0.00"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                                min="0"
+                                step="0.01"
+                                required
+                                fullWidth
+                            />
                         )}
                     </div>
 
                     <div className="form-row">
                         <div className="form-field">
-                            <Label.Root htmlFor="exchange-location-type" className="form-label">
+                            <label htmlFor="exchange-location-type" className="form-label">
                                 Location Type
-                            </Label.Root>
+                            </label>
                             <Select.Root value={locationType} onValueChange={(value: LocationType) => setLocationType(value)}>
                                 <Select.Trigger className="select-trigger" id="exchange-location-type">
                                     <Select.Value />
@@ -347,69 +336,52 @@ export default function NewExchangePage() {
                         </div>
 
                         {locationType === 'in-person' && (
-                            <div className="form-field">
-                                <Label.Root htmlFor="exchange-address" className="form-label">
-                                    Address (Optional)
-                                </Label.Root>
-                                <input
-                                    id="exchange-address"
-                                    type="text"
-                                    className="form-input"
-                                    placeholder="E.g. Innovation Hub, Building A"
-                                    value={locationAddress}
-                                    onChange={(e) => setLocationAddress(e.target.value)}
-                                />
-                            </div>
+                            <Input
+                                id="exchange-address"
+                                type="text"
+                                label="Address (Optional)"
+                                placeholder="E.g. Innovation Hub, Building A"
+                                value={locationAddress}
+                                onChange={(e) => setLocationAddress(e.target.value)}
+                                fullWidth
+                            />
                         )}
                     </div>
 
                     <div className="form-row">
-                        <div className="form-field">
-                            <Label.Root htmlFor="exchange-schedule" className="form-label">
-                                Schedule / Availability (Optional)
-                            </Label.Root>
-                            <input
-                                id="exchange-schedule"
-                                type="text"
-                                className="form-input"
-                                placeholder="E.g. Weekdays 9am-5pm, By appointment"
-                                value={schedule}
-                                onChange={(e) => setSchedule(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="form-field">
-                            <Label.Root htmlFor="exchange-expires" className="form-label">
-                                Expires (Optional)
-                            </Label.Root>
-                            <input
-                                id="exchange-expires"
-                                type="date"
-                                className="form-input"
-                                value={expiresAt}
-                                onChange={(e) => setExpiresAt(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-field">
-                        <Label.Root htmlFor="exchange-conditions" className="form-label">
-                            Conditions & Requirements (Optional)
-                        </Label.Root>
-                        <textarea
-                            id="exchange-conditions"
-                            className="form-textarea"
-                            placeholder="Any specific conditions, requirements, or expectations"
-                            value={conditions}
-                            onChange={(e) => setConditions(e.target.value)}
-                            rows={3}
+                        <Input
+                            id="exchange-schedule"
+                            type="text"
+                            label="Schedule / Availability (Optional)"
+                            placeholder="E.g. Weekdays 9am-5pm, By appointment"
+                            value={schedule}
+                            onChange={(e) => setSchedule(e.target.value)}
+                            fullWidth
+                        />
+                        <Input
+                            id="exchange-expires"
+                            type="date"
+                            label="Expires (Optional)"
+                            value={expiresAt}
+                            onChange={(e) => setExpiresAt(e.target.value)}
+                            fullWidth
                         />
                     </div>
 
+                    <Textarea
+                        id="exchange-conditions"
+                        label="Conditions & Requirements (Optional)"
+                        placeholder="Any specific conditions, requirements, or expectations"
+                        value={conditions}
+                        onChange={(e) => setConditions(e.target.value)}
+                        rows={3}
+                        fullWidth
+                    />
+
                     <div className="form-field">
-                        <Label.Root htmlFor="exchange-content" className="form-label">
+                        <label htmlFor="exchange-content" className="form-label">
                             Description *
-                        </Label.Root>
+                        </label>
                         <LexicalEditor
                             value={content}
                             onChange={handleEditorChange}
@@ -444,13 +416,15 @@ export default function NewExchangePage() {
                         >
                             Cancel
                         </Link>
-                        <button
+                        <Button
                             type="submit"
-                            className="form-button new-exchange-submit"
-                            disabled={!isFormValid || createMutation.isPending}
+                            variant="primary"
+                            size="lg"
+                            disabled={!isFormValid}
+                            loading={createMutation.isPending}
                         >
-                            {createMutation.isPending ? 'Publishing...' : `Publish ${exchangeType === 'offering' ? 'Offering' : 'Request'}`}
-                        </button>
+                            {`Publish ${exchangeType === 'offering' ? 'Offering' : 'Request'}`}
+                        </Button>
                     </div>
                 </form>
             </div>

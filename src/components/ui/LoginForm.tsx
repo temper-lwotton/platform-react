@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { login, LoginCredentials } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import { Input, Button } from '@/components/ui/primitives';
 
 interface LoginFormProps {
     onSuccess?: () => void;
@@ -43,59 +44,49 @@ export function LoginForm({ onSuccess, redirectTo = '/spaces' }: LoginFormProps)
         <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
             {error && <div className="form-error-box">{error}</div>}
 
-            <div className="form-field">
-                <label htmlFor="email" className="form-label">
-                    Email
-                </label>
-                <input
-                    id="email"
-                    type="email"
-                    className="form-input"
-                    placeholder="you@example.com"
-                    disabled={isLoading}
-                    {...register('email', {
-                        required: 'Email is required',
-                        pattern: {
-                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            message: 'Invalid email address',
-                        },
-                    })}
-                />
-                {errors.email && (
-                    <span className="form-error">{errors.email.message}</span>
-                )}
-            </div>
-
-            <div className="form-field">
-                <label htmlFor="password" className="form-label">
-                    Password
-                </label>
-                <input
-                    id="password"
-                    type="password"
-                    className="form-input"
-                    placeholder="Enter your password"
-                    disabled={isLoading}
-                    {...register('password', {
-                        required: 'Password is required',
-                        minLength: {
-                            value: 6,
-                            message: 'Password must be at least 6 characters',
-                        },
-                    })}
-                />
-                {errors.password && (
-                    <span className="form-error">{errors.password.message}</span>
-                )}
-            </div>
-
-            <button
-                type="submit"
-                className="form-button"
+            <Input
+                id="email"
+                type="email"
+                label="Email"
+                placeholder="you@example.com"
                 disabled={isLoading}
+                error={errors.email?.message}
+                fullWidth
+                {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Invalid email address',
+                    },
+                })}
+            />
+
+            <Input
+                id="password"
+                type="password"
+                label="Password"
+                placeholder="Enter your password"
+                disabled={isLoading}
+                error={errors.password?.message}
+                fullWidth
+                {...register('password', {
+                    required: 'Password is required',
+                    minLength: {
+                        value: 6,
+                        message: 'Password must be at least 6 characters',
+                    },
+                })}
+            />
+
+            <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={isLoading}
             >
-                {isLoading ? 'Signing in...' : 'Sign in'}
-            </button>
+                Sign in
+            </Button>
         </form>
     );
 }
