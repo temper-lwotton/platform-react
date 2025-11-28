@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Icon } from '@/components/ui/Icon';
-import { Input, Textarea, RadioGroup, Checkbox, Button } from '@/components/ui/primitives';
+import { Input, Textarea, RadioGroup, Checkbox, Button, Select } from '@/components/ui/primitives';
 import { Document } from '@/lib/documents';
 
 interface PublishDocumentModalProps {
@@ -90,26 +90,20 @@ export function PublishDocumentModal({ open, onOpenChange, document }: PublishDo
                         </div>
 
                         {/* Space Selection */}
-                        <div className="publish-modal-field">
-                            <label htmlFor="publish-space" className="publish-modal-label">
-                                Publish to Space *
-                            </label>
-                            <select
-                                id="publish-space"
-                                value={publishData.spaceId}
-                                onChange={(e) => setPublishData({ ...publishData, spaceId: e.target.value })}
-                                className="publish-modal-select"
-                                required
-                            >
-                                <option value="">Select a space...</option>
-                                <option value="23">Tech Community</option>
-                                <option value="28">Innovation Hub</option>
-                                <option value="45">Green Transport Initiative</option>
-                            </select>
-                            <div className="publish-modal-hint">
-                                The space where this document will be published
-                            </div>
-                        </div>
+                        <Select
+                            label="Publish to Space"
+                            value={publishData.spaceId}
+                            onValueChange={(value) => setPublishData({ ...publishData, spaceId: value })}
+                            placeholder="Select a space..."
+                            options={[
+                                { value: '23', label: 'Tech Community' },
+                                { value: '28', label: 'Innovation Hub' },
+                                { value: '45', label: 'Green Transport Initiative' }
+                            ]}
+                            required
+                            helperText="The space where this document will be published"
+                            fullWidth
+                        />
 
                         {/* Visibility */}
                         <RadioGroup

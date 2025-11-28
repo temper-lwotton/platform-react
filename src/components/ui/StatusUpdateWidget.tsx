@@ -7,7 +7,7 @@ import { getCurrentUserStatus, QUICK_TEMPLATES, COMMON_EMOJIS, formatTimeAgo, ty
 import { getSpace } from '@/lib/spaces';
 import { Icon } from './Icon';
 import * as Popover from '@radix-ui/react-popover';
-import { Textarea, Input, Button } from './primitives';
+import { Textarea, Input, Button, Select } from './primitives';
 
 export function StatusUpdateWidget() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -313,18 +313,16 @@ export function StatusUpdateWidget() {
                     {/* Space Selector */}
                     <div className="status-update-space-selector">
                         <Icon icon="users" size={16} />
-                        <select
+                        <Select
                             value={selectedSpaceId}
-                            onChange={(e) => setSelectedSpaceId(e.target.value)}
-                            className="status-update-space-select"
-                        >
-                            <option value="">Share with...</option>
-                            {userSpaces.map((space) => (
-                                <option key={space.id} value={space.id}>
-                                    {space.title}
-                                </option>
-                            ))}
-                        </select>
+                            onValueChange={setSelectedSpaceId}
+                            placeholder="Share with..."
+                            options={userSpaces.map((space) => ({
+                                value: String(space.id),
+                                label: space.title
+                            }))}
+                            fullWidth
+                        />
                     </div>
 
                     {/* Action Buttons */}

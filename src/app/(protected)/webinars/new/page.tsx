@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/ui/Icon';
-import { Input, Textarea, Checkbox, Button } from '@/components/ui/primitives';
+import { Input, Textarea, Checkbox, Button, Select } from '@/components/ui/primitives';
 import Link from 'next/link';
 
 type ScheduleType = 'now' | 'later';
@@ -150,41 +150,31 @@ export default function NewWebinarPage() {
                         />
 
                         <div className="webinar-form-row">
-                            <div className="webinar-form-field">
-                                <label htmlFor="spaceId" className="webinar-form-label">
-                                    Space
-                                </label>
-                                <select
-                                    id="spaceId"
-                                    name="spaceId"
-                                    value={formData.spaceId}
-                                    onChange={handleChange}
-                                    className="webinar-form-select"
-                                >
-                                    <option value="">Select a space (optional)</option>
-                                    <option value="23">Electric Vehicle Innovation Hub</option>
-                                    <option value="28">Sustainable Transport Alliance</option>
-                                    <option value="15">Future Mobility Network</option>
-                                </select>
-                            </div>
+                            <Select
+                                label="Space"
+                                value={formData.spaceId}
+                                onValueChange={(value) => setFormData(prev => ({ ...prev, spaceId: value }))}
+                                placeholder="Select a space (optional)"
+                                options={[
+                                    { value: '23', label: 'Electric Vehicle Innovation Hub' },
+                                    { value: '28', label: 'Sustainable Transport Alliance' },
+                                    { value: '15', label: 'Future Mobility Network' }
+                                ]}
+                                fullWidth
+                            />
 
-                            <div className="webinar-form-field">
-                                <label htmlFor="duration" className="webinar-form-label">
-                                    Duration (minutes)
-                                </label>
-                                <select
-                                    id="duration"
-                                    name="duration"
-                                    value={formData.duration}
-                                    onChange={handleChange}
-                                    className="webinar-form-select"
-                                >
-                                    <option value="30">30 minutes</option>
-                                    <option value="60">1 hour</option>
-                                    <option value="90">1.5 hours</option>
-                                    <option value="120">2 hours</option>
-                                </select>
-                            </div>
+                            <Select
+                                label="Duration (minutes)"
+                                value={formData.duration}
+                                onValueChange={(value) => setFormData(prev => ({ ...prev, duration: value }))}
+                                options={[
+                                    { value: '30', label: '30 minutes' },
+                                    { value: '60', label: '1 hour' },
+                                    { value: '90', label: '1.5 hours' },
+                                    { value: '120', label: '2 hours' }
+                                ]}
+                                fullWidth
+                            />
                         </div>
                     </section>
 
