@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { Webinar } from '@/lib/webinars';
-import { Icon } from '@/components/ui/Icon';
+import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
+import styles from './WebinarCard.module.scss';
 
 interface WebinarCardProps {
     webinar: Webinar;
@@ -60,23 +62,23 @@ export function WebinarCard({ webinar, variant = 'full' }: WebinarCardProps) {
     const getStatusBadge = () => {
         if (isLive) {
             return (
-                <span className="webinar-status-badge webinar-status-badge--live">
+                <Badge variant="danger" size="sm">
                     Live Now
-                </span>
+                </Badge>
             );
         }
         if (isScheduled) {
             return (
-                <span className="webinar-status-badge webinar-status-badge--scheduled">
+                <Badge variant="primary" size="sm">
                     Scheduled
-                </span>
+                </Badge>
             );
         }
         if (isEnded) {
             return (
-                <span className="webinar-status-badge webinar-status-badge--ended">
+                <Badge variant="default" size="sm">
                     Ended
-                </span>
+                </Badge>
             );
         }
         return null;
@@ -85,7 +87,7 @@ export function WebinarCard({ webinar, variant = 'full' }: WebinarCardProps) {
     const getActionButton = () => {
         if (isLive) {
             return (
-                <Link href={`/webinars/${webinar.id}/room`} className="webinar-card-action webinar-card-action--live">
+                <Link href={`/webinars/${webinar.id}/room`} className={`${styles.action} ${styles.actionLive}`}>
                     <Icon icon="video" size={18} />
                     Join Webinar
                 </Link>
@@ -93,7 +95,7 @@ export function WebinarCard({ webinar, variant = 'full' }: WebinarCardProps) {
         }
         if (isScheduled) {
             return (
-                <button className="webinar-card-action webinar-card-action--register">
+                <button className={`${styles.action} ${styles.actionRegister}`}>
                     <Icon icon="bell" size={18} />
                     {webinar.settings.requireRegistration ? 'Register' : 'Add to Calendar'}
                 </button>
@@ -101,7 +103,7 @@ export function WebinarCard({ webinar, variant = 'full' }: WebinarCardProps) {
         }
         if (isEnded && webinar.settings.enableRecording) {
             return (
-                <Link href={`/webinars/${webinar.id}`} className="webinar-card-action webinar-card-action--ended">
+                <Link href={`/webinars/${webinar.id}`} className={`${styles.action} ${styles.actionEnded}`}>
                     <Icon icon="play" size={18} />
                     Watch Recording
                 </Link>
@@ -111,38 +113,35 @@ export function WebinarCard({ webinar, variant = 'full' }: WebinarCardProps) {
     };
 
     return (
-        <article className={`webinar-card ${isLive ? 'webinar-card--live' : ''}`}>
+        <article className={`${styles.card} ${isLive ? styles.live : ''}`}>
             {/* Header with status */}
-            <div className="webinar-card-header">
+            <div className={styles.header}>
                 {getStatusBadge()}
-                <span className="webinar-card-space">{webinar.spaceName}</span>
+                <span className={styles.space}>{webinar.spaceName}</span>
             </div>
 
             {/* Main content */}
-            <div className="webinar-card-content">
-                <Link href={`/webinars/${webinar.id}`} className="webinar-card-title-link">
-                    <h3 className="webinar-card-title">{webinar.title}</h3>
+            <div className={styles.content}>
+                <Link href={`/webinars/${webinar.id}`} className={styles.titleLink}>
+                    <h3 className={styles.title}>{webinar.title}</h3>
                 </Link>
 
                 {variant === 'full' && webinar.description && (
-                    <p className="webinar-card-description">{webinar.description}</p>
+                    <p className={styles.description}>{webinar.description}</p>
                 )}
 
                 {/* Host info */}
-                <div className="webinar-card-host">
-                    <div className="webinar-card-host-avatar">
-                        {webinar.hostPhoto ? (
-                            <img src={webinar.hostPhoto} alt={webinar.hostName} />
-                        ) : (
-                            <div className="webinar-card-host-avatar-placeholder">
-                                {webinar.hostName.charAt(0)}
-                            </div>
-                        )}
-                    </div>
-                    <div className="webinar-card-host-info">
-                        <span className="webinar-card-host-name">{webinar.hostName}</span>
+                <div className={styles.host}>
+                    <Avatar
+                        src={webinar.hostPhoto}
+                        alt={webinar.hostName}
+                        fallback={webinar.hostName.charAt(0).toUpperCase()}
+                        size="sm"
+                    />
+                    <div className={styles.hostInfo}>
+                        <span className={styles.hostName}>{webinar.hostName}</span>
                         {webinar.coHosts && webinar.coHosts.length > 0 && (
-                            <span className="webinar-card-cohosts">
+                            <span className={styles.cohosts}>
                                 + {webinar.coHosts.length} co-host{webinar.coHosts.length !== 1 ? 's' : ''}
                             </span>
                         )}
@@ -150,31 +149,31 @@ export function WebinarCard({ webinar, variant = 'full' }: WebinarCardProps) {
                 </div>
 
                 {/* Stats */}
-                <div className="webinar-card-stats">
+                <div className={styles.stats}>
                     {isLive && webinar.stats && (
-                        <div className="webinar-card-stat">
+                        <div className={styles.stat}>
                             <Icon icon="users" size={16} />
                             <span>{webinar.stats.attendeeCount} attending</span>
                         </div>
                     )}
                     {isScheduled && webinar.stats && webinar.stats.registeredCount > 0 && (
-                        <div className="webinar-card-stat">
+                        <div className={styles.stat}>
                             <Icon icon="users" size={16} />
                             <span>{webinar.stats.registeredCount} registered</span>
                         </div>
                     )}
                     {isEnded && webinar.stats && (
-                        <div className="webinar-card-stat">
+                        <div className={styles.stat}>
                             <Icon icon="users" size={16} />
                             <span>{webinar.stats.peakAttendees} peak attendees</span>
                         </div>
                     )}
-                    <div className="webinar-card-stat">
+                    <div className={styles.stat}>
                         <Icon icon="clock" size={16} />
                         <span>{getTimeDisplay()}</span>
                     </div>
                     {webinar.duration && (
-                        <div className="webinar-card-stat">
+                        <div className={styles.stat}>
                             <Icon icon="calendar" size={16} />
                             <span>{webinar.duration} min</span>
                         </div>
@@ -183,7 +182,7 @@ export function WebinarCard({ webinar, variant = 'full' }: WebinarCardProps) {
             </div>
 
             {/* Footer with action */}
-            <div className="webinar-card-footer">
+            <div className={styles.footer}>
                 {getActionButton()}
             </div>
         </article>

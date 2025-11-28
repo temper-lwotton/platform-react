@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { mockDocuments } from '@/lib/mock-documents';
-import { DocumentCard } from '@/components/documents/DocumentCard';
+import { DocumentCard } from '@/components/ui/DocumentCard';
 import { Icon } from '@/components/ui/Icon';
 import { DocumentStatus } from '@/lib/documents';
 

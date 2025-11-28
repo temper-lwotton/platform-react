@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { mockWebinars, filterWebinars } from '@/lib/mock-webinars';
-import { WebinarCard } from '@/components/webinars/WebinarCard';
+import { WebinarCard } from '@/components/ui/WebinarCard';
 import { Icon } from '@/components/ui/Icon';
 import Link from 'next/link';
 

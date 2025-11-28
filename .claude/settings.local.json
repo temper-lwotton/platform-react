@@ -16,7 +16,8 @@
       "Bash(for:*)",
       "Bash(/tmp/eventcard-styles.scss)",
       "Bash(grep:*)",
-      "Bash(src/components/ui/ShowcaseCard/ShowcaseCard.tsx)"
+      "Bash(src/components/ui/ShowcaseCard/ShowcaseCard.tsx)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

@@ -250,11 +250,11 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
 
             <button
               onClick={handleBookmark}
-              className={styles.bookmark}
+              className={`${styles.bookmark} ${isBookmarked ? styles.bookmarkActive : ''}`}
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
               <Icon
-                icon={isBookmarked ? 'bookmarkFilled' : 'bookmark'}
+                icon="bookmark"
                 size={18}
                 className={styles.bookmarkIcon}
               />

@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { Document } from '@/lib/documents';
-import { Icon } from '@/components/ui/Icon';
+import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
+import styles from './DocumentCard.module.scss';
 
 interface DocumentCardProps {
     document: Document;
@@ -10,16 +12,16 @@ interface DocumentCardProps {
 }
 
 export function DocumentCard({ document, viewType = 'grid' }: DocumentCardProps) {
-    const getStatusColor = () => {
+    const getStatusVariant = (): 'success' | 'warning' | 'default' => {
         switch (document.status) {
             case 'published':
-                return 'document-status-badge--published';
+                return 'success';
             case 'draft':
-                return 'document-status-badge--draft';
+                return 'warning';
             case 'archived':
-                return 'document-status-badge--archived';
+                return 'default';
             default:
-                return '';
+                return 'default';
         }
     };
 
@@ -58,60 +60,55 @@ export function DocumentCard({ document, viewType = 'grid' }: DocumentCardProps)
     return (
         <Link
             href={`/documents/${document.id}`}
-            className={`document-card ${viewType === 'list' ? 'document-card--list' : ''}`}
+            className={`${styles.card} ${viewType === 'list' ? styles.listView : ''}`}
         >
-            <div className="document-card-header">
-                <div className="document-card-header-top">
-                    <span className={`document-status-badge ${getStatusColor()}`}>
+            <div className={styles.header}>
+                <div className={styles.headerTop}>
+                    <Badge variant={getStatusVariant()} size="sm">
                         {document.status}
-                    </span>
-                    <div className="document-card-visibility">
+                    </Badge>
+                    <div className={styles.visibility}>
                         <Icon icon={getVisibilityIcon()} size={14} />
                     </div>
                 </div>
-                <h3 className="document-card-title">{document.title}</h3>
+                <h3 className={styles.title}>{document.title}</h3>
                 {document.excerpt && (
-                    <p className="document-card-excerpt">{document.excerpt}</p>
+                    <p className={styles.excerpt}>{document.excerpt}</p>
                 )}
             </div>
 
-            <div className="document-card-meta">
-                <div className="document-card-author">
-                    <div className="document-card-author-avatar">
-                        {document.authorPhoto ? (
-                            <img src={document.authorPhoto} alt={document.authorName} />
-                        ) : (
-                            document.authorName.charAt(0)
-                        )}
-                    </div>
-                    <div className="document-card-author-info">
-                        <div className="document-card-author-name">{document.authorName}</div>
-                        <div className="document-card-date">
+            <div className={styles.meta}>
+                <div className={styles.author}>
+                    <Avatar
+                        src={document.authorPhoto}
+                        alt={document.authorName}
+                        fallback={document.authorName.charAt(0).toUpperCase()}
+                        size="sm"
+                    />
+                    <div className={styles.authorInfo}>
+                        <div className={styles.authorName}>{document.authorName}</div>
+                        <div className={styles.date}>
                             Updated {formatDate(document.updatedAt)}
                         </div>
                     </div>
                 </div>
 
                 {document.collaborators.length > 0 && (
-                    <div className="document-card-collaborators">
-                        <div className="document-card-collaborators-avatars">
+                    <div className={styles.collaborators}>
+                        <div className={styles.collaboratorAvatars}>
                             {document.collaborators.slice(0, 3).map((collab) => (
-                                <div
+                                <Avatar
                                     key={collab.id}
-                                    className="document-card-collaborator-avatar"
-                                    title={collab.name}
-                                >
-                                    {collab.photo ? (
-                                        <img src={collab.photo} alt={collab.name} />
-                                    ) : (
-                                        collab.name.charAt(0)
-                                    )}
-                                </div>
+                                    src={collab.photo}
+                                    alt={collab.name}
+                                    fallback={collab.name.charAt(0).toUpperCase()}
+                                    size="xs"
+                                />
                             ))}
                             {document.collaborators.length > 3 && (
-                                <div className="document-card-collaborator-count">
+                                <span className={styles.collaboratorCount}>
                                     +{document.collaborators.length - 3}
-                                </div>
+                                </span>
                             )}
                         </div>
                     </div>
@@ -119,29 +116,29 @@ export function DocumentCard({ document, viewType = 'grid' }: DocumentCardProps)
             </div>
 
             {document.tags && document.tags.length > 0 && (
-                <div className="document-card-tags">
+                <div className={styles.tags}>
                     {document.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="document-card-tag">
+                        <Badge key={tag} variant="outline" size="sm">
                             {tag}
-                        </span>
+                        </Badge>
                     ))}
                 </div>
             )}
 
-            <div className="document-card-footer">
-                <div className="document-card-stat">
+            <div className={styles.footer}>
+                <div className={styles.stat}>
                     <Icon icon="eye" size={14} />
                     <span>{document.stats?.views || 0}</span>
                 </div>
-                <div className="document-card-stat">
+                <div className={styles.stat}>
                     <Icon icon="pencil" size={14} />
                     <span>{document.stats?.edits || 0}</span>
                 </div>
-                <div className="document-card-stat">
+                <div className={styles.stat}>
                     <Icon icon="comment" size={14} />
                     <span>{document.stats?.comments || 0}</span>
                 </div>
-                <div className="document-card-stat">
+                <div className={styles.stat}>
                     <Icon icon="fileText" size={14} />
                     <span>{document.wordCount} words</span>
                 </div>
