@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { StatusUpdate, formatTimeAgo } from '@/lib/status-updates';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
 import * as Popover from '@radix-ui/react-popover';
+import styles from './StatusUpdateCard.module.scss';
 
 interface StatusUpdateCardProps {
     statusUpdate: StatusUpdate;
@@ -56,35 +58,34 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
     };
 
     return (
-        <div className={`status-update-card ${isPinned ? 'pinned' : ''}`}>
+        <div className={`${styles.card} ${isPinned ? styles.pinned : ''}`}>
             {/* Pin Indicator */}
             {isPinned && (
-                <div className="status-update-pin-indicator">
+                <div className={styles.pinIndicator}>
                     <Icon icon="pin" size={14} />
                     <span>Pinned</span>
                 </div>
             )}
 
             {/* Header */}
-            <div className="status-update-card-header">
-                <Link href={`/users/${author.id}`} className="status-update-card-author">
-                    <div className="status-update-card-avatar">
-                        {author.photo ? (
-                            <img src={author.photo} alt={author.fullName} />
-                        ) : (
-                            <span>{author.fullName.charAt(0).toUpperCase()}</span>
-                        )}
-                    </div>
-                    <div className="status-update-card-author-info">
-                        <div className="status-update-card-author-name">{author.fullName}</div>
+            <div className={styles.header}>
+                <Link href={`/users/${author.id}`} className={styles.authorLink}>
+                    <Avatar
+                        src={author.photo}
+                        alt={author.fullName}
+                        fallback={author.fullName.charAt(0).toUpperCase()}
+                        size="md"
+                    />
+                    <div className={styles.authorInfo}>
+                        <div className={styles.authorName}>{author.fullName}</div>
                         {author.jobTitle && (
-                            <div className="status-update-card-author-title">{author.jobTitle}</div>
+                            <div className={styles.authorTitle}>{author.jobTitle}</div>
                         )}
                     </div>
                 </Link>
-                <div className="status-update-card-header-actions">
-                    <div className="status-update-card-meta">
-                        <span className="status-update-card-time">{formatTimeAgo(createdAt)}</span>
+                <div className={styles.headerActions}>
+                    <div className={styles.meta}>
+                        <span className={styles.time}>{formatTimeAgo(createdAt)}</span>
                     </div>
 
                     {/* Settings Menu - Admin Only */}
@@ -92,7 +93,7 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
                         <Popover.Root open={menuOpen} onOpenChange={setMenuOpen}>
                             <Popover.Trigger asChild>
                                 <button className="status-update-menu-trigger" aria-label="Post options">
-                                    <Icon icon="more-vertical" size={18} />
+                                    <Icon icon="moreVertical" size={18} />
                                 </button>
                             </Popover.Trigger>
                             <Popover.Portal>
@@ -101,7 +102,7 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
                                         {/* Pin/Unpin */}
                                         {isPinned ? (
                                             <button className="status-update-menu-item" onClick={handleUnpinPost}>
-                                                <Icon icon="pin-off" size={16} />
+                                                <Icon icon="x" size={16} />
                                                 <span>Unpin from this space</span>
                                             </button>
                                         ) : (
@@ -127,13 +128,13 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
 
                                         {/* Mark as Spam */}
                                         <button className="status-update-menu-item danger" onClick={handleMarkSpam}>
-                                            <Icon icon="alert-triangle" size={16} />
+                                            <Icon icon="alertTriangle" size={16} />
                                             <span>Mark as spam</span>
                                         </button>
 
                                         {/* Delete */}
                                         <button className="status-update-menu-item danger" onClick={handleDeletePost}>
-                                            <Icon icon="trash-2" size={16} />
+                                            <Icon icon="trash" size={16} />
                                             <span>Delete post</span>
                                         </button>
                                     </div>
@@ -146,30 +147,30 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
             </div>
 
             {/* Content */}
-            <div className="status-update-card-content">
-                <div className="status-update-card-text">
-                    {emoji && <span className="status-update-card-emoji">{emoji}</span>}
+            <div className={styles.content}>
+                <div className={styles.text}>
+                    {emoji && <span className={styles.emoji}>{emoji}</span>}
                     <span>{text}</span>
                 </div>
 
                 {/* Media Attachments */}
                 {statusUpdate.media && statusUpdate.media.length > 0 && (
-                    <div className={`status-update-card-media ${statusUpdate.media.length === 1 ? 'single' : 'grid'}`}>
+                    <div className={`${styles.media} ${statusUpdate.media.length === 1 ? styles.mediaSingle : styles.mediaGrid}`}>
                         {statusUpdate.media.map((media) => (
-                            <div key={media.id} className="status-update-card-media-item">
+                            <div key={media.id} className={styles.mediaItem}>
                                 {media.type === 'image' && (
-                                    <div className="status-media-image">
+                                    <div className={styles.mediaImage}>
                                         <img src={media.url} alt={media.caption || ''} />
                                         {media.caption && (
-                                            <div className="status-media-caption">{media.caption}</div>
+                                            <div className={styles.mediaCaption}>{media.caption}</div>
                                         )}
                                     </div>
                                 )}
                                 {media.type === 'video' && (
-                                    <div className="status-media-video">
+                                    <div className={styles.mediaVideo}>
                                         <video src={media.url} controls poster={media.thumbnail} />
                                         {media.caption && (
-                                            <div className="status-media-caption">{media.caption}</div>
+                                            <div className={styles.mediaCaption}>{media.caption}</div>
                                         )}
                                     </div>
                                 )}
@@ -178,22 +179,22 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
                                         href={media.url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="status-media-link-card"
+                                        className={styles.mediaLinkCard}
                                     >
                                         {media.thumbnail && (
-                                            <div className="status-media-link-image">
+                                            <div className={styles.mediaLinkImage}>
                                                 <img src={media.thumbnail} alt="" />
                                             </div>
                                         )}
-                                        <div className="status-media-link-content">
+                                        <div className={styles.mediaLinkContent}>
                                             {media.title && (
-                                                <div className="status-media-link-title">{media.title}</div>
+                                                <div className={styles.mediaLinkTitle}>{media.title}</div>
                                             )}
                                             {media.description && (
-                                                <div className="status-media-link-description">{media.description}</div>
+                                                <div className={styles.mediaLinkDescription}>{media.description}</div>
                                             )}
-                                            <div className="status-media-link-url">
-                                                {media.favicon && <img src={media.favicon} alt="" className="status-media-favicon" />}
+                                            <div className={styles.mediaLinkUrl}>
+                                                {media.favicon && <img src={media.favicon} alt="" className={styles.mediaFavicon} />}
                                                 <span>{new URL(media.url).hostname}</span>
                                             </div>
                                         </div>
@@ -205,14 +206,14 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
                 )}
 
                 {/* Context */}
-                <div className="status-update-card-context">
-                    <Link href={`/spaces/${space.id}`} className="status-update-card-space">
+                <div className={styles.context}>
+                    <Link href={`/spaces/${space.id}`} className={styles.spaceLink}>
                         <Icon icon="users" size={14} />
                         <span>{space.title}</span>
                     </Link>
 
                     {project && (
-                        <div className="status-update-card-project">
+                        <div className={styles.project}>
                             <Icon icon="folder" size={14} />
                             <span>{project.name}</span>
                         </div>
@@ -221,27 +222,27 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
 
                 {/* Tags */}
                 {tags && tags.length > 0 && (
-                    <div className="status-update-card-tags">
+                    <div className={styles.tags}>
                         {tags.map((tag) => (
-                            <span key={tag.id} className="status-update-card-tag">
+                            <Badge key={tag.id} variant="outline" size="sm">
                                 #{tag.name}
-                            </span>
+                            </Badge>
                         ))}
                     </div>
                 )}
             </div>
 
             {/* Actions */}
-            <div className="status-update-card-actions">
-                <button className="status-update-card-action">
+            <div className={styles.actions}>
+                <button className={styles.action}>
                     <Icon icon="heart" size={16} />
                     <span>{likesCount > 0 ? likesCount : ''}</span>
                 </button>
-                <button className="status-update-card-action">
+                <button className={styles.action}>
                     <Icon icon="comment" size={16} />
                     <span>{commentsCount > 0 ? commentsCount : ''}</span>
                 </button>
-                <button className="status-update-card-action">
+                <button className={styles.action}>
                     <Icon icon="bookmark" size={16} />
                 </button>
             </div>

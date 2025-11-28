@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { Update } from '@/lib/updates';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
+import styles from './UpdateCard.module.scss';
 
 interface UpdateCardProps {
     update: Update;
@@ -47,13 +49,13 @@ export function UpdateCard({ update }: UpdateCardProps) {
         return expiryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     };
 
-    const getPriorityColor = (priority: string) => {
+    const getPriorityVariant = (priority: string): 'danger' | 'warning' | 'primary' | 'default' => {
         switch (priority) {
-            case 'urgent': return 'priority-urgent';
-            case 'high': return 'priority-high';
-            case 'normal': return 'priority-normal';
-            case 'low': return 'priority-low';
-            default: return 'priority-normal';
+            case 'urgent': return 'danger';
+            case 'high': return 'warning';
+            case 'normal': return 'primary';
+            case 'low': return 'default';
+            default: return 'primary';
         }
     };
 
@@ -61,7 +63,7 @@ export function UpdateCard({ update }: UpdateCardProps) {
         switch (category) {
             case 'news': return 'bell';
             case 'milestone': return 'star';
-            case 'policy': return 'document';
+            case 'policy': return 'fileText';
             case 'announcement': return 'megaphone';
             default: return 'info';
         }
@@ -75,65 +77,60 @@ export function UpdateCard({ update }: UpdateCardProps) {
     };
 
     return (
-        <Link href={`/updates/${update.id}`} className="update-card-link">
-            <article className="update-card">
-                <div className="update-card-badges">
-                    <span className={`update-priority-badge ${getPriorityColor(update.priority)}`}>
+        <Link href={`/updates/${update.id}`} className={styles.link}>
+            <article className={styles.card}>
+                <div className={styles.badges}>
+                    <Badge variant={getPriorityVariant(update.priority)} size="sm">
                         {update.priority}
-                    </span>
-                    <span className="update-category-badge">
+                    </Badge>
+                    <Badge variant="outline" size="sm">
                         <Icon icon={getCategoryIcon(update.category)} size={14} />
-                        <span>{update.category}</span>
-                    </span>
+                        {update.category}
+                    </Badge>
                     {update.isPinned && (
-                        <span className="pinned-badge">
+                        <Badge variant="warning" size="sm">
                             <Icon icon="pin" size={14} />
-                            <span>Pinned</span>
-                        </span>
+                            Pinned
+                        </Badge>
                     )}
                 </div>
 
                 {isNearExpiry(update.expiresAt) && (
-                    <div className="update-expiry-notice">
+                    <div className={styles.expiryNotice}>
                         <Icon icon="clock" size={14} />
                         <span>Expires {formatExpiryDate(update.expiresAt!)}</span>
                     </div>
                 )}
 
-                <div className="update-card-header">
-                    <h3 className="update-card-title">{update.title}</h3>
+                <div className={styles.header}>
+                    <h3 className={styles.title}>{update.title}</h3>
                 </div>
 
-                <p className="update-card-excerpt">{getExcerpt()}</p>
+                <p className={styles.excerpt}>{getExcerpt()}</p>
 
-                <div className="update-card-meta">
-                    {update.author.profile?.photo ? (
-                        <img
-                            src={update.author.profile.photo}
-                            alt={update.author.fullName}
-                            className="update-card-avatar"
-                        />
-                    ) : (
-                        <div className="update-card-avatar update-card-avatar--placeholder">
-                            {update.author.fullName.charAt(0)}
-                        </div>
-                    )}
-                    <div className="update-card-author-info">
-                        <span className="update-card-author">{update.author.fullName}</span>
-                        <div className="update-card-meta-details">
-                            <span className="update-card-space">{update.space.title}</span>
-                            <span className="update-card-separator">•</span>
-                            <span className="update-card-date">{formatDate(update.createdAt)}</span>
+                <div className={styles.meta}>
+                    <Avatar
+                        src={update.author.profile?.photo}
+                        alt={update.author.fullName}
+                        fallback={update.author.fullName.charAt(0).toUpperCase()}
+                        size="sm"
+                    />
+                    <div className={styles.authorInfo}>
+                        <span className={styles.author}>{update.author.fullName}</span>
+                        <div className={styles.metaDetails}>
+                            <span className={styles.space}>{update.space.title}</span>
+                            <span className={styles.separator}>•</span>
+                            <span className={styles.date}>{formatDate(update.createdAt)}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="update-card-footer">
-                    <span className="update-card-stat">
-                        <Icon icon={update.isLiked ? 'heartFilled' : 'heart'} size={16} />
+                <div className={styles.footer}>
+                    <span className={styles.stat}>
+                        <Icon icon="heart" size={16} />
                         {update.likesCount}
                     </span>
-                    <span className="update-card-stat">
+                    <span className={styles.stat}>
                         <Icon icon="comment" size={16} />
                         {update.commentsCount}
                     </span>

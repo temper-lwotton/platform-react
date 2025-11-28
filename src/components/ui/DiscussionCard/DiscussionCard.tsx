@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Discussion } from '@/lib/discussions';
-import { Icon } from './Icon';
-import { useToast } from './ToastProvider';
+import { Icon } from '../Icon';
+import { useToast } from '../ToastProvider';
+import { Avatar } from '../primitives';
+import styles from './DiscussionCard.module.scss';
 
 interface DiscussionCardProps {
     discussion: Discussion;
@@ -51,66 +53,61 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
     };
 
     return (
-        <article className="discussion-card">
+        <article className={styles.card}>
             {spaceName && (
-                <div className="discussion-card-space">
-                    <Link href={`/spaces/${spaceId}`} className="discussion-card-space-link">
-                        <Icon icon="folder" size={14} className="discussion-card-space-icon" />
+                <div className={styles.space}>
+                    <Link href={`/spaces/${spaceId}`} className={styles.spaceLink}>
+                        <Icon icon="folder" size={14} />
                         {spaceName}
                     </Link>
                 </div>
             )}
 
-            <div className="discussion-card-header">
-                {discussion.author?.profile?.photo ? (
-                    <img
-                        src={discussion.author.profile.photo}
-                        alt={authorName}
-                        className="discussion-card-avatar"
-                    />
-                ) : (
-                    <div className="discussion-card-avatar discussion-card-avatar--placeholder">
-                        {initials}
-                    </div>
-                )}
-                <div className="discussion-card-meta">
-                    <span className="discussion-card-author">{authorName}</span>
-                    <span className="discussion-card-date">{formattedDate}</span>
+            <div className={styles.header}>
+                <Avatar
+                    src={discussion.author?.profile?.photo}
+                    alt={authorName}
+                    fallback={initials}
+                    size="sm"
+                />
+                <div className={styles.meta}>
+                    <span className={styles.author}>{authorName}</span>
+                    <span className={styles.date}>{formattedDate}</span>
                 </div>
             </div>
 
-            <Link href={`/spaces/${spaceId}/discussions/${discussion.id}`} className="discussion-card-title-link">
-                <h3 className="discussion-card-title">{discussion.title}</h3>
+            <Link href={`/spaces/${spaceId}/discussions/${discussion.id}`} className={styles.titleLink}>
+                <h3 className={styles.title}>{discussion.title}</h3>
             </Link>
 
             {discussion.excerpt && (
-                <p className="discussion-card-preview">
+                <p className={styles.preview}>
                     {discussion.excerpt.length > 150
                         ? `${discussion.excerpt.slice(0, 150)}...`
                         : discussion.excerpt}
                 </p>
             )}
 
-            <div className="discussion-card-footer">
-                <div className="discussion-card-stats">
-                    <span className="discussion-card-stat">
-                        <Icon icon="heart" size={16} className="discussion-card-stat-icon" />
+            <div className={styles.footer}>
+                <div className={styles.stats}>
+                    <span className={styles.stat}>
+                        <Icon icon="heart" size={16} />
                         {discussion.likesCount ?? 0}
                     </span>
-                    <span className="discussion-card-stat">
-                        <Icon icon="comment" size={16} className="discussion-card-stat-icon" />
+                    <span className={styles.stat}>
+                        <Icon icon="comment" size={16} />
                         {discussion.commentsCount ?? 0}
                     </span>
                 </div>
                 <button
                     onClick={handleBookmark}
-                    className="discussion-card-bookmark"
+                    className={styles.bookmark}
                     aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
                 >
                     <Icon
-                        icon={isBookmarked ? 'bookmarkFilled' : 'bookmark'}
+                        icon="bookmark"
                         size={18}
-                        className="discussion-card-bookmark-icon"
+                        className={styles.bookmarkIcon}
                     />
                 </button>
             </div>

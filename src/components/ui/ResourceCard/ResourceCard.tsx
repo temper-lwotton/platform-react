@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { Resource } from '@/lib/resources';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import { Avatar, Badge } from '../primitives';
+import styles from './ResourceCard.module.scss';
 
 interface ResourceCardProps {
     resource: Resource;
@@ -36,12 +38,12 @@ export function ResourceCard({ resource }: ResourceCardProps) {
         }
     };
 
-    const getDifficultyColor = (difficulty?: string) => {
+    const getDifficultyVariant = (difficulty?: string): 'success' | 'warning' | 'danger' | 'default' => {
         switch (difficulty) {
-            case 'beginner': return 'difficulty-beginner';
-            case 'intermediate': return 'difficulty-intermediate';
-            case 'advanced': return 'difficulty-advanced';
-            default: return '';
+            case 'beginner': return 'success';
+            case 'intermediate': return 'warning';
+            case 'advanced': return 'danger';
+            default: return 'default';
         }
     };
 
@@ -70,40 +72,40 @@ export function ResourceCard({ resource }: ResourceCardProps) {
     const estimatedTime = formatTime(resource.estimatedTime);
 
     return (
-        <Link href={`/resources/${resource.id}`} className="resource-card-link">
-            <article className="resource-card">
-                <div className="resource-card-header">
-                    <div className="resource-card-badges">
-                        <span className="resource-type-badge">
+        <Link href={`/resources/${resource.id}`} className={styles.link}>
+            <article className={styles.card}>
+                <div className={styles.header}>
+                    <div className={styles.badges}>
+                        <Badge variant="primary" size="sm">
                             <Icon icon={getResourceTypeIcon(resource.resourceType)} size={14} />
-                            <span>{getResourceTypeLabel(resource.resourceType)}</span>
-                        </span>
+                            {getResourceTypeLabel(resource.resourceType)}
+                        </Badge>
                         {resource.difficulty && (
-                            <span className={`difficulty-badge ${getDifficultyColor(resource.difficulty)}`}>
+                            <Badge variant={getDifficultyVariant(resource.difficulty)} size="sm">
                                 {resource.difficulty}
-                            </span>
+                            </Badge>
                         )}
                         {resource.isPinned && (
-                            <span className="pinned-badge">
+                            <Badge variant="warning" size="sm">
                                 <Icon icon="pin" size={14} />
-                                <span>Pinned</span>
-                            </span>
+                                Pinned
+                            </Badge>
                         )}
                     </div>
                     {estimatedTime && (
-                        <span className="resource-card-time">
+                        <span className={styles.time}>
                             <Icon icon="clock" size={14} />
                             {estimatedTime}
                         </span>
                     )}
                 </div>
 
-                <h3 className="resource-card-title">{resource.title}</h3>
+                <h3 className={styles.title}>{resource.title}</h3>
 
-                <p className="resource-card-excerpt">{getExcerpt()}</p>
+                <p className={styles.excerpt}>{getExcerpt()}</p>
 
                 {resource.attachments && resource.attachments.length > 0 && (
-                    <div className="resource-card-attachments">
+                    <div className={styles.attachments}>
                         <Icon icon="download" size={14} />
                         <span>
                             {resource.attachments.length} file{resource.attachments.length !== 1 ? 's' : ''}
@@ -114,46 +116,41 @@ export function ResourceCard({ resource }: ResourceCardProps) {
                     </div>
                 )}
 
-                <div className="resource-card-footer">
-                    <div className="resource-card-author">
-                        {resource.author.profile?.photo ? (
-                            <img
-                                src={resource.author.profile.photo}
-                                alt={resource.author.fullName}
-                                className="resource-card-author-photo"
-                            />
-                        ) : (
-                            <div className="resource-card-author-placeholder">
-                                {resource.author.fullName.charAt(0)}
-                            </div>
-                        )}
-                        <div className="resource-card-author-info">
-                            <span className="resource-card-author-name">{resource.author.fullName}</span>
-                            <span className="resource-card-space">{resource.space.title}</span>
+                <div className={styles.footer}>
+                    <div className={styles.author}>
+                        <Avatar
+                            src={resource.author.profile?.photo}
+                            alt={resource.author.fullName}
+                            fallback={resource.author.fullName.charAt(0).toUpperCase()}
+                            size="sm"
+                        />
+                        <div className={styles.authorInfo}>
+                            <span className={styles.authorName}>{resource.author.fullName}</span>
+                            <span className={styles.space}>{resource.space.title}</span>
                         </div>
                     </div>
-                    <div className="resource-card-meta">
+                    <div className={styles.meta}>
                         {resource.version && (
                             <>
-                                <span className="resource-card-version">v{resource.version}</span>
-                                <span className="resource-card-separator">•</span>
+                                <span className={styles.version}>v{resource.version}</span>
+                                <span className={styles.separator}>•</span>
                             </>
                         )}
-                        <span className="resource-card-date">{formatDate(resource.updatedAt)}</span>
+                        <span className={styles.date}>{formatDate(resource.updatedAt)}</span>
                     </div>
                 </div>
 
-                <div className="resource-card-stats">
-                    <span className="resource-card-stat">
+                <div className={styles.stats}>
+                    <span className={styles.stat}>
                         <Icon icon="eye" size={16} />
                         {resource.viewCount}
                     </span>
-                    <span className="resource-card-stat">
+                    <span className={styles.stat}>
                         <Icon icon="download" size={16} />
                         {resource.downloadCount}
                     </span>
-                    <span className="resource-card-stat">
-                        <Icon icon={resource.isHelpful ? 'thumbsUpFilled' : 'thumbsUp'} size={16} />
+                    <span className={styles.stat}>
+                        <Icon icon="thumbsUp" size={16} />
                         {resource.helpfulCount}
                     </span>
                 </div>
