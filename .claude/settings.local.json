@@ -9,7 +9,10 @@
       "Bash(mkdir:*)",
       "Bash(/tmp/globals-remainder.txt)",
       "Bash(node -c:*)",
-      "Bash(npx sass:*)"
+      "Bash(npx sass:*)",
+      "Bash(for file in src/components/ui/ShowcaseCard.tsx src/components/ui/ExchangeCard.tsx src/components/ui/ResourceCard.tsx src/components/ui/UpdateCard.tsx src/components/ui/DiscussionCard.tsx)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

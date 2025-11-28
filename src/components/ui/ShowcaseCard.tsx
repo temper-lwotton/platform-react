@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Showcase } from '@/lib/showcases';
 import { Icon } from './Icon';
+import { Avatar, Badge } from './primitives';
 
 interface ShowcaseCardProps {
     showcase: Showcase;
@@ -57,10 +58,10 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
                 <div className="showcase-card-content">
                     <div className="showcase-card-header">
                         {showcase.isPinned && (
-                            <span className="pinned-badge">
+                            <Badge variant="warning" size="sm" className="pinned-badge">
                                 <Icon icon="pin" size={14} />
-                                <span>Featured</span>
-                            </span>
+                                Featured
+                            </Badge>
                         )}
                     </div>
 
@@ -84,40 +85,32 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
                             <span className="showcase-card-team-label">Team:</span>
                             <div className="showcase-card-team-avatars">
                                 {showcase.teamMembers.slice(0, 4).map((member) => (
-                                    member.photo ? (
-                                        <img
-                                            key={member.id}
-                                            src={member.photo}
-                                            alt={member.fullName}
-                                            className="showcase-card-team-avatar"
-                                        />
-                                    ) : (
-                                        <div key={member.id} className="showcase-card-team-avatar showcase-card-team-avatar--placeholder">
-                                            {member.fullName.charAt(0)}
-                                        </div>
-                                    )
+                                    <Avatar
+                                        key={member.id}
+                                        src={member.photo}
+                                        alt={member.fullName}
+                                        fallback={member.fullName.charAt(0).toUpperCase()}
+                                        size="xs"
+                                        className="showcase-card-team-avatar"
+                                    />
                                 ))}
                                 {showcase.teamMembers.length > 4 && (
-                                    <div className="showcase-card-team-more">
+                                    <Badge variant="default" size="sm" className="showcase-card-team-more">
                                         +{showcase.teamMembers.length - 4}
-                                    </div>
+                                    </Badge>
                                 )}
                             </div>
                         </div>
                     )}
 
                     <div className="showcase-card-meta">
-                        {showcase.author.profile?.photo ? (
-                            <img
-                                src={showcase.author.profile.photo}
-                                alt={showcase.author.fullName}
-                                className="showcase-card-avatar"
-                            />
-                        ) : (
-                            <div className="showcase-card-avatar showcase-card-avatar--placeholder">
-                                {showcase.author.fullName.charAt(0)}
-                            </div>
-                        )}
+                        <Avatar
+                            src={showcase.author.profile?.photo}
+                            alt={showcase.author.fullName}
+                            fallback={showcase.author.fullName.charAt(0).toUpperCase()}
+                            size="sm"
+                            className="showcase-card-avatar"
+                        />
                         <div className="showcase-card-author-info">
                             <span className="showcase-card-author">{showcase.author.fullName}</span>
                             {duration && (
@@ -131,7 +124,7 @@ export function ShowcaseCard({ showcase }: ShowcaseCardProps) {
 
                     <div className="showcase-card-footer">
                         <span className="showcase-card-stat">
-                            <Icon icon={showcase.isLiked ? 'heartFilled' : 'heart'} size={16} />
+                            <Icon icon="heart" size={16} />
                             {showcase.likesCount}
                         </span>
                         <span className="showcase-card-stat">
