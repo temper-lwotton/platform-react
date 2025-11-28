@@ -1,0 +1,8 @@
+// ============================================
+// Abstracts Index
+// ============================================
+// This file exports all abstract utilities (variables, mixins, functions)
+// Use @use "abstracts" to import all abstracts in your components
+
+@forward 'variables';
+@forward 'mixins';

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
-import './globals.css';
+import './globals.scss';
 import { QueryClientWrapper } from './query-client-provider';
 import { Navigation } from '@/components/ui/Navigation';
 import { ThemeProvider } from '@/contexts/ThemeContext';

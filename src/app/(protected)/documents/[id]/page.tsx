@@ -95,7 +95,7 @@ export default function DocumentEditorPage() {
                                 onClick={handleSave}
                                 className="document-editor-action document-editor-action--primary"
                             >
-                                <Icon icon="save" size={18} />
+                                <Icon icon="check" size={18} />
                                 Save Changes
                             </button>
                         </>
@@ -114,7 +114,7 @@ export default function DocumentEditorPage() {
                                 onClick={() => setIsEditing(true)}
                                 className="document-editor-action document-editor-action--primary"
                             >
-                                <Icon icon="edit" size={18} />
+                                <Icon icon="pencil" size={18} />
                                 Edit
                             </button>
                             <button className="document-editor-action document-editor-action--icon">

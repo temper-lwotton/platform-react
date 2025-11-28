@@ -1,0 +1,15 @@
+// ============================================
+// Main Styles Entry Point
+// ============================================
+// This file is imported by globals.scss
+// It provides the foundation: variables, mixins, and base styles
+
+// Abstracts (variables, mixins, functions)
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
+
+// Base styles (reset, typography, global)
+@use 'base/reset';
+
+// Layout styles will be added in future phases
+// @use 'layout';

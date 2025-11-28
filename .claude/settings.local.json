@@ -6,7 +6,8 @@
       "Bash(cat:*)",
       "Bash(npx tsc:*)",
       "Bash(find:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(/tmp/globals-remainder.txt)"
     ],
     "deny": [],
     "ask": []

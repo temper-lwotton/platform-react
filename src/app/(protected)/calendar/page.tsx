@@ -52,7 +52,7 @@ export default function CalendarPage() {
                     start: new Date(event.eventStart),
                     end: new Date(event.eventEnd),
                     color: '#3b82f6', // Blue for events
-                    spaceTitle: typeof event.space === 'object' ? event.space.title : undefined,
+                    spaceTitle: typeof event.space === 'object' ? event.space.name : undefined,
                     spaceId: typeof event.space === 'object' ? String(event.space.id) : String(event.space),
                     url: `/events/${event.id}`
                 });
@@ -69,7 +69,7 @@ export default function CalendarPage() {
                     title: task.title,
                     start: dueDate,
                     end: dueDate,
-                    color: task.priority === 'high' ? '#ef4444' : task.priority === 'medium' ? '#f59e0b' : '#10b981',
+                    color: '#10b981', // Green for tasks
                     url: `/tasks`
                 });
             }
@@ -215,7 +215,7 @@ export default function CalendarPage() {
                                                         style={{ borderLeftColor: item.color }}
                                                     >
                                                         <div className="calendar-item-content">
-                                                            <Icon icon={item.type === 'event' ? 'calendar' : 'check-square'} size={12} />
+                                                            <Icon icon={item.type === 'event' ? 'calendar' : 'check'} size={12} />
                                                             <span className="calendar-item-title">{item.title}</span>
                                                         </div>
                                                     </Link>
@@ -259,7 +259,7 @@ export default function CalendarPage() {
                                 </div>
                                 <div className="calendar-upcoming-info">
                                     <div className="calendar-upcoming-item-title">
-                                        <Icon icon={item.type === 'event' ? 'calendar' : 'check-square'} size={16} />
+                                        <Icon icon={item.type === 'event' ? 'calendar' : 'check'} size={16} />
                                         {item.title}
                                     </div>
                                     {item.spaceTitle && (
