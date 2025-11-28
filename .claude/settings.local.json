@@ -7,7 +7,9 @@
       "Bash(npx tsc:*)",
       "Bash(find:*)",
       "Bash(mkdir:*)",
-      "Bash(/tmp/globals-remainder.txt)"
+      "Bash(/tmp/globals-remainder.txt)",
+      "Bash(node -c:*)",
+      "Bash(npx sass:*)"
     ],
     "deny": [],
     "ask": []

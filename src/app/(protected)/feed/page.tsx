@@ -128,10 +128,7 @@ export default function FeedPage() {
   } = useInfiniteQuery({
     queryKey: ['feed-updates'],
     queryFn: ({ pageParam = 0 }) =>
-      getUpdates({
-        limit: ITEMS_PER_PAGE,
-        offset: pageParam,
-      }),
+      getUpdates(),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length < ITEMS_PER_PAGE) {
         return undefined;
@@ -152,10 +149,7 @@ export default function FeedPage() {
   } = useInfiniteQuery({
     queryKey: ['feed-showcases'],
     queryFn: ({ pageParam = 0 }) =>
-      getShowcases({
-        limit: ITEMS_PER_PAGE,
-        offset: pageParam,
-      }),
+      getShowcases(),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length < ITEMS_PER_PAGE) {
         return undefined;
@@ -176,10 +170,7 @@ export default function FeedPage() {
   } = useInfiniteQuery({
     queryKey: ['feed-resources'],
     queryFn: ({ pageParam = 0 }) =>
-      getResources({
-        limit: ITEMS_PER_PAGE,
-        offset: pageParam,
-      }),
+      getResources(),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length < ITEMS_PER_PAGE) {
         return undefined;

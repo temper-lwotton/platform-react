@@ -9,6 +9,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  ArrowUp,
+  ArrowDown,
   Home,
   ExternalLink,
   Bell,
@@ -56,11 +58,23 @@ import {
   Briefcase,
   Building,
   Sparkles,
+  Lock,
+  Rss,
+  Globe,
+  Plus,
+  Search,
+  ArrowUpDown,
+  List,
+  Info,
+  Package,
+  Gift,
+  DollarSign,
+  Eye,
 } from 'lucide-react';
 import { CSSProperties } from 'react';
 
 interface IconProps {
-  icon: 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles';
+  icon: 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'mapPin' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'arrowUp' | 'arrowDown' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles' | 'lock' | 'rss' | 'globe' | 'plus' | 'search' | 'arrowUpDown' | 'list' | 'info' | 'package' | 'gift' | 'dollarSign' | 'eye';
   size?: number;
   className?: string;
   style?: CSSProperties;
@@ -72,12 +86,15 @@ export function Icon({ icon, size = 24, className = '', style }: IconProps) {
     heart: Heart,
     calendar: Calendar,
     mapMarker: MapPin,
+    mapPin: MapPin,
     link: Link2,
     folder: Folder,
     chevronDown: ChevronDown,
     chevronLeft: ChevronLeft,
     chevronRight: ChevronRight,
     arrowLeft: ArrowLeft,
+    arrowUp: ArrowUp,
+    arrowDown: ArrowDown,
     home: Home,
     external: ExternalLink,
     bell: Bell,
@@ -126,6 +143,18 @@ export function Icon({ icon, size = 24, className = '', style }: IconProps) {
     briefcase: Briefcase,
     building: Building,
     sparkles: Sparkles,
+    lock: Lock,
+    rss: Rss,
+    globe: Globe,
+    plus: Plus,
+    search: Search,
+    arrowUpDown: ArrowUpDown,
+    list: List,
+    info: Info,
+    package: Package,
+    gift: Gift,
+    dollarSign: DollarSign,
+    eye: Eye,
   };
 
   const LucideIcon = iconMap[icon];

@@ -142,7 +142,7 @@ export default function DocumentsPage() {
                             aria-label="Grid view"
                             title="Grid view"
                         >
-                            <Icon icon="grid" size={18} />
+                            <Icon icon="layoutGrid" size={18} />
                         </button>
                         <button
                             onClick={() => setViewType('list')}

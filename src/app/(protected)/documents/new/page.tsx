@@ -209,7 +209,7 @@ export default function NewDocumentPage() {
                                 onClick={handleSaveDraft}
                                 className="document-new-draft"
                             >
-                                <Icon icon="save" size={18} />
+                                <Icon icon="bookmark" size={18} />
                                 Save as Draft
                             </button>
                             <button

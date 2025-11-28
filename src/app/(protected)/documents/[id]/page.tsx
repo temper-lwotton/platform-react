@@ -299,7 +299,7 @@ export default function DocumentEditorPage() {
                                     <div className="document-editor-collaborators-header">
                                         <h3>Collaborators</h3>
                                         <button className="document-editor-collaborators-add">
-                                            <Icon icon="plus" size={16} />
+                                            <Icon icon="userPlus" size={16} />
                                             Invite
                                         </button>
                                     </div>
@@ -387,7 +387,7 @@ export default function DocumentEditorPage() {
                                                     {version.changes}
                                                 </div>
                                                 <button className="document-editor-version-restore">
-                                                    <Icon icon="history" size={14} />
+                                                    <Icon icon="clock" size={14} />
                                                     Restore
                                                 </button>
                                             </div>

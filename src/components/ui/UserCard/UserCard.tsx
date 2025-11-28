@@ -4,8 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { User, sendConnectionRequest, removeConnection } from '@/lib/users';
 import { getCurrentUserId } from '@/lib/auth';
-import { useToast } from './ToastProvider';
-import { Icon } from './Icon';
+import { useToast } from '../ToastProvider';
+import { Icon } from '../Icon';
+import styles from './UserCard.module.scss';
 
 interface UserCardProps {
     user: User;
@@ -117,7 +118,7 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
         if (isConnecting) {
             return (
                 <>
-                    <span className="user-card-btn-spinner"></span>
+                    <span className={styles.btnSpinner}></span>
                     Connecting...
                 </>
             );
@@ -149,40 +150,41 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
     };
 
     const getButtonClassName = () => {
-        let className = `user-card-connect-btn user-card-connect-btn--${status}`;
-        if (isConnecting) className += ' user-card-connect-btn--loading';
-        if (error) className += ' user-card-connect-btn--error';
-        return className;
+        const baseClass = styles.connectBtn;
+        const statusClass = styles[`connectBtn--${status}`] || '';
+        const loadingClass = isConnecting ? styles['connectBtn--loading'] : '';
+        const errorClass = error ? styles['connectBtn--error'] : '';
+        return [baseClass, statusClass, loadingClass, errorClass].filter(Boolean).join(' ');
     };
 
     return (
-        <article className="user-card">
+        <article className={styles.card}>
             {/* 4:3 Cover Image Section */}
-            <Link href={`/users/${user.id}`} className="user-card-cover-link">
-                <div className="user-card-cover">
+            <Link href={`/users/${user.id}`} className={styles.coverLink}>
+                <div className={styles.cover}>
                     {profile.photo ? (
                         <img
                             src={profile.photo}
                             alt={displayName}
-                            className="user-card-cover-image"
+                            className={styles.coverImage}
                         />
                     ) : (
-                        <div className={`user-card-cover-placeholder user-card-cover-placeholder--${colorVariation}`}>
-                            <span className="user-card-cover-initials">{initials}</span>
+                        <div className={`${styles.coverPlaceholder} ${styles[`coverPlaceholder--${colorVariation}`]}`}>
+                            <span className={styles.coverInitials}>{initials}</span>
                         </div>
                     )}
                 </div>
             </Link>
 
             {/* Card Content */}
-            <div className="user-card-content">
+            <div className={styles.content}>
                 {/* Name and New Badge */}
-                <div className="user-card-name-section">
-                    <Link href={`/users/${user.id}`} className="user-card-name-link">
-                        <h3 className="user-card-name">{displayName}</h3>
+                <div className={styles.nameSection}>
+                    <Link href={`/users/${user.id}`} className={styles.nameLink}>
+                        <h3 className={styles.name}>{displayName}</h3>
                     </Link>
                     {isNewUser && (
-                        <span className="user-card-new-badge">
+                        <span className={styles.newBadge}>
                             <Icon icon="sparkles" size={12} />
                             New
                         </span>
@@ -191,7 +193,7 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
 
                 {/* Job Title */}
                 {profile.jobTitle && (
-                    <p className="user-card-job-title">
+                    <p className={styles.jobTitle}>
                         <Icon icon="briefcase" size={14} />
                         {profile.jobTitle}
                     </p>
@@ -199,7 +201,7 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
 
                 {/* Company Name */}
                 {profile.companyName && (
-                    <p className="user-card-company">
+                    <p className={styles.company}>
                         <Icon icon="building" size={14} />
                         {profile.companyName}
                     </p>
@@ -207,18 +209,18 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
 
                 {/* Interest Tags */}
                 {transportModes.length > 0 && (
-                    <div className="user-card-tags">
+                    <div className={styles.tags}>
                         {transportModes.slice(0, 4).map((mode, index) => (
                             <span
                                 key={index}
-                                className="user-card-tag"
+                                className={styles.tag}
                                 style={{ animationDelay: `${index * 50}ms` }}
                             >
                                 {mode}
                             </span>
                         ))}
                         {transportModes.length > 4 && (
-                            <span className="user-card-tag user-card-tag-more">
+                            <span className={`${styles.tag} ${styles.tagMore}`}>
                                 +{transportModes.length - 4}
                             </span>
                         )}
@@ -237,16 +239,16 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
 
                 {/* Error Message */}
                 {error && (
-                    <div className="user-card-error">
+                    <div className={styles.error}>
                         <Icon icon="alertCircle" size={14} />
                         {error}
                     </div>
                 )}
 
                 {/* Footer Metadata */}
-                <div className="user-card-footer">
+                <div className={styles.footer}>
                     {spaceCount > 0 && (
-                        <span className="user-card-meta">
+                        <span className={styles.meta}>
                             <Icon icon="users" size={14} />
                             {spaceCount} space{spaceCount !== 1 ? 's' : ''}
                         </span>

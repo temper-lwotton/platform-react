@@ -101,6 +101,7 @@ export default function NewExchangePage() {
                 type: exchangeType,
                 category,
                 terms,
+                availability: 'available',
                 price: price && terms === 'paid' ? Number(price) : undefined,
                 conditions: conditions.trim() || undefined,
                 location: locationType ? {

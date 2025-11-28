@@ -136,7 +136,7 @@ export default function ExchangeDetailPage() {
         .slice(0, 2);
 
     const isOwnExchange = currentUserId === exchange.author.id;
-    const hasExpressedInterest = exchange.interestedUsers?.some(user => user.userId === currentUserId);
+    const hasExpressedInterest = exchange.interestedUsers?.some(user => user.id === currentUserId);
     const canExpressInterest = !isOwnExchange && exchange.availability === 'available' && !hasExpressedInterest;
 
     return (
@@ -236,7 +236,7 @@ export default function ExchangeDetailPage() {
                                     onClick={() => setShowInterestForm(true)}
                                     className="exchange-interest-btn exchange-interest-btn--primary"
                                 >
-                                    <Icon icon="messageSquare" size={18} />
+                                    <Icon icon="comment" size={18} />
                                     Express Interest
                                 </button>
                             )}
@@ -290,8 +290,8 @@ export default function ExchangeDetailPage() {
                             )}
 
                             <LikesDisplay
-                                likesCount={exchange.likesCount ?? 0}
-                                isLiked={exchange.isLiked ?? false}
+                                likesCount={0}
+                                isLiked={false}
                                 likedBy={[]}
                                 onLikeToggle={() => {}}
                             />
@@ -357,14 +357,14 @@ export default function ExchangeDetailPage() {
                         <div className="exchange-stat-item">
                             <Icon icon="eye" size={20} />
                             <div>
-                                <div className="exchange-stat-value">{exchange.viewCount}</div>
+                                <div className="exchange-stat-value">0</div>
                                 <div className="exchange-stat-label">Views</div>
                             </div>
                         </div>
                         <div className="exchange-stat-item">
                             <Icon icon="heart" size={20} />
                             <div>
-                                <div className="exchange-stat-value">{exchange.likesCount}</div>
+                                <div className="exchange-stat-value">0</div>
                                 <div className="exchange-stat-label">Likes</div>
                             </div>
                         </div>
@@ -375,20 +375,12 @@ export default function ExchangeDetailPage() {
                             <h3 className="exchange-interested-title">Interested Users</h3>
                             <div className="exchange-interested-list">
                                 {exchange.interestedUsers.map((interested) => (
-                                    <div key={interested.userId} className="exchange-interested-item">
-                                        {interested.user.photo ? (
-                                            <img
-                                                src={interested.user.photo}
-                                                alt={interested.user.fullName}
-                                                className="exchange-interested-avatar"
-                                            />
-                                        ) : (
-                                            <div className="exchange-interested-avatar exchange-interested-avatar--placeholder">
-                                                {interested.user.fullName.charAt(0)}
-                                            </div>
-                                        )}
+                                    <div key={interested.id} className="exchange-interested-item">
+                                        <div className="exchange-interested-avatar exchange-interested-avatar--placeholder">
+                                            {interested.fullName.charAt(0)}
+                                        </div>
                                         <div className="exchange-interested-info">
-                                            <div className="exchange-interested-name">{interested.user.fullName}</div>
+                                            <div className="exchange-interested-name">{interested.fullName}</div>
                                             {interested.message && (
                                                 <div className="exchange-interested-message">{interested.message}</div>
                                             )}
@@ -403,7 +395,7 @@ export default function ExchangeDetailPage() {
 
             <section className="exchange-comments">
                 <h2 className="exchange-comments-title">
-                    Comments ({exchange.commentsCount ?? 0})
+                    Comments (0)
                 </h2>
                 <p className="exchange-comments-placeholder">
                     Comments functionality will be added in a future update.

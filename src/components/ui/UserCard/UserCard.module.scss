@@ -1,0 +1,377 @@
+@use '../../../styles/abstracts' as *;
+
+// User Card Component
+.card {
+  @include card-base;
+  overflow: hidden;
+  @include flex-column;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+
+    .coverImage {
+      transform: scale(1.05);
+    }
+
+    .coverPlaceholder {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// 4:3 Cover Image Section
+.coverLink {
+  display: block;
+  text-decoration: none;
+  border-radius: 12px 12px 0 0;
+  outline: none;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.cover {
+  @include aspect-ratio(4, 3);
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+}
+
+.coverImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.coverPlaceholder {
+  @include flex-center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  transition: transform 0.3s ease;
+}
+
+// Color Variations for Placeholder
+.coverPlaceholder--0 {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+}
+
+.coverPlaceholder--1 {
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);
+}
+
+.coverPlaceholder--2 {
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ef4444 100%);
+}
+
+.coverPlaceholder--3 {
+  background: linear-gradient(135deg, #ec4899 0%, #d946ef 50%, #a855f7 100%);
+}
+
+.coverPlaceholder--4 {
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+}
+
+.coverInitials {
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  user-select: none;
+}
+
+// Card Content
+.content {
+  @include flex-column;
+  padding: 1.25rem;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+// Name Section
+.nameSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.nameLink {
+  text-decoration: none;
+  color: inherit;
+  border-radius: 4px;
+  outline: none;
+  flex: 1;
+  min-width: 0;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &:hover .name {
+    color: var(--color-primary);
+  }
+}
+
+.name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.newBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  animation: badgeSlideIn 0.4s ease-out;
+}
+
+@keyframes badgeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Job Title
+.jobTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+// Company
+.company {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+// Interest Tags
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.tag {
+  padding: 6px 12px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  animation: tagFadeIn 0.4s ease-out backwards;
+
+  &:hover {
+    background: var(--color-bg-tertiary);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes tagFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tagMore {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+// Connect CTA Button
+.connectBtn {
+  @include button-base;
+  background: var(--color-primary);
+  color: white;
+  margin-top: auto;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  &:focus-visible {
+    @include focus-ring(var(--color-primary));
+  }
+}
+
+// Connection States
+.connectBtn--pending {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  cursor: default;
+
+  &:hover {
+    background: var(--color-bg-secondary);
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.connectBtn--connected {
+  background: #10b981;
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+
+    &::after {
+      content: ' • Click to Disconnect';
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+  }
+}
+
+.connectBtn--loading {
+  cursor: wait;
+  opacity: 0.7;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// Loading Spinner
+.btnSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Error State
+.connectBtn--error {
+  border: 1px solid #dc2626;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem;
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  margin-top: -0.25rem;
+  animation: errorSlideIn 0.3s ease-out;
+
+  @include dark-mode {
+    background: #450a0a;
+    color: #fca5a5;
+  }
+}
+
+@keyframes errorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Footer Metadata
+.footer {
+  @include flex-center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-primary);
+  margin-top: 0.25rem;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+// Responsive Refinements
+@include responsive(mobile) {
+  .coverInitials {
+    font-size: 3rem;
+  }
+
+  .content {
+    padding: 1rem;
+    gap: 0.625rem;
+  }
+
+  .name {
+    font-size: 1rem;
+  }
+
+  .connectBtn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+  }
+
+  .tag {
+    font-size: 0.6875rem;
+    padding: 5px 10px;
+  }
+}
