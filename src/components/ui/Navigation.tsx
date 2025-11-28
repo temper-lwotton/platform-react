@@ -22,14 +22,14 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     { href: '/feed', label: 'Home', requiresAuth: true },
-    { href: '/events', label: 'Events', requiresAuth: true },
+    { href: '/users', label: 'Connect', requiresAuth: true },
     {
         label: 'Grow',
         requiresAuth: true,
         children: [
-            { href: '/showcases', label: 'Success Stories', icon: 'star' },
-            { href: '/resources', label: 'Knowledge Base', icon: 'book' },
-            { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
+            { href: '/showcases', label: 'Funding', icon: 'star' },
+            { href: '/resources', label: 'Opportunities', icon: 'book' },
+            { href: '/exchanges', label: 'Find an expert', icon: 'repeat' }
         ]
     },
     {
@@ -58,7 +58,7 @@ const navItems: NavItem[] = [
             { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
         ]
     },
-    { href: '/users', label: 'People', requiresAuth: true },
+    { href: '/events', label: 'Events', requiresAuth: true },
     { href: '/login', label: 'Login', hideWhenAuth: true },
 ];
 
