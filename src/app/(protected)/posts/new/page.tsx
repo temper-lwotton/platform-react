@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Popover from '@radix-ui/react-popover';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import * as Label from '@radix-ui/react-label';
 import Link from 'next/link';
 import { createDiscussion } from '@/lib/discussions';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
@@ -13,6 +12,7 @@ import { getSpace, Space } from '@/lib/spaces';
 import { ExcerptSelector } from '@/components/ui/ExcerptSelector';
 import { EngagementAnalysis } from '@/components/ui/EngagementAnalysis';
 import { LexicalEditor } from '@/components/ui/LexicalEditor';
+import { Input, Button } from '@/components/ui/primitives';
 import { MentionUser } from '@/hooks/useMentions';
 import type { EngagementAnalysis as EngagementAnalysisType } from '@/types/engagement';
 
@@ -270,9 +270,9 @@ export default function NewPostPage() {
                 {currentStep === 1 && (
                     <form className="new-post-form" onSubmit={handleStep1Next}>
                         <div className="form-field">
-                            <Label.Root className="form-label">
+                            <label className="form-label">
                                 Space
-                            </Label.Root>
+                            </label>
                             <Popover.Root open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
                                 <Popover.Trigger asChild>
                                     <button
@@ -353,25 +353,21 @@ export default function NewPostPage() {
                             </Popover.Root>
                         </div>
 
-                        <div className="form-field">
-                            <Label.Root htmlFor="post-title" className="form-label">
-                                Title
-                            </Label.Root>
-                            <input
-                                id="post-title"
-                                type="text"
-                                className="form-input"
-                                placeholder="What would you like to discuss?"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                required
-                            />
-                        </div>
+                        <Input
+                            id="post-title"
+                            type="text"
+                            label="Title"
+                            placeholder="What would you like to discuss?"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                            fullWidth
+                        />
 
                         <div className="form-field">
-                            <Label.Root htmlFor="post-content" className="form-label">
+                            <label htmlFor="post-content" className="form-label">
                                 Content
-                            </Label.Root>
+                            </label>
                             <LexicalEditor
                                 value={content}
                                 onChange={handleEditorChange}
@@ -400,13 +396,15 @@ export default function NewPostPage() {
                             >
                                 Cancel
                             </Link>
-                            <button
+                            <Button
                                 type="submit"
-                                className="form-button new-post-submit"
-                                disabled={!isStep1Valid || generateExcerptsMutation.isPending}
+                                variant="primary"
+                                size="lg"
+                                disabled={!isStep1Valid}
+                                loading={generateExcerptsMutation.isPending}
                             >
-                                {generateExcerptsMutation.isPending ? 'Analyzing...' : 'Next: AI Enhancement'}
-                            </button>
+                                Next: AI Enhancement
+                            </Button>
                         </div>
                     </form>
                 )}
@@ -438,21 +436,23 @@ export default function NewPostPage() {
                         )}
 
                         <div className="new-post-actions">
-                            <button
+                            <Button
                                 type="button"
                                 onClick={handleBack}
-                                className="new-post-back"
+                                variant="outline"
                                 disabled={createMutation.isPending}
                             >
                                 ← Back
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 type="submit"
-                                className="form-button new-post-submit"
-                                disabled={!isStep2Valid || createMutation.isPending}
+                                variant="primary"
+                                size="lg"
+                                disabled={!isStep2Valid}
+                                loading={createMutation.isPending}
                             >
-                                {createMutation.isPending ? 'Posting...' : 'Post Discussion'}
-                            </button>
+                                Post Discussion
+                            </Button>
                         </div>
                     </form>
                 )}
