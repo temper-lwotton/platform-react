@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Exchange } from '@/lib/exchanges';
 import { Icon } from './Icon';
+import { Avatar, Badge } from './primitives';
 
 interface ExchangeCardProps {
     exchange: Exchange;
@@ -37,16 +38,6 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
             case 'materials': return 'package';
             case 'other': return 'info';
             default: return 'info';
-        }
-    };
-
-    const getAvailabilityColor = (availability: string) => {
-        switch (availability) {
-            case 'available': return 'availability-available';
-            case 'in-use': return 'availability-in-use';
-            case 'fulfilled': return 'availability-fulfilled';
-            case 'expired': return 'availability-expired';
-            default: return 'availability-available';
         }
     };
 
@@ -108,27 +99,39 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
                             className="exchange-card-image"
                         />
                         {exchange.images.length > 1 && (
-                            <span className="exchange-card-image-count">
+                            <Badge variant="default" size="sm" className="exchange-card-image-count">
                                 <Icon icon="eye" size={14} />
                                 {exchange.images.length}
-                            </span>
+                            </Badge>
                         )}
                     </div>
                 )}
 
                 <div className="exchange-card-content">
                     <div className="exchange-card-badges">
-                        <span className={`exchange-type-badge exchange-type-badge--${exchange.type}`}>
+                        <Badge
+                            variant={exchange.type === 'offering' ? 'success' : 'primary'}
+                            size="sm"
+                            className="exchange-type-badge"
+                        >
                             <Icon icon={exchange.type === 'offering' ? 'arrowUp' : 'arrowDown'} size={14} />
-                            <span>{exchange.type === 'offering' ? 'Offering' : 'Request'}</span>
-                        </span>
-                        <span className="exchange-category-badge">
+                            {exchange.type === 'offering' ? 'Offering' : 'Request'}
+                        </Badge>
+                        <Badge variant="outline" size="sm" className="exchange-category-badge">
                             <Icon icon={getCategoryIcon(exchange.category)} size={14} />
-                            <span>{exchange.category}</span>
-                        </span>
-                        <span className={`exchange-availability-badge ${getAvailabilityColor(exchange.availability)}`}>
+                            {exchange.category}
+                        </Badge>
+                        <Badge
+                            variant={
+                                exchange.availability === 'available' ? 'success' :
+                                exchange.availability === 'in-use' ? 'warning' :
+                                exchange.availability === 'fulfilled' ? 'info' : 'default'
+                            }
+                            size="sm"
+                            className="exchange-availability-badge"
+                        >
                             {getAvailabilityLabel(exchange.availability)}
-                        </span>
+                        </Badge>
                     </div>
 
                     <div className="exchange-card-header">
@@ -164,17 +167,13 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
                     )}
 
                     <div className="exchange-card-meta">
-                        {exchange.author.profile?.photo ? (
-                            <img
-                                src={exchange.author.profile.photo}
-                                alt={exchange.author.fullName}
-                                className="exchange-card-avatar"
-                            />
-                        ) : (
-                            <div className="exchange-card-avatar exchange-card-avatar--placeholder">
-                                {exchange.author.fullName.charAt(0)}
-                            </div>
-                        )}
+                        <Avatar
+                            src={exchange.author.profile?.photo}
+                            alt={exchange.author.fullName}
+                            fallback={exchange.author.fullName.charAt(0).toUpperCase()}
+                            size="sm"
+                            className="exchange-card-avatar"
+                        />
                         <div className="exchange-card-author-info">
                             <span className="exchange-card-author">{exchange.author.fullName}</span>
                             <div className="exchange-card-meta-details">
@@ -191,7 +190,7 @@ export function ExchangeCard({ exchange }: ExchangeCardProps) {
                             {exchange.interestedCount} interested
                         </span>
                         <span className="exchange-card-stat">
-                            <Icon icon={exchange.isLiked ? 'heartFilled' : 'heart'} size={16} />
+                            <Icon icon="heart" size={16} />
                             {exchange.likesCount}
                         </span>
                         <span className="exchange-card-stat">
