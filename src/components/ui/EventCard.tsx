@@ -6,6 +6,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Event, formatEventDateRange, isUpcoming, isOngoing, isPast } from '@/lib/events';
 import { Icon } from './Icon';
 import { useToast } from './ToastProvider';
+import { Avatar, Badge } from './primitives';
 
 type RSVPStatus = 'going' | 'maybe' | 'not_going' | null;
 
@@ -30,9 +31,10 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
   // Safely get author name with fallback
   const authorName = event.author?.name || event.author?.username || 'Unknown';
 
-  // Generate initials from author name
+  // Generate initials from author name for Avatar fallback
   const authorInitials = authorName
     .split(' ')
+    .filter(Boolean)
     .map(part => part.charAt(0))
     .join('')
     .toUpperCase()
@@ -89,9 +91,9 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
             className="event-card-image"
           />
           {status === 'ongoing' && (
-            <span className="event-card-badge event-card-badge--ongoing">
+            <Badge variant="danger" size="sm" className="event-card-badge">
               Live Now
-            </span>
+            </Badge>
           )}
         </div>
       )}
@@ -107,9 +109,13 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
               {event.space.name}
             </Link>
             <span className="event-card-separator">•</span>
-            <span className={`event-card-status event-card-status--${status}`}>
+            <Badge
+              variant={status === 'ongoing' ? 'danger' : status === 'upcoming' ? 'primary' : 'default'}
+              size="sm"
+              className="event-card-status"
+            >
               {status === 'ongoing' ? 'Happening now' : status === 'upcoming' ? 'Upcoming' : 'Past'}
-            </span>
+            </Badge>
           </div>
         </div>
 
@@ -140,26 +146,22 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
         {event.tags && event.tags.length > 0 && (
           <div className="event-card-tags">
             {event.tags.map(tag => (
-              <span key={tag.id} className="event-card-tag">
+              <Badge key={tag.id} variant="outline" size="sm" className="event-card-tag">
                 {tag.name}
-              </span>
+              </Badge>
             ))}
           </div>
         )}
 
         <div className="event-card-footer">
           <div className="event-card-author">
-            {event.author?.avatar ? (
-              <img
-                src={event.author.avatar}
-                alt={authorName}
-                className="event-card-author-avatar"
-              />
-            ) : (
-              <div className="event-card-author-avatar event-card-author-avatar--placeholder">
-                {authorInitials}
-              </div>
-            )}
+            <Avatar
+              src={event.author?.avatar}
+              alt={authorName}
+              fallback={authorInitials}
+              size="sm"
+              className="event-card-author-avatar"
+            />
             <span className="event-card-author-name">
               Hosted by {authorName}
             </span>
