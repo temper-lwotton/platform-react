@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { Task } from '@/lib/tasks';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import styles from './UrgentTasksSidebar.module.scss';
 
 interface UrgentTasksSidebarProps {
   tasks: Task[];
@@ -45,36 +46,36 @@ export function UrgentTasksSidebar({ tasks }: UrgentTasksSidebarProps) {
   };
 
   return (
-    <div className="urgent-tasks-sidebar">
-      <div className="urgent-tasks-sidebar-header">
-        <div className="urgent-tasks-sidebar-title-row">
+    <div className={styles.sidebar}>
+      <div className={styles.header}>
+        <div className={styles.titleRow}>
           <Icon icon="clipboard" size={20} />
-          <h2 className="urgent-tasks-sidebar-title">Urgent Tasks</h2>
+          <h2 className={styles.title}>Urgent Tasks</h2>
         </div>
-        <Link href="/tasks" className="urgent-tasks-sidebar-view-all">
+        <Link href="/tasks" className={styles.viewAll}>
           View all
         </Link>
       </div>
 
-      <div className="urgent-tasks-sidebar-list">
+      <div className={styles.list}>
         {urgentTasks.map((task) => {
           const dueInfo = task.dueDate ? formatDueDate(task.dueDate) : null;
 
           return (
-            <div key={task.id} className="urgent-task-item">
-              <div className="urgent-task-content">
-                <h3 className="urgent-task-title">{task.title}</h3>
+            <div key={task.id} className={styles.item}>
+              <div className={styles.content}>
+                <h3 className={styles.taskTitle}>{task.title}</h3>
 
-                <div className="urgent-task-meta">
+                <div className={styles.meta}>
                   {task.points && (
-                    <span className="urgent-task-points">
+                    <span className={styles.points}>
                       <Icon icon="zap" size={12} />
                       {task.points} pts
                     </span>
                   )}
 
                   {dueInfo && (
-                    <span className={`urgent-task-due ${dueInfo.isOverdue ? 'urgent-task-due--overdue' : ''}`}>
+                    <span className={`${styles.due} ${dueInfo.isOverdue ? styles.dueOverdue : ''}`}>
                       <Icon icon="calendar" size={12} />
                       {dueInfo.text}
                     </span>
@@ -82,24 +83,24 @@ export function UrgentTasksSidebar({ tasks }: UrgentTasksSidebarProps) {
                 </div>
 
                 {task.progress !== undefined && task.progress > 0 && (
-                  <div className="urgent-task-progress">
-                    <div className="urgent-task-progress-bar">
+                  <div className={styles.progress}>
+                    <div className={styles.progressBar}>
                       <div
-                        className="urgent-task-progress-fill"
+                        className={styles.progressFill}
                         style={{ width: `${task.progress}%` }}
                       />
                     </div>
-                    <span className="urgent-task-progress-text">{task.progress}%</span>
+                    <span className={styles.progressText}>{task.progress}%</span>
                   </div>
                 )}
               </div>
 
               {task.link ? (
-                <a href={task.link} className="urgent-task-cta">
+                <a href={task.link} className={styles.cta}>
                   <Icon icon="chevronRight" size={16} />
                 </a>
               ) : (
-                <Link href="/tasks" className="urgent-task-cta">
+                <Link href="/tasks" className={styles.cta}>
                   <Icon icon="chevronRight" size={16} />
                 </Link>
               )}
@@ -108,7 +109,7 @@ export function UrgentTasksSidebar({ tasks }: UrgentTasksSidebarProps) {
         })}
       </div>
 
-      <Link href="/tasks" className="urgent-tasks-sidebar-footer">
+      <Link href="/tasks" className={styles.footer}>
         <span>View all tasks</span>
         <Icon icon="chevronRight" size={16} />
       </Link>
