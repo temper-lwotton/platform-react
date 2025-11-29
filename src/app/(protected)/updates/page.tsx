@@ -29,7 +29,7 @@ export default function UpdatesPage() {
 
     const { data: updatesData, isLoading: updatesLoading } = useQuery({
         queryKey: ['all-updates'],
-        queryFn: () => getUpdates({ limit: 100, offset: 0 }),
+        queryFn: getUpdates,
         enabled: isClient && !!currentUserId,
     });
 
@@ -122,14 +122,14 @@ export default function UpdatesPage() {
                                 onClick={() => setCategoryFilter('news')}
                                 className={`updates-filter-btn ${categoryFilter === 'news' ? 'updates-filter-btn--active' : ''}`}
                             >
-                                <Icon icon="newspaper" size={14} />
+                                <Icon icon="feed" size={14} />
                                 News
                             </button>
                             <button
                                 onClick={() => setCategoryFilter('milestone')}
                                 className={`updates-filter-btn ${categoryFilter === 'milestone' ? 'updates-filter-btn--active' : ''}`}
                             >
-                                <Icon icon="flag" size={14} />
+                                <Icon icon="star" size={14} />
                                 Milestones
                             </button>
                             <button

@@ -282,7 +282,7 @@ export default function WebinarRoomPage() {
                                                         </div>
                                                     )}
                                                 </div>
-                                                {attendee.handRaised && (
+                                                {attendee.isHandRaised && (
                                                     <Icon icon="handRaised" size={16} className="webinar-room-attendee-hand" />
                                                 )}
                                             </div>

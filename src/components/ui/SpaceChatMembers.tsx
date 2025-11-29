@@ -2,19 +2,11 @@
 
 import Link from 'next/link';
 import { Icon } from './Icon';
-
-interface Member {
-    id: string;
-    profile: {
-        fullName: string;
-        jobTitle?: string;
-        photo?: string;
-    };
-}
+import type { SpaceUser } from '@/lib/spaces';
 
 interface SpaceChatMembersProps {
-    admins: Member[];
-    members: Member[];
+    admins: SpaceUser[];
+    members: SpaceUser[];
 }
 
 // Mock function to determine online status
@@ -25,10 +17,13 @@ function isOnline(userId: string): boolean {
     return onlineUsers.includes(userId);
 }
 
-function MemberItem({ member, isAdmin }: { member: Member; isAdmin?: boolean }) {
+function MemberItem({ member, isAdmin }: { member: SpaceUser; isAdmin?: boolean }) {
     const online = isOnline(member.id);
-    const displayName = member.profile.fullName;
-    const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase();
+    const displayName = member.profile?.fullName ||
+                       `${member.profile?.firstName || ''} ${member.profile?.lastName || ''}`.trim() ||
+                       member.email ||
+                       'Unknown User';
+    const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
     return (
         <Link href={`/users/${member.id}`} className="chat-member-item">
@@ -47,7 +42,7 @@ function MemberItem({ member, isAdmin }: { member: Member; isAdmin?: boolean }) 
                     {displayName}
                     {isAdmin && <span className="chat-member-badge">Admin</span>}
                 </div>
-                {member.profile.jobTitle && (
+                {member.profile?.jobTitle && (
                     <div className="chat-member-title">{member.profile.jobTitle}</div>
                 )}
             </div>

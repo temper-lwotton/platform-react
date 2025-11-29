@@ -32,6 +32,7 @@ export interface WebinarStats {
     registeredCount: number;
     attendeeCount: number;
     peakAttendees: number;
+    totalViews?: number;
 }
 
 export interface CoHost {
@@ -49,6 +50,7 @@ export interface WebinarAttendee {
     joinedAt: string;
     isHandRaised: boolean;
     isMuted?: boolean;
+    role?: string;
 }
 
 export interface ChatMessage {

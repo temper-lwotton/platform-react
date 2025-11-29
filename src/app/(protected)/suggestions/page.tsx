@@ -181,20 +181,20 @@ const MOCK_SUGGESTIONS: Suggestion[] = [
     },
 ];
 
-const getTypeIcon = (type: SuggestionType): string => {
+const getTypeIcon = (type: SuggestionType) => {
     switch (type) {
         case 'user':
-            return 'user';
+            return 'user' as const;
         case 'space':
-            return 'users';
+            return 'users' as const;
         case 'event':
-            return 'calendar';
+            return 'calendar' as const;
         case 'discussion':
-            return 'chat';
+            return 'chat' as const;
         case 'resource':
-            return 'book';
+            return 'book' as const;
         case 'showcase':
-            return 'star';
+            return 'star' as const;
     }
 };
 

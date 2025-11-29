@@ -158,14 +158,14 @@ export default function UserPage() {
                                 {user.connectionStatus === 'connected' ? (
                                     <>
                                         <button className="user-detail-btn user-detail-btn--primary">
-                                            <Icon icon="mail" size={16} />
+                                            <Icon icon="send" size={16} />
                                             Message
                                         </button>
                                         <button
                                             className="user-detail-btn user-detail-btn--secondary"
                                             onClick={handleDisconnect}
                                         >
-                                            <Icon icon="userCheck" size={16} />
+                                            <Icon icon="checkCircle" size={16} />
                                             Connected
                                         </button>
                                     </>
@@ -192,18 +192,18 @@ export default function UserPage() {
                         {/* Contact Info */}
                         <div className="user-detail-contact">
                             <div className="user-detail-contact-item">
-                                <Icon icon="mail" size={16} />
+                                <Icon icon="send" size={16} />
                                 <a href={`mailto:${user.email}`}>{user.email}</a>
                             </div>
                             {enrichedProfile.telephone && (
                                 <div className="user-detail-contact-item">
-                                    <Icon icon="phone" size={16} />
+                                    <Icon icon="info" size={16} />
                                     <span>{enrichedProfile.telephone}</span>
                                 </div>
                             )}
                             {enrichedProfile.linkedInProfile && (
                                 <div className="user-detail-contact-item">
-                                    <Icon icon="linkedin" size={16} />
+                                    <Icon icon="external" size={16} />
                                     <a href={enrichedProfile.linkedInProfile} target="_blank" rel="noopener noreferrer">
                                         LinkedIn Profile
                                     </a>
@@ -252,7 +252,7 @@ export default function UserPage() {
                                 className={`user-detail-tab ${activeTab === 'spaces' ? 'user-detail-tab--active' : ''}`}
                                 onClick={() => setActiveTab('spaces')}
                             >
-                                <Icon icon="grid" size={16} />
+                                <Icon icon="layoutGrid" size={16} />
                                 Spaces
                                 {stats && <span className="user-detail-tab-count">{stats.spacesJoined}</span>}
                             </button>
@@ -335,7 +335,7 @@ export default function UserPage() {
                                                             {space.title.charAt(0).toUpperCase()}
                                                         </div>
                                                         <span className="user-detail-space-title">{space.title}</span>
-                                                        <Icon icon="shieldCheck" size={16} className="user-detail-space-badge" />
+                                                        <Icon icon="checkCircle" size={16} className="user-detail-space-badge" />
                                                     </Link>
                                                 ))}
                                             </div>
@@ -362,7 +362,7 @@ export default function UserPage() {
                                     )}
                                     {user.adminSpaces.length === 0 && user.memberSpaces.length === 0 && (
                                         <div className="user-detail-empty">
-                                            <Icon icon="grid" size={48} />
+                                            <Icon icon="layoutGrid" size={48} />
                                             <p>Not a member of any spaces yet</p>
                                         </div>
                                     )}
@@ -388,7 +388,7 @@ export default function UserPage() {
                             <div className="user-detail-stats-grid">
                                 <div className="user-detail-stat-card">
                                     <div className="user-detail-stat-icon">
-                                        <Icon icon="messageCircle" size={20} />
+                                        <Icon icon="comment" size={20} />
                                     </div>
                                     <div className="user-detail-stat-info">
                                         <p className="user-detail-stat-value">{stats.discussionsStarted}</p>
@@ -398,7 +398,7 @@ export default function UserPage() {
 
                                 <div className="user-detail-stat-card">
                                     <div className="user-detail-stat-icon">
-                                        <Icon icon="messageSquare" size={20} />
+                                        <Icon icon="comment" size={20} />
                                     </div>
                                     <div className="user-detail-stat-info">
                                         <p className="user-detail-stat-value">{stats.repliesMade}</p>
@@ -478,7 +478,7 @@ export default function UserPage() {
                                 </div>
                                 {stats.mostActiveSpace && (
                                     <div className="user-detail-meta-stat">
-                                        <Icon icon="trendingUp" size={16} />
+                                        <Icon icon="arrowUp" size={16} />
                                         <span>
                                             Most active in{' '}
                                             <Link href={`/spaces/${stats.mostActiveSpace.id}`}>
