@@ -1,0 +1,1 @@
+export { CalendarColorLegend } from './CalendarColorLegend';

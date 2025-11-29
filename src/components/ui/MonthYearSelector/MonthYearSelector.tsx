@@ -1,8 +1,9 @@
 'use client';
 
 import * as Select from '@radix-ui/react-select';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 import { getMonthName } from '@/lib/calendar-utils';
+import styles from './MonthYearSelector.module.scss';
 
 interface MonthYearSelectorProps {
   currentMonth: number; // 0-11
@@ -28,32 +29,32 @@ export function MonthYearSelector({
   const monthOptions = Array.from({ length: 12 }, (_, i) => i);
 
   return (
-    <div className="month-year-selector">
+    <div className={styles.selector}>
       {/* Month Selector */}
       <Select.Root
         value={currentMonth.toString()}
         onValueChange={(value) => onMonthChange(parseInt(value))}
       >
-        <Select.Trigger className="month-year-selector-trigger" aria-label="Select month">
+        <Select.Trigger className={styles.trigger} aria-label="Select month">
           <Select.Value>
             {getMonthName(currentMonth)}
           </Select.Value>
-          <Select.Icon className="month-year-selector-icon">
+          <Select.Icon className={styles.icon}>
             <Icon icon="chevronDown" size={14} />
           </Select.Icon>
         </Select.Trigger>
 
         <Select.Portal>
-          <Select.Content className="month-year-selector-content" position="popper">
-            <Select.Viewport className="month-year-selector-viewport">
+          <Select.Content className={styles.content} position="popper">
+            <Select.Viewport className={styles.viewport}>
               {monthOptions.map((month) => (
                 <Select.Item
                   key={month}
                   value={month.toString()}
-                  className="month-year-selector-item"
+                  className={styles.item}
                 >
                   <Select.ItemText>{getMonthName(month)}</Select.ItemText>
-                  <Select.ItemIndicator className="month-year-selector-indicator">
+                  <Select.ItemIndicator className={styles.indicator}>
                     ✓
                   </Select.ItemIndicator>
                 </Select.Item>
@@ -68,26 +69,26 @@ export function MonthYearSelector({
         value={currentYear.toString()}
         onValueChange={(value) => onYearChange(parseInt(value))}
       >
-        <Select.Trigger className="month-year-selector-trigger" aria-label="Select year">
+        <Select.Trigger className={styles.trigger} aria-label="Select year">
           <Select.Value>
             {currentYear}
           </Select.Value>
-          <Select.Icon className="month-year-selector-icon">
+          <Select.Icon className={styles.icon}>
             <Icon icon="chevronDown" size={14} />
           </Select.Icon>
         </Select.Trigger>
 
         <Select.Portal>
-          <Select.Content className="month-year-selector-content" position="popper">
-            <Select.Viewport className="month-year-selector-viewport">
+          <Select.Content className={styles.content} position="popper">
+            <Select.Viewport className={styles.viewport}>
               {yearOptions.map((year) => (
                 <Select.Item
                   key={year}
                   value={year.toString()}
-                  className="month-year-selector-item"
+                  className={styles.item}
                 >
                   <Select.ItemText>{year}</Select.ItemText>
-                  <Select.ItemIndicator className="month-year-selector-indicator">
+                  <Select.ItemIndicator className={styles.indicator}>
                     ✓
                   </Select.ItemIndicator>
                 </Select.Item>

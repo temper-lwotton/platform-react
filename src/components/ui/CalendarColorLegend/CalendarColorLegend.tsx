@@ -3,6 +3,8 @@
 import { useMemo } from 'react';
 import { Event } from '@/lib/events';
 import { getSpaceColor, groupEventsBySpace } from '@/lib/calendar-utils';
+import { Badge } from '../primitives';
+import styles from './CalendarColorLegend.module.scss';
 
 interface CalendarColorLegendProps {
   events: Event[];
@@ -35,17 +37,19 @@ export function CalendarColorLegend({ events }: CalendarColorLegendProps) {
   }
 
   return (
-    <div className="calendar-color-legend">
-      <h3 className="calendar-color-legend-title">Spaces</h3>
-      <div className="calendar-color-legend-items">
+    <div className={styles.legend}>
+      <h3 className={styles.title}>Spaces</h3>
+      <div className={styles.items}>
         {spaces.map((space) => (
-          <div key={space.id} className="calendar-color-legend-item">
+          <div key={space.id} className={styles.item}>
             <span
-              className="calendar-color-legend-dot"
+              className={styles.dot}
               style={{ backgroundColor: space.color }}
             />
-            <span className="calendar-color-legend-name">{space.name}</span>
-            <span className="calendar-color-legend-count">{space.count}</span>
+            <span className={styles.name}>{space.name}</span>
+            <Badge variant="outline" size="sm">
+              {space.count}
+            </Badge>
           </div>
         ))}
       </div>

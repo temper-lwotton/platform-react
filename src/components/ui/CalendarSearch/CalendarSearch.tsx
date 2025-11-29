@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Icon } from './Icon';
-import { Input, Button } from './primitives';
+import { Icon } from '../Icon';
+import { Input, Button } from '../primitives';
+import styles from './CalendarSearch.module.scss';
 
 interface CalendarSearchProps {
   onSearch: (query: string) => void;
@@ -48,8 +49,8 @@ export function CalendarSearch({ onSearch, placeholder = 'Search events...' }: C
   };
 
   return (
-    <div className={`calendar-search ${isFocused ? 'calendar-search--focused' : ''}`}>
-      <Icon icon="zap" size={16} className="calendar-search-icon" />
+    <div className={`${styles.search} ${isFocused ? styles.focused : ''}`}>
+      <Icon icon="search" size={16} className={styles.icon} />
       <Input
         ref={inputRef}
         type="text"
@@ -59,7 +60,7 @@ export function CalendarSearch({ onSearch, placeholder = 'Search events...' }: C
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         aria-label="Search events"
-        fullWidth
+        className={styles.input}
       />
       {query && (
         <Button
@@ -67,12 +68,13 @@ export function CalendarSearch({ onSearch, placeholder = 'Search events...' }: C
           aria-label="Clear search"
           variant="ghost"
           size="sm"
+          className={styles.clearButton}
         >
           ×
         </Button>
       )}
       {!query && !isFocused && (
-        <kbd className="calendar-search-kbd">/</kbd>
+        <kbd className={styles.kbd}>/</kbd>
       )}
     </div>
   );
