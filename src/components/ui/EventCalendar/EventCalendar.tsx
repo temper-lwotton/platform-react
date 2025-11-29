@@ -11,12 +11,12 @@ import {
   getSpaceColor,
   isMultiDayEvent,
   getEventDateSpan,
-  formatDateKey,
   downloadICS,
 } from '@/lib/calendar-utils';
-import { Icon } from './Icon';
-import { CalendarDayPopover } from './CalendarDayPopover';
-import { MonthYearSelector } from './MonthYearSelector';
+import { Icon } from '../Icon';
+import { CalendarDayPopover } from '../CalendarDayPopover';
+import { MonthYearSelector } from '../MonthYearSelector';
+import styles from './EventCalendar.module.scss';
 
 interface EventCalendarProps {
   events: Event[];
@@ -180,17 +180,17 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
     const remainingCount = singleDayEvents.length - maxDotsToShow;
 
     return (
-      <div className="event-calendar-day-indicators">
-        {visibleEvents.map((event, index) => (
+      <div className={styles.dayIndicators}>
+        {visibleEvents.map((event) => (
           <span
             key={event.id}
-            className="event-calendar-day-dot"
+            className={styles.dayDot}
             style={{ backgroundColor: getSpaceColor(event.space.id) }}
             title={event.title}
           />
         ))}
         {remainingCount > 0 && (
-          <span className="event-calendar-day-more">
+          <span className={styles.dayMore}>
             +{remainingCount}
           </span>
         )}
@@ -203,16 +203,15 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
     if (!rowSpans || rowSpans.length === 0) return null;
 
     return (
-      <div className="event-calendar-multiday-container">
+      <div className={styles.multidayContainer}>
         {rowSpans.map((span, index) => {
           const startCol = (span.start % 7) + 1;
           const endCol = (span.end % 7) + 2;
-          const spanCols = endCol - startCol;
 
           return (
             <button
               key={`${span.event.id}-${span.start}`}
-              className="event-calendar-multiday-bar"
+              className={styles.multidayBar}
               style={{
                 gridColumnStart: startCol,
                 gridColumnEnd: endCol,
@@ -222,7 +221,7 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
               onClick={() => window.location.href = `/events/${span.event.id}`}
               title={span.event.title}
             >
-              <span className="event-calendar-multiday-title">
+              <span className={styles.multidayTitle}>
                 {span.event.title}
               </span>
             </button>
@@ -233,10 +232,10 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
   };
 
   return (
-    <div className="event-calendar" role="region" aria-label="Events calendar">
+    <div className={styles.calendar} role="region" aria-label="Events calendar">
       {/* Calendar Header */}
-      <div className="event-calendar-header" role="toolbar" aria-label="Calendar navigation">
-        <div className="event-calendar-header-title">
+      <div className={styles.header} role="toolbar" aria-label="Calendar navigation">
+        <div className={styles.headerTitle}>
           <MonthYearSelector
             currentMonth={currentMonth}
             currentYear={currentYear}
@@ -244,7 +243,7 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
             onYearChange={handleYearChange}
           />
           <button
-            className="event-calendar-today-btn"
+            className={styles.todayBtn}
             onClick={goToToday}
             aria-label="Go to today (Shortcut: T)"
             title="Keyboard shortcut: T"
@@ -252,7 +251,7 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
             Today
           </button>
           <button
-            className="event-calendar-export-btn"
+            className={styles.exportBtn}
             onClick={handleExportMonth}
             aria-label="Export month to calendar"
             title="Export month to calendar (.ics)"
@@ -262,9 +261,9 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
           </button>
         </div>
 
-        <div className="event-calendar-nav">
+        <div className={styles.nav}>
           <button
-            className="event-calendar-nav-btn"
+            className={styles.navBtn}
             onClick={goToPreviousMonth}
             aria-label="Previous month (Shortcut: ←)"
             title="Keyboard shortcut: ←"
@@ -272,7 +271,7 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
             <Icon icon="chevronLeft" size={20} />
           </button>
           <button
-            className="event-calendar-nav-btn"
+            className={styles.navBtn}
             onClick={goToNextMonth}
             aria-label="Next month (Shortcut: →)"
             title="Keyboard shortcut: →"
@@ -283,11 +282,11 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
       </div>
 
       {/* Calendar Grid */}
-      <div className="event-calendar-grid-wrapper">
-        <div className="event-calendar-grid" role="grid" aria-label={`Calendar for ${getMonthName(currentMonth)} ${currentYear}`}>
+      <div className={styles.gridWrapper}>
+        <div className={styles.grid} role="grid" aria-label={`Calendar for ${getMonthName(currentMonth)} ${currentYear}`}>
           {/* Weekday Headers */}
           {weekdays.map((weekday) => (
-            <div key={weekday} className="event-calendar-weekday" role="columnheader" aria-label={weekday}>
+            <div key={weekday} className={styles.weekday} role="columnheader" aria-label={weekday}>
               {weekday}
             </div>
           ))}
@@ -298,8 +297,8 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
             if (weekDays.length === 0) return null;
 
             return (
-              <div key={weekIndex} className="event-calendar-week" style={{ gridColumn: '1 / -1' }}>
-                <div className="event-calendar-week-grid">
+              <div key={weekIndex} className={styles.week} style={{ gridColumn: '1 / -1' }}>
+                <div className={styles.weekGrid}>
                   {/* Multi-day event bars for this week */}
                   {renderMultiDayEventBars(weekIndex)}
 
@@ -315,15 +314,15 @@ export function EventCalendar({ events, onEventClick, onDateClick }: EventCalend
                         events={dayEvents}
                       >
                         <button
-                          className={`event-calendar-day ${
-                            !day.isCurrentMonth ? 'event-calendar-day--other-month' : ''
-                          } ${day.isToday ? 'event-calendar-day--today' : ''} ${
-                            day.isPast ? 'event-calendar-day--past' : ''
-                          } ${hasEvents ? 'event-calendar-day--has-events' : ''}`}
+                          className={`${styles.day} ${
+                            !day.isCurrentMonth ? styles.dayOtherMonth : ''
+                          } ${day.isToday ? styles.dayToday : ''} ${
+                            day.isPast ? styles.dayPast : ''
+                          } ${hasEvents ? styles.dayHasEvents : ''}`}
                           onClick={() => handleDayClick(day)}
                           aria-label={`${getMonthName(day.date.getMonth())} ${day.dayNumber}, ${day.date.getFullYear()}${hasEvents ? `, ${dayEvents.length} event${dayEvents.length > 1 ? 's' : ''}` : ''}`}
                         >
-                          <span className="event-calendar-day-number">{day.dayNumber}</span>
+                          <span className={styles.dayNumber}>{day.dayNumber}</span>
                           {renderEventIndicators(day)}
                         </button>
                       </CalendarDayPopover>
