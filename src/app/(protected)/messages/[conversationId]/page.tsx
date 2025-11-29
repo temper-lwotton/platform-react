@@ -91,6 +91,16 @@ export default function ConversationPage() {
         );
     }
 
+    // Debug: Log conversation data
+    console.log('ConversationPage Debug:', {
+        currentUserId,
+        currentUserIdType: typeof currentUserId,
+        conversationId,
+        messagesCount: conversation.messages.length,
+        firstMessage: conversation.messages[0],
+        participants: conversation.participants,
+    });
+
     return (
         <div className="conversation-view">
             <MessageThread

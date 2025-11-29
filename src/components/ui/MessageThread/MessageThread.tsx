@@ -25,6 +25,15 @@ export function MessageThread({
 }: MessageThreadProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Debug: Log component props
+  console.log('MessageThread Rendered:', {
+    currentUserId,
+    currentUserIdType: typeof currentUserId,
+    messagesCount: messages.length,
+    firstMessageSender: messages[0]?.sender,
+    participantsCount: participants.length,
+  });
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -91,28 +100,62 @@ export function MessageThread({
         ) : (
           <>
             {messages.map((message, index) => {
-              const isOwn = message.sender?.id === currentUserId;
+              // Handle both cases: sender as User object or sender as string ID
+              // Convert to string for consistent comparison with currentUserId (which is a string)
+              const senderId = typeof message.sender === 'string'
+                ? message.sender
+                : String(message.sender?.id);
+
+              const isOwn = senderId === currentUserId;
+
+              // Debug logging
+              console.log('Message Debug:', {
+                messageId: message.id,
+                messageIndex: index,
+                currentUserId,
+                currentUserIdType: typeof currentUserId,
+                senderId,
+                senderIdType: typeof senderId,
+                senderRaw: message.sender,
+                senderRawType: typeof message.sender,
+                isOwn,
+                comparison: `${senderId} === ${currentUserId}`,
+                strictEqual: senderId === currentUserId,
+              });
+
+              const prevSender = messages[index - 1]?.sender;
+              const prevSenderId = typeof prevSender === 'string'
+                ? prevSender
+                : String(prevSender?.id);
+
               const showAvatar = !isOwn && (
                 index === 0 ||
-                messages[index - 1]?.sender?.id !== message.sender?.id
+                prevSenderId !== senderId
               );
+
+              // Get sender info (handle both User object and string ID)
+              const senderObj = typeof message.sender === 'string' ? null : message.sender;
+              const senderName = senderObj?.profile?.fullName ||
+                `${senderObj?.profile?.firstName || ''} ${senderObj?.profile?.lastName || ''}`.trim() ||
+                'Unknown';
+              const senderPhoto = senderObj?.profile?.photo || null;
+              const senderInitial = senderObj?.profile?.fullName?.[0] ||
+                senderObj?.profile?.firstName?.[0] ||
+                '?';
 
               return (
                 <div
                   key={message.id}
-                  className={`${styles.message} ${isOwn ? styles.messageOwn : ''}`}
+                  className={`${styles.message} ${isOwn ? styles.messageOwn : styles.messageOther}`}
+                  data-own={isOwn}
                 >
                   {!isOwn && (
                     showAvatar ? (
                       <div className={styles.messageAvatar}>
                         <Avatar
-                          src={message.sender?.profile?.photo || null}
-                          alt={message.sender?.profile?.fullName || `${message.sender?.profile?.firstName || ''} ${message.sender?.profile?.lastName || ''}`.trim() || 'Unknown'}
-                          fallback={
-                            message.sender?.profile?.fullName?.[0] ||
-                            message.sender?.profile?.firstName?.[0] ||
-                            '?'
-                          }
+                          src={senderPhoto}
+                          alt={senderName}
+                          fallback={senderInitial}
                           size="md"
                         />
                       </div>
@@ -121,14 +164,14 @@ export function MessageThread({
                     )
                   )}
 
-                  <div className={styles.messageContent}>
+                  <div className={`${styles.messageContent} ${isOwn ? styles.messageContentOwn : styles.messageContentOther}`}>
                     {!isOwn && showAvatar && (
                       <div className={styles.messageSender}>
-                        {message.sender?.profile?.fullName || `${message.sender?.profile?.firstName || ''} ${message.sender?.profile?.lastName || ''}`.trim() || 'Unknown'}
+                        {senderName}
                       </div>
                     )}
 
-                    <div className={styles.messageBubble}>
+                    <div className={`${styles.messageBubble} ${isOwn ? styles.messageBubbleOwn : styles.messageBubbleOther}`}>
                       {message.content}
 
                       {message.attachments && message.attachments.length > 0 && (
@@ -151,7 +194,9 @@ export function MessageThread({
                       )}
                     </div>
 
-                    <div className={styles.messageTime}>{formatTime(message.lastUpdated)}</div>
+                    <div className={`${styles.messageTime} ${isOwn ? styles.messageTimeOwn : styles.messageTimeOther}`}>
+                      {formatTime(message.lastUpdated)}
+                    </div>
                   </div>
 
                   {isOwn && onDeleteMessage && (

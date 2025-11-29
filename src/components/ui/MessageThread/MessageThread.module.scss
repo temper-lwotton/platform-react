@@ -102,17 +102,15 @@
   }
 }
 
+// Other user's messages - left aligned (default layout)
+.messageOther {
+  flex-direction: row;
+}
+
+// User's own messages - right aligned
 .messageOwn {
   flex-direction: row-reverse;
-
-  .messageBubble {
-    background: var(--color-primary);
-    color: white;
-  }
-
-  .messageTime {
-    text-align: right;
-  }
+  justify-content: flex-end;
 }
 
 .messageAvatar {
@@ -140,6 +138,16 @@
   }
 }
 
+// Other user's message content - left aligned
+.messageContentOther {
+  align-items: flex-start;
+}
+
+// User's own message content - right aligned
+.messageContentOwn {
+  align-items: flex-end;
+}
+
 .messageSender {
   font-size: 0.875rem;
   font-weight: 600;
@@ -153,14 +161,36 @@
 .messageBubble {
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  background: var(--color-bg-tertiary);
-  color: var(--color-text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  @media (prefers-color-scheme: dark) {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Other user's message bubble - light background
+.messageBubbleOther {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border-bottom-left-radius: 4px;
 
   @media (prefers-color-scheme: dark) {
     background: var(--color-bg-tertiary);
     color: var(--color-text-primary);
+  }
+}
+
+// User's own message bubble - primary color background
+.messageBubbleOwn {
+  background: var(--color-primary);
+  color: white;
+  border-bottom-right-radius: 4px;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-primary);
+    color: white;
   }
 }
 
@@ -171,6 +201,16 @@
   @media (prefers-color-scheme: dark) {
     color: var(--color-text-secondary);
   }
+}
+
+// Other user's message time
+.messageTimeOther {
+  text-align: left;
+}
+
+// User's own message time - right aligned
+.messageTimeOwn {
+  text-align: right;
 }
 
 .messageActions {
@@ -219,31 +259,51 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
-  background: var(--color-bg-secondary);
   border-radius: 6px;
-  border: 1px solid var(--color-border-primary);
   text-decoration: none;
-  color: var(--color-text-primary);
   transition: all 0.15s;
+}
+
+// Attachments in other user's messages
+.messageBubbleOther .attachment {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: inherit;
 
   &:hover {
-    background: var(--color-bg-hover);
-    border-color: var(--color-primary);
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
   }
 
   @media (prefers-color-scheme: dark) {
-    background: var(--color-bg-secondary);
-    border-color: var(--color-border-primary);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 
     &:hover {
-      background: var(--color-bg-tertiary);
-      border-color: var(--color-primary);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
     }
+  }
+}
+
+// Attachments in user's own messages
+.messageBubbleOwn .attachment {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
   }
 }
 
 .attachmentIcon {
   color: var(--color-text-secondary);
+}
+
+.messageBubbleOwn .attachmentIcon {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .attachmentName {
