@@ -81,3 +81,6 @@ export type {
   ToastProps,
   ToastViewportProps,
 } from './Toast';
+
+export { TabbedDropdown, getTimeAgo } from './TabbedDropdown';
+export type { TabbedDropdownProps, TabbedDropdownTab } from './TabbedDropdown';

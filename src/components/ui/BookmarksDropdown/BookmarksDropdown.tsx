@@ -2,15 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import * as Popover from '@radix-ui/react-popover';
-import * as Tabs from '@radix-ui/react-tabs';
 import { getCurrentUserId } from '@/lib/auth';
-import { Icon } from '../Icon';
-import styles from './BookmarksDropdown.module.scss';
+import { TabbedDropdown, TabbedDropdownTab } from '../primitives';
+import { BookmarkItem } from './BookmarkItem';
 
-// Placeholder types for bookmarked items
-interface BookmarkedItem {
+export interface BookmarkedItem {
     id: string;
     title: string;
     excerpt?: string;
@@ -35,8 +31,6 @@ export function BookmarksDropdown() {
     }, []);
 
     const handleBookmarkClick = (bookmark: BookmarkedItem) => {
-        setIsOpen(false);
-
         // Navigate based on type
         switch (bookmark.type) {
             case 'discussion':
@@ -50,244 +44,84 @@ export function BookmarksDropdown() {
             case 'message':
                 router.push(`/messages/${bookmark.id}`);
                 break;
-            // Add other types as needed
             default:
                 break;
         }
     };
 
-    const getTimeAgo = (dateString: string): string => {
-        const normalized = dateString.replace(' ', 'T');
-        const date = new Date(normalized);
-        if (isNaN(date.getTime())) return 'recently';
-
-        const now = new Date();
-        const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-        if (seconds < 60) return 'just now';
-        if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-        if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-        if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
-        return date.toLocaleDateString();
+    const handleRemoveBookmark = (bookmark: BookmarkedItem) => {
+        // TODO: Remove bookmark when API is available
     };
 
     if (!isClient || !currentUserId) return null;
 
     // Filter bookmarks by type
-    const postBookmarks = bookmarks.filter(b => b.type === 'post');
-    const discussionBookmarks = bookmarks.filter(b => b.type === 'discussion');
-    const eventBookmarks = bookmarks.filter(b => b.type === 'event');
-    const learningBookmarks = bookmarks.filter(b => b.type === 'learning');
-    const videoBookmarks = bookmarks.filter(b => b.type === 'video');
-    const messageBookmarks = bookmarks.filter(b => b.type === 'message');
+    const postBookmarks = bookmarks.filter(b => b.type === 'post').slice(0, 5);
+    const discussionBookmarks = bookmarks.filter(b => b.type === 'discussion').slice(0, 5);
+    const eventBookmarks = bookmarks.filter(b => b.type === 'event').slice(0, 5);
+    const learningBookmarks = bookmarks.filter(b => b.type === 'learning').slice(0, 5);
+    const videoBookmarks = bookmarks.filter(b => b.type === 'video').slice(0, 5);
+    const messageBookmarks = bookmarks.filter(b => b.type === 'message').slice(0, 5);
 
-    const renderBookmark = (bookmark: BookmarkedItem) => {
-        return (
-            <button
-                key={bookmark.id}
-                className={styles.item}
-                onClick={() => handleBookmarkClick(bookmark)}
-            >
-                <div className={styles.itemIcon}>
-                    <Icon icon="bookmarkFilled" size={16} />
-                </div>
-
-                <div className={styles.itemContent}>
-                    <h4 className={styles.itemTitle}>
-                        {bookmark.title}
-                    </h4>
-
-                    {bookmark.excerpt && (
-                        <p className={styles.itemExcerpt}>
-                            {bookmark.excerpt.length > 60
-                                ? `${bookmark.excerpt.slice(0, 60)}...`
-                                : bookmark.excerpt}
-                        </p>
-                    )}
-
-                    <div className={styles.itemMeta}>
-                        {bookmark.spaceName && (
-                            <span className={styles.itemSpace}>
-                                <Icon icon="folder" size={12} />
-                                {bookmark.spaceName}
-                            </span>
-                        )}
-                        <span className={styles.itemTime}>
-                            {getTimeAgo(bookmark.createdAt)}
-                        </span>
-                    </div>
-                </div>
-
-                <button
-                    className={styles.itemRemove}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        // TODO: Remove bookmark when API is available
-                    }}
-                    aria-label="Remove bookmark"
-                >
-                    <Icon icon="bookmark" size={14} />
-                </button>
-            </button>
-        );
-    };
-
-    const renderEmptyState = (type: string) => (
-        <div className={styles.empty}>
-            <Icon icon="bookmark" size={24} className={styles.emptyIcon} />
-            <p className={styles.emptyText}>No {type} bookmarked yet</p>
-            <p className={styles.emptyHint}>
-                Click the bookmark icon on any {type.toLowerCase()} to save it here
-            </p>
-        </div>
-    );
+    const tabs: TabbedDropdownTab<BookmarkedItem>[] = [
+        {
+            id: 'posts',
+            label: 'Posts',
+            count: bookmarks.filter(b => b.type === 'post').length,
+            items: postBookmarks,
+        },
+        {
+            id: 'discussions',
+            label: 'Discussions',
+            count: bookmarks.filter(b => b.type === 'discussion').length,
+            items: discussionBookmarks,
+        },
+        {
+            id: 'events',
+            label: 'Events',
+            count: bookmarks.filter(b => b.type === 'event').length,
+            items: eventBookmarks,
+        },
+        {
+            id: 'learning',
+            label: 'Learning',
+            count: bookmarks.filter(b => b.type === 'learning').length,
+            items: learningBookmarks,
+        },
+        {
+            id: 'videos',
+            label: 'Videos',
+            count: bookmarks.filter(b => b.type === 'video').length,
+            items: videoBookmarks,
+        },
+        {
+            id: 'messages',
+            label: 'Messages',
+            count: bookmarks.filter(b => b.type === 'message').length,
+            items: messageBookmarks,
+        },
+    ];
 
     return (
-        <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-            <Popover.Trigger asChild>
-                <button
-                    type="button"
-                    className={styles.button}
-                    aria-label="Bookmarks"
-                >
-                    <Icon icon="bookmark" size={20} className={styles.icon} />
-                    {bookmarks.length > 0 && (
-                        <span className={styles.badge}>
-                            {bookmarks.length > 9 ? '9+' : bookmarks.length}
-                        </span>
-                    )}
-                </button>
-            </Popover.Trigger>
-
-            <Popover.Portal>
-                <Popover.Content
-                    className={styles.dropdownMenu}
-                    align="end"
-                    sideOffset={8}
-                >
-                    <div className={styles.dropdownHeader}>
-                        <span className={styles.dropdownTitle}>Bookmarks</span>
-                    </div>
-
-                    <Tabs.Root defaultValue="discussions" className={styles.tabs}>
-                        <Tabs.List className={styles.tabsList}>
-                            <Tabs.Trigger value="posts" className={styles.tabTrigger}>
-                                Posts
-                                {postBookmarks.length > 0 && (
-                                    <span className={styles.tabBadge}>
-                                        {postBookmarks.length}
-                                    </span>
-                                )}
-                            </Tabs.Trigger>
-                            <Tabs.Trigger value="discussions" className={styles.tabTrigger}>
-                                Discussions
-                                {discussionBookmarks.length > 0 && (
-                                    <span className={styles.tabBadge}>
-                                        {discussionBookmarks.length}
-                                    </span>
-                                )}
-                            </Tabs.Trigger>
-                            <Tabs.Trigger value="events" className={styles.tabTrigger}>
-                                Events
-                                {eventBookmarks.length > 0 && (
-                                    <span className={styles.tabBadge}>
-                                        {eventBookmarks.length}
-                                    </span>
-                                )}
-                            </Tabs.Trigger>
-                            <Tabs.Trigger value="learning" className={styles.tabTrigger}>
-                                Learning
-                                {learningBookmarks.length > 0 && (
-                                    <span className={styles.tabBadge}>
-                                        {learningBookmarks.length}
-                                    </span>
-                                )}
-                            </Tabs.Trigger>
-                            <Tabs.Trigger value="videos" className={styles.tabTrigger}>
-                                Videos
-                                {videoBookmarks.length > 0 && (
-                                    <span className={styles.tabBadge}>
-                                        {videoBookmarks.length}
-                                    </span>
-                                )}
-                            </Tabs.Trigger>
-                            <Tabs.Trigger value="messages" className={styles.tabTrigger}>
-                                Messages
-                                {messageBookmarks.length > 0 && (
-                                    <span className={styles.tabBadge}>
-                                        {messageBookmarks.length}
-                                    </span>
-                                )}
-                            </Tabs.Trigger>
-                        </Tabs.List>
-
-                        <Tabs.Content value="posts" className={styles.tabContent}>
-                            <div className={styles.list}>
-                                {postBookmarks.length === 0
-                                    ? renderEmptyState('posts')
-                                    : postBookmarks.slice(0, 5).map(renderBookmark)}
-                            </div>
-                        </Tabs.Content>
-
-                        <Tabs.Content value="discussions" className={styles.tabContent}>
-                            <div className={styles.list}>
-                                {discussionBookmarks.length === 0
-                                    ? renderEmptyState('discussions')
-                                    : discussionBookmarks.slice(0, 5).map(renderBookmark)}
-                            </div>
-                        </Tabs.Content>
-
-                        <Tabs.Content value="events" className={styles.tabContent}>
-                            <div className={styles.list}>
-                                {eventBookmarks.length === 0
-                                    ? renderEmptyState('events')
-                                    : eventBookmarks.slice(0, 5).map(renderBookmark)}
-                            </div>
-                        </Tabs.Content>
-
-                        <Tabs.Content value="learning" className={styles.tabContent}>
-                            <div className={styles.list}>
-                                {learningBookmarks.length === 0
-                                    ? renderEmptyState('learning materials')
-                                    : learningBookmarks.slice(0, 5).map(renderBookmark)}
-                            </div>
-                        </Tabs.Content>
-
-                        <Tabs.Content value="videos" className={styles.tabContent}>
-                            <div className={styles.list}>
-                                {videoBookmarks.length === 0
-                                    ? renderEmptyState('videos')
-                                    : videoBookmarks.slice(0, 5).map(renderBookmark)}
-                            </div>
-                        </Tabs.Content>
-
-                        <Tabs.Content value="messages" className={styles.tabContent}>
-                            <div className={styles.list}>
-                                {messageBookmarks.length === 0
-                                    ? renderEmptyState('messages')
-                                    : messageBookmarks.slice(0, 5).map(renderBookmark)}
-                            </div>
-                        </Tabs.Content>
-                    </Tabs.Root>
-
-                    {bookmarks.length > 0 && (
-                        <>
-                            <div className={styles.dropdownSeparator} />
-
-                            <div className={styles.dropdownFooter}>
-                                <Popover.Close asChild>
-                                    <Link
-                                        href="/bookmarks"
-                                        className={styles.viewAll}
-                                    >
-                                        View all bookmarks
-                                    </Link>
-                                </Popover.Close>
-                            </div>
-                        </>
-                    )}
-                </Popover.Content>
-            </Popover.Portal>
-        </Popover.Root>
+        <TabbedDropdown<BookmarkedItem>
+            icon="bookmark"
+            badgeCount={bookmarks.length > 0 ? bookmarks.length : undefined}
+            ariaLabel="Bookmarks"
+            title="Bookmarks"
+            tabs={tabs}
+            defaultTab="discussions"
+            renderItem={(bookmark) => (
+                <BookmarkItem
+                    bookmark={bookmark}
+                    onRemove={handleRemoveBookmark}
+                />
+            )}
+            emptyMessage="No bookmarks"
+            viewAllLink="/bookmarks"
+            viewAllLabel="View all bookmarks"
+            onItemClick={handleBookmarkClick}
+            isOpen={isOpen}
+            onOpenChange={setIsOpen}
+        />
     );
 }
