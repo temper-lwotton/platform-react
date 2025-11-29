@@ -114,7 +114,7 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
 
                                         {/* Broadcast */}
                                         <button className="status-update-menu-item" onClick={handleBroadcastPost}>
-                                            <Icon icon="radio" size={16} />
+                                            <Icon icon="rss" size={16} />
                                             <span>Broadcast to spaces</span>
                                         </button>
 
@@ -128,13 +128,13 @@ export function StatusUpdateCard({ statusUpdate, isAdmin = false, isPinned = fal
 
                                         {/* Mark as Spam */}
                                         <button className="status-update-menu-item danger" onClick={handleMarkSpam}>
-                                            <Icon icon="alertTriangle" size={16} />
+                                            <Icon icon="alertCircle" size={16} />
                                             <span>Mark as spam</span>
                                         </button>
 
                                         {/* Delete */}
                                         <button className="status-update-menu-item danger" onClick={handleDeletePost}>
-                                            <Icon icon="trash" size={16} />
+                                            <Icon icon="x" size={16} />
                                             <span>Delete post</span>
                                         </button>
                                     </div>

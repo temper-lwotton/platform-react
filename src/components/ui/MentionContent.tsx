@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import Link from 'next/link';
 import { MentionUser } from '@/hooks/useMentions';
 
@@ -18,7 +19,7 @@ export function MentionContent({ content, users, className }: MentionContentProp
   const renderContent = () => {
     // Regex to match @mentions
     const mentionRegex = /@([\w\s]+?)(?=\s|$|[.,!?;:])/g;
-    const parts: (string | JSX.Element)[] = [];
+    const parts: (string | React.JSX.Element)[] = [];
     let lastIndex = 0;
     let match;
     let keyCounter = 0;

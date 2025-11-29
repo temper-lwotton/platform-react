@@ -185,7 +185,7 @@ interface MentionsPluginProps {
 export default function MentionsPlugin({
   users,
   onMention,
-}: MentionsPluginProps): JSX.Element | null {
+}: MentionsPluginProps): React.JSX.Element | null {
   const [editor] = useLexicalComposerContext();
 
   const [queryString, setQueryString] = useState<string | null>(null);

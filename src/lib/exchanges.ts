@@ -77,6 +77,8 @@ export interface Exchange {
         title: string;
     };
     tags?: Array<{ id: number; name: string }>;
+    likesCount?: number;
+    commentsCount?: number;
 
     createdAt: string;
     updatedAt: string;

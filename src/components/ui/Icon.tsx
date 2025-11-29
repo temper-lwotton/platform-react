@@ -73,8 +73,10 @@ import {
 } from 'lucide-react';
 import { CSSProperties } from 'react';
 
+export type IconName = 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'mapPin' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'arrowUp' | 'arrowDown' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles' | 'lock' | 'rss' | 'globe' | 'plus' | 'search' | 'arrowUpDown' | 'list' | 'info' | 'package' | 'gift' | 'dollarSign' | 'eye';
+
 interface IconProps {
-  icon: 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'mapPin' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'arrowUp' | 'arrowDown' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles' | 'lock' | 'rss' | 'globe' | 'plus' | 'search' | 'arrowUpDown' | 'list' | 'info' | 'package' | 'gift' | 'dollarSign' | 'eye';
+  icon: IconName;
   size?: number;
   className?: string;
   style?: CSSProperties;

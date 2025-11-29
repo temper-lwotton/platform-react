@@ -7,7 +7,7 @@ export type CheckboxSize = 'sm' | 'md' | 'lg';
 
 export interface CheckboxProps extends Omit<CheckboxPrimitive.CheckboxProps, 'asChild'> {
   size?: CheckboxSize;
-  label?: string;
+  label?: React.ReactNode;
   helperText?: string;
   error?: string;
 }

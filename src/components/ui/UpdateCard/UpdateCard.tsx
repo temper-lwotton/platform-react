@@ -61,11 +61,11 @@ export function UpdateCard({ update }: UpdateCardProps) {
 
     const getCategoryIcon = (category: string) => {
         switch (category) {
-            case 'news': return 'bell';
-            case 'milestone': return 'star';
-            case 'policy': return 'fileText';
-            case 'announcement': return 'megaphone';
-            default: return 'info';
+            case 'news': return 'bell' as const;
+            case 'milestone': return 'star' as const;
+            case 'policy': return 'fileText' as const;
+            case 'announcement': return 'rocket' as const;
+            default: return 'info' as const;
         }
     };
 

@@ -28,13 +28,13 @@ export function DocumentCard({ document, viewType = 'grid' }: DocumentCardProps)
     const getVisibilityIcon = () => {
         switch (document.visibility) {
             case 'public':
-                return 'globe';
+                return 'globe' as const;
             case 'members':
-                return 'users';
+                return 'users' as const;
             case 'private':
-                return 'lock';
+                return 'lock' as const;
             default:
-                return 'file';
+                return 'fileText' as const;
         }
     };
 

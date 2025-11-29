@@ -29,7 +29,7 @@ function MemberItem({ member, isAdmin }: { member: SpaceUser; isAdmin?: boolean 
         <Link href={`/users/${member.id}`} className="chat-member-item">
             <div className="chat-member-avatar-container">
                 <div className="chat-member-avatar">
-                    {member.profile.photo ? (
+                    {member.profile?.photo ? (
                         <img src={member.profile.photo} alt={displayName} />
                     ) : (
                         <span className="chat-member-avatar-text">{initials}</span>
@@ -42,9 +42,6 @@ function MemberItem({ member, isAdmin }: { member: SpaceUser; isAdmin?: boolean 
                     {displayName}
                     {isAdmin && <span className="chat-member-badge">Admin</span>}
                 </div>
-                {member.profile?.jobTitle && (
-                    <div className="chat-member-title">{member.profile.jobTitle}</div>
-                )}
             </div>
         </Link>
     );

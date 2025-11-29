@@ -4,7 +4,7 @@ import styles from './Input.module.scss';
 export type InputSize = 'sm' | 'md' | 'lg';
 export type InputVariant = 'default' | 'error' | 'success';
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: InputSize;
   variant?: InputVariant;
   fullWidth?: boolean;

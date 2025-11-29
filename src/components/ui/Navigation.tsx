@@ -10,14 +10,14 @@ import { BookmarksDropdown } from './BookmarksDropdown';
 import { UserMenu } from './UserMenu';
 import { GoLiveButton } from './GoLiveButton';
 import { useAuth } from '@/hooks/useAuth';
-import { Icon } from './Icon';
+import { Icon, IconName } from './Icon';
 
 interface NavItem {
     href?: string;
     label: string;
     requiresAuth?: boolean;
     hideWhenAuth?: boolean;
-    children?: { href: string; label: string; icon?: string }[];
+    children?: { href: string; label: string; icon?: IconName }[];
 }
 
 const navItems: NavItem[] = [
