@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { createEventWithPhoto } from '@/lib/events';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { getSpace, Space } from '@/lib/spaces';
-import { LexicalEditor } from '@/components/ui/LexicalEditor';
+import { LexicalEditor } from '@/components/ui/Lexical';
 import { Input, Checkbox, Button } from '@/components/ui/primitives';
 
 export default function NewGlobalEventPage() {

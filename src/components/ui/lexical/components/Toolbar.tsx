@@ -29,8 +29,8 @@ import { $createParagraphNode } from 'lexical';
 import { TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { $createCodeNode } from '@lexical/code';
 import type { EditorFeatures, EditorMode } from '@/lib/lexical-config';
-import { LinkInsertDialog } from './lexical/dialogs/LinkInsertDialog';
-import { CodeBlockInsertDialog } from './lexical/dialogs/CodeBlockInsertDialog';
+import { LinkInsertDialog } from '../dialogs/LinkInsertDialog';
+import { CodeBlockInsertDialog } from '../dialogs/CodeBlockInsertDialog';
 import {
     Bold,
     Italic,
@@ -46,14 +46,15 @@ import {
     Image,
     Table,
 } from 'lucide-react';
+import styles from '../Lexical.module.scss';
 
-interface ToolbarPluginProps {
+interface ToolbarProps {
     disabled?: boolean;
     features: EditorFeatures;
     mode: EditorMode;
 }
 
-export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) {
+export function Toolbar({ disabled, features, mode }: ToolbarProps) {
     const [editor] = useLexicalComposerContext();
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
@@ -212,14 +213,14 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
     const isCompact = mode === 'simple';
 
     return (
-        <div className={`lexical-toolbar ${isCompact ? 'lexical-toolbar-compact' : ''}`}>
+        <div className={`${styles.toolbar} ${isCompact ? styles.toolbarCompact : ''}`}>
             {/* History */}
             {features.undo && (
                 <button
                     type="button"
                     disabled={disabled}
                     onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
-                    className="lexical-toolbar-button"
+                    className={styles.toolbarButton}
                     aria-label="Undo"
                     title="Undo (Ctrl+Z)"
                 >
@@ -231,7 +232,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                     type="button"
                     disabled={disabled}
                     onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
-                    className="lexical-toolbar-button"
+                    className={styles.toolbarButton}
                     aria-label="Redo"
                     title="Redo (Ctrl+Y)"
                 >
@@ -239,7 +240,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                 </button>
             )}
 
-            {(features.undo || features.redo) && <div className="lexical-toolbar-divider" />}
+            {(features.undo || features.redo) && <div className={styles.toolbarDivider} />}
 
             {/* Block Type Selector */}
             {features.headings && (
@@ -255,7 +256,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                             else if (value === 'h3') formatHeading('h3');
                             else if (value === 'quote' && features.quote) formatQuote();
                         }}
-                        className="lexical-toolbar-select"
+                        className={styles.toolbarSelect}
                         aria-label="Formatting options"
                     >
                         <option value="paragraph">Paragraph</option>
@@ -264,18 +265,18 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         <option value="h3">Heading 3</option>
                         {features.quote && <option value="quote">Quote</option>}
                     </select>
-                    <div className="lexical-toolbar-divider" />
+                    <div className={styles.toolbarDivider} />
                 </>
             )}
 
             {/* Text Formatting */}
-            <div className="lexical-toolbar-group">
+            <div className={styles.toolbarGroup}>
                 {features.bold && (
                     <button
                         type="button"
                         disabled={disabled}
                         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
-                        className={`lexical-toolbar-button ${isBold ? 'active' : ''}`}
+                        className={`${styles.toolbarButton} ${isBold ? styles.active : ''}`}
                         aria-label="Format bold"
                         title="Bold (Ctrl+B)"
                     >
@@ -287,7 +288,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         type="button"
                         disabled={disabled}
                         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
-                        className={`lexical-toolbar-button ${isItalic ? 'active' : ''}`}
+                        className={`${styles.toolbarButton} ${isItalic ? styles.active : ''}`}
                         aria-label="Format italic"
                         title="Italic (Ctrl+I)"
                     >
@@ -299,7 +300,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         type="button"
                         disabled={disabled}
                         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline')}
-                        className={`lexical-toolbar-button ${isUnderline ? 'active' : ''}`}
+                        className={`${styles.toolbarButton} ${isUnderline ? styles.active : ''}`}
                         aria-label="Format underline"
                         title="Underline (Ctrl+U)"
                     >
@@ -311,7 +312,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         type="button"
                         disabled={disabled}
                         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough')}
-                        className={`lexical-toolbar-button ${isStrikethrough ? 'active' : ''}`}
+                        className={`${styles.toolbarButton} ${isStrikethrough ? styles.active : ''}`}
                         aria-label="Format strikethrough"
                         title="Strikethrough"
                     >
@@ -323,7 +324,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                         type="button"
                         disabled={disabled}
                         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code')}
-                        className={`lexical-toolbar-button ${isCode ? 'active' : ''}`}
+                        className={`${styles.toolbarButton} ${isCode ? styles.active : ''}`}
                         aria-label="Format code"
                         title="Code"
                     >
@@ -333,18 +334,18 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
             </div>
 
             {(features.bulletList || features.numberedList) && (
-                <div className="lexical-toolbar-divider" />
+                <div className={styles.toolbarDivider} />
             )}
 
             {/* Lists */}
             {(features.bulletList || features.numberedList) && (
-                <div className="lexical-toolbar-group">
+                <div className={styles.toolbarGroup}>
                     {features.bulletList && (
                         <button
                             type="button"
                             disabled={disabled}
                             onClick={formatBulletList}
-                            className={`lexical-toolbar-button ${blockType === 'ul' ? 'active' : ''}`}
+                            className={`${styles.toolbarButton} ${blockType === 'ul' ? styles.active : ''}`}
                             aria-label="Bullet list"
                             title="Bullet list"
                         >
@@ -356,7 +357,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                             type="button"
                             disabled={disabled}
                             onClick={formatNumberedList}
-                            className={`lexical-toolbar-button ${blockType === 'ol' ? 'active' : ''}`}
+                            className={`${styles.toolbarButton} ${blockType === 'ol' ? styles.active : ''}`}
                             aria-label="Numbered list"
                             title="Numbered list"
                         >
@@ -369,14 +370,14 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
             {/* Block Elements */}
             {(features.quote || features.codeBlock) && (
                 <>
-                    <div className="lexical-toolbar-divider" />
-                    <div className="lexical-toolbar-group">
+                    <div className={styles.toolbarDivider} />
+                    <div className={styles.toolbarGroup}>
                         {features.quote && (
                             <button
                                 type="button"
                                 disabled={disabled}
                                 onClick={formatQuote}
-                                className={`lexical-toolbar-button ${blockType === 'quote' ? 'active' : ''}`}
+                                className={`${styles.toolbarButton} ${blockType === 'quote' ? styles.active : ''}`}
                                 aria-label="Quote block"
                                 title="Quote block"
                             >
@@ -388,7 +389,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 type="button"
                                 disabled={disabled}
                                 onClick={handleCodeBlockButtonClick}
-                                className="lexical-toolbar-button"
+                                className={styles.toolbarButton}
                                 aria-label="Code block"
                                 title="Insert code block"
                             >
@@ -402,14 +403,14 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
             {/* Insert Elements */}
             {(features.links || features.images || features.tables) && (
                 <>
-                    <div className="lexical-toolbar-divider" />
-                    <div className="lexical-toolbar-group">
+                    <div className={styles.toolbarDivider} />
+                    <div className={styles.toolbarGroup}>
                         {features.links && (
                             <button
                                 type="button"
                                 disabled={disabled}
                                 onClick={handleLinkButtonClick}
-                                className="lexical-toolbar-button"
+                                className={styles.toolbarButton}
                                 aria-label="Insert link"
                                 title="Insert link"
                             >
@@ -423,7 +424,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 onClick={() => {
                                     // Image insertion will be handled
                                 }}
-                                className="lexical-toolbar-button"
+                                className={styles.toolbarButton}
                                 aria-label="Insert image"
                                 title="Insert image (coming soon)"
                             >
@@ -437,7 +438,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
                                 onClick={() => {
                                     // Table insertion will be handled
                                 }}
-                                className="lexical-toolbar-button"
+                                className={styles.toolbarButton}
                                 aria-label="Insert table"
                                 title="Insert table (coming soon)"
                             >
@@ -450,7 +451,7 @@ export function ToolbarPlugin({ disabled, features, mode }: ToolbarPluginProps) 
 
             {/* Advanced Features Badge */}
             {mode === 'advanced' && (
-                <div className="lexical-toolbar-mode-badge">
+                <div className={styles.toolbarModeBadge}>
                     Advanced
                 </div>
             )}

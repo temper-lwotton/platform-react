@@ -7,7 +7,7 @@ import * as Select from '@radix-ui/react-select';
 import Link from 'next/link';
 import { createExchange, ExchangeType, ExchangeCategory, ExchangeTerms, LocationType } from '@/lib/exchanges';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
-import { LexicalEditor } from '@/components/ui/LexicalEditor';
+import { LexicalEditor } from '@/components/ui/Lexical';
 import { Icon } from '@/components/ui/Icon';
 import { Input, Textarea, Button } from '@/components/ui/primitives';
 import { MentionUser } from '@/hooks/useMentions';

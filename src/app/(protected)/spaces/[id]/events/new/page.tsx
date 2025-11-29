@@ -9,7 +9,7 @@ import * as Separator from '@radix-ui/react-separator';
 import Link from 'next/link';
 import { createEventWithPhoto } from '@/lib/events';
 import { getCurrentUserId } from '@/lib/auth';
-import { LexicalEditor } from '@/components/ui/LexicalEditor';
+import { LexicalEditor } from '@/components/ui/Lexical';
 
 export default function NewEventPage() {
   const params = useParams();

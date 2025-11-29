@@ -14,11 +14,12 @@ import { $generateHtmlFromNodes } from '@lexical/html';
 import { $getRoot, EditorState } from 'lexical';
 import { registerCodeHighlighting } from '@lexical/code';
 
-import { ToolbarPlugin } from './LexicalToolbar';
+import { Toolbar } from './Toolbar';
 import { getEditorConfig, EditorMode } from '@/lib/lexical-config';
-import { MentionNode } from './lexical/nodes/MentionNode';
-import MentionsPlugin from './lexical/plugins/MentionsPlugin';
+import { MentionNode } from '../nodes/MentionNode';
+import MentionsPlugin from '../plugins/MentionsPlugin';
 import { MentionUser } from '@/hooks/useMentions';
+import styles from '../Lexical.module.scss';
 
 interface LexicalEditorProps {
     value: string;
@@ -57,70 +58,35 @@ function CodeHighlightPluginWrapper() {
     return null;
 }
 
-// Theme configuration for styling
+// Theme configuration for styling - using module classes
 const theme = {
-    paragraph: 'lexical-paragraph',
+    paragraph: styles.paragraph,
     heading: {
-        h1: 'lexical-h1',
-        h2: 'lexical-h2',
-        h3: 'lexical-h3',
-        h4: 'lexical-h4',
-        h5: 'lexical-h5',
-        h6: 'lexical-h6',
+        h1: styles.h1,
+        h2: styles.h2,
+        h3: styles.h3,
+        h4: styles.h4,
+        h5: styles.h5,
+        h6: styles.h6,
     },
     list: {
-        ul: 'lexical-ul',
-        ol: 'lexical-ol',
-        listitem: 'lexical-listitem',
+        ul: styles.ul,
+        ol: styles.ol,
+        listitem: styles.listitem,
         nested: {
-            listitem: 'lexical-nested-listitem',
+            listitem: styles.listitem,
         },
     },
-    quote: 'lexical-quote',
-    code: 'lexical-code',
-    codeHighlight: {
-        atrule: 'lexical-token-atrule',
-        attr: 'lexical-token-attr',
-        boolean: 'lexical-token-boolean',
-        builtin: 'lexical-token-builtin',
-        cdata: 'lexical-token-cdata',
-        char: 'lexical-token-char',
-        class: 'lexical-token-class',
-        'class-name': 'lexical-token-class-name',
-        comment: 'lexical-token-comment',
-        constant: 'lexical-token-constant',
-        deleted: 'lexical-token-deleted',
-        doctype: 'lexical-token-doctype',
-        entity: 'lexical-token-entity',
-        function: 'lexical-token-function',
-        important: 'lexical-token-important',
-        inserted: 'lexical-token-inserted',
-        keyword: 'lexical-token-keyword',
-        namespace: 'lexical-token-namespace',
-        number: 'lexical-token-number',
-        operator: 'lexical-token-operator',
-        prolog: 'lexical-token-prolog',
-        property: 'lexical-token-property',
-        punctuation: 'lexical-token-punctuation',
-        regex: 'lexical-token-regex',
-        selector: 'lexical-token-selector',
-        string: 'lexical-token-string',
-        symbol: 'lexical-token-symbol',
-        tag: 'lexical-token-tag',
-        url: 'lexical-token-url',
-        variable: 'lexical-token-variable',
-    },
-    link: 'lexical-link',
+    quote: styles.quote,
+    code: styles.code,
+    link: styles.link,
     text: {
-        bold: 'lexical-text-bold',
-        italic: 'lexical-text-italic',
-        underline: 'lexical-text-underline',
-        strikethrough: 'lexical-text-strikethrough',
-        code: 'lexical-text-code',
+        bold: styles.textBold,
+        italic: styles.textItalic,
+        underline: styles.textUnderline,
+        strikethrough: styles.textStrikethrough,
+        code: styles.textCode,
     },
-    table: 'lexical-table',
-    tableCell: 'lexical-table-cell',
-    tableCellHeader: 'lexical-table-cell-header',
 };
 
 function onError(error: Error) {
@@ -161,20 +127,20 @@ export function LexicalEditor({
 
     return (
         <LexicalComposer initialConfig={initialConfig}>
-            <div className={`lexical-editor-container lexical-editor-${mode}`}>
-                <ToolbarPlugin
+            <div className={`${styles.editorContainer} lexical-editor-${mode}`}>
+                <Toolbar
                     disabled={disabled}
                     features={editorConfig.features}
                     mode={mode}
                 />
-                <div className="lexical-editor-inner">
+                <div className={styles.editorInner}>
                     <RichTextPlugin
                         contentEditable={
                             <ContentEditable
-                                className="lexical-content-editable"
+                                className={styles.contentEditable}
                                 aria-placeholder={effectivePlaceholder}
                                 placeholder={
-                                    <div className="lexical-placeholder">
+                                    <div className={styles.placeholder}>
                                         {effectivePlaceholder}
                                     </div>
                                 }

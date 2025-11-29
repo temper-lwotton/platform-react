@@ -11,7 +11,7 @@ import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { getSpace, Space } from '@/lib/spaces';
 import { ExcerptSelector } from '@/components/ui/ExcerptSelector';
 import { EngagementAnalysis } from '@/components/ui/EngagementAnalysis';
-import { LexicalEditor } from '@/components/ui/LexicalEditor';
+import { LexicalEditor } from '@/components/ui/Lexical';
 import { Input, Button } from '@/components/ui/primitives';
 import { MentionUser } from '@/hooks/useMentions';
 import type { EngagementAnalysis as EngagementAnalysisType } from '@/types/engagement';

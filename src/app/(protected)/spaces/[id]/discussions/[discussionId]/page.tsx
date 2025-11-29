@@ -8,7 +8,7 @@ import { getCurrentUserId } from '@/lib/auth';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
 import { LikesDisplay } from '@/components/ui/LikesDisplay';
-import { LexicalCommentEditor } from '@/components/ui/LexicalCommentEditor';
+import { LexicalCommentEditor } from '@/components/ui/Lexical';
 import { MentionContent } from '@/components/ui/MentionContent';
 import { RichContent } from '@/components/ui/RichContent';
 import { RichContentWithMentions } from '@/components/ui/RichContentWithMentions';
