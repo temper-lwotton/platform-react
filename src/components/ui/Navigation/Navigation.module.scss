@@ -1,15 +1,12 @@
 @use '../../../styles/abstracts' as *;
 
 .nav {
-  background: var(--background);
-  border-bottom: 1px solid var(--color-border-primary);
+  @include glass-panel(var(--blur-lg));
+  border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
   z-index: 100;
-
-  @media (prefers-color-scheme: dark) {
-    border-bottom-color: var(--color-border-primary);
-  }
+  box-shadow: var(--glass-shadow);
 }
 
 .container {
@@ -61,43 +58,31 @@
 
 .link {
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--color-text-secondary);
   text-decoration: none;
-  transition: all 0.15s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
     color: var(--foreground);
-    background: var(--color-bg-hover);
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    box-shadow: var(--glow-subtle);
   }
 
   &.linkActive {
     color: var(--color-primary);
-    background: var(--color-primary-bg);
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    box-shadow: var(--glass-shadow), var(--glow-primary);
 
     &:hover {
       color: var(--color-primary);
-      background: var(--color-primary-bg);
-    }
-  }
-
-  @media (prefers-color-scheme: dark) {
-    color: var(--color-text-secondary);
-
-    &:hover {
-      color: var(--foreground);
-      background: var(--color-bg-hover);
-    }
-
-    &.linkActive {
-      color: var(--color-primary);
-      background: var(--color-primary-bg);
-
-      &:hover {
-        background: var(--color-primary-bg);
-      }
+      background: var(--glass-bg);
     }
   }
 }
@@ -114,18 +99,13 @@
 }
 
 .dropdown {
-  background: var(--background);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
+  @include glass-effect(var(--blur-lg), var(--glass-bg-heavy));
+  border-radius: 12px;
   padding: 0.5rem;
   min-width: 200px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow-hover);
   z-index: 1000;
-  animation: slideDown 0.15s ease-out;
-
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   @media (max-width: 768px) {
     min-width: 180px;
@@ -154,23 +134,29 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--color-text-primary);
   text-decoration: none;
-  transition: background 0.15s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background: var(--color-bg-hover);
+    background: var(--glass-bg-light);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    box-shadow: var(--glow-subtle);
   }
 
   &.dropdownItemActive {
-    background: var(--color-primary-bg);
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
     color: var(--color-primary);
+    box-shadow: var(--glass-shadow), var(--glow-primary);
 
     &:hover {
-      background: var(--color-primary-bg);
+      background: var(--glass-bg);
     }
   }
 

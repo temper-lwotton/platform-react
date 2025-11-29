@@ -1,0 +1,238 @@
+@use '../../../styles/abstracts' as *;
+
+.page {
+  @include flex-column;
+  gap: var(--grid-gap-md);
+  padding: var(--space-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+
+  @include responsive(mobile) {
+    padding: var(--space-lg);
+    gap: var(--space-lg);
+  }
+}
+
+.header {
+  @include flex-column;
+  gap: var(--space-md);
+}
+
+.headerTitle {
+  @include flex-center;
+  gap: var(--space-sm);
+  justify-content: flex-start;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 600px;
+}
+
+// Filters
+.filters {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  @include flex-center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--card-radius-sm);
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--color-bg-hover);
+    border-color: var(--color-border-secondary);
+    color: var(--color-text-primary);
+  }
+
+  &--active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--white);
+
+    &:hover {
+      background: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+  }
+}
+
+// Suggestions Grid
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--grid-gap-sm);
+
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  @include flex-column;
+  gap: var(--space-md);
+  padding: var(--card-padding-lg);
+  background: var(--white);
+  border: 1px solid var(--color-border-ultra-light);
+  border-radius: var(--card-radius-lg);
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+
+  @include dark-mode {
+    background: var(--color-surface-card);
+    border-color: var(--color-border-ultra-light);
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+  }
+}
+
+.cardHeader {
+  @include flex-between;
+}
+
+.cardType {
+  @include flex-center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cardContent {
+  @include flex-column;
+  gap: var(--space-md);
+  align-items: center;
+  text-align: center;
+  flex: 1;
+}
+
+.cardAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.cardAvatarPlaceholder {
+  @include flex-center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--indigo-500) 0%, var(--purple-500) 100%);
+  color: var(--white);
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.cardIcon {
+  @include flex-center;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--card-radius-md);
+  background: var(--gradient-green-radial);
+  color: var(--true-black);
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cardMetadata {
+  @include flex-center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cardMetaItem {
+  @include flex-center;
+  gap: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+.cardReason {
+  @include flex-center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background: var(--gradient-green-radial);
+  border-radius: var(--card-radius-sm);
+  font-size: 0.75rem;
+  color: var(--true-black);
+  line-height: 1.4;
+
+  @include dark-mode {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+}
+
+// Empty State
+.empty {
+  @include flex-column;
+  @include flex-center;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  text-align: center;
+  color: var(--color-text-tertiary);
+}
+
+.emptyTitle {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.emptyDescription {
+  font-size: 0.9375rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}

@@ -3,7 +3,7 @@
 import { forwardRef } from 'react';
 import styles from './Card.module.scss';
 
-export type CardVariant = 'default' | 'elevated' | 'outlined' | 'ghost';
+export type CardVariant = 'default' | 'elevated' | 'outlined' | 'ghost' | 'minimal' | 'accentGreen' | 'stat' | 'glass' | 'glassElevated' | 'glassAnimated';
 
 export interface CardProps extends React.HTMLAttributes<HTMLElement> {
   variant?: CardVariant;

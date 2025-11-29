@@ -1,0 +1,365 @@
+@use '../../../styles/abstracts' as *;
+
+.showcase {
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @include responsive(mobile) {
+    padding: 2rem 1rem;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeInDown 0.6s ease-out;
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+
+  @include responsive(mobile) {
+    font-size: 2.5rem;
+  }
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+
+  @include responsive(mobile) {
+    font-size: 1rem;
+  }
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.section {
+  animation: fadeInUp 0.8s ease-out backwards;
+
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+
+  @include responsive(mobile) {
+    font-size: 1.5rem;
+  }
+}
+
+// Card Grid
+.cardGrid {
+  @include grid-auto-fit(320px, 2rem);
+
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.stat {
+  @include flex-column;
+  gap: 0.25rem;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// Button Grid
+.buttonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.buttonDemo {
+  @include flex-column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  @include glass-effect(var(--blur-sm), var(--glass-bg-light));
+  border-radius: var(--card-radius-md);
+}
+
+.demoLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+// Layered Demo
+.layeredDemo {
+  position: relative;
+  min-height: 500px;
+  padding: 2rem;
+  background: var(--gradient-depth-bg);
+  border-radius: var(--card-radius-lg);
+  overflow: hidden;
+
+  @include responsive(mobile) {
+    min-height: 600px;
+    padding: 1rem;
+  }
+}
+
+.layer1,
+.layer2,
+.layer3 {
+  position: absolute;
+  min-width: 300px;
+  max-width: 400px;
+
+  @include responsive(mobile) {
+    min-width: 250px;
+    max-width: 280px;
+  }
+}
+
+.layer1 {
+  top: 2rem;
+  left: 2rem;
+  z-index: 1;
+
+  @include responsive(mobile) {
+    top: 1rem;
+    left: 1rem;
+  }
+}
+
+.layer2 {
+  top: 8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+
+  @include responsive(mobile) {
+    top: 10rem;
+  }
+}
+
+.layer3 {
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 3;
+
+  @include responsive(mobile) {
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
+
+// Interactive Grid
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.interactiveGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.feature {
+  @include flex-column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--glass-bg-light);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  border-radius: var(--card-radius-md);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    transform: translateY(-4px);
+    box-shadow: var(--glass-shadow-hover);
+  }
+
+  h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+.actions {
+  @include flex-center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+
+  @include responsive(mobile) {
+    flex-direction: column;
+    width: 100%;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Color Accent Cards
+.colorGrid {
+  @include grid-auto-fit(280px, 2rem);
+
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.accentBlue {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  &:hover {
+    box-shadow: var(--glass-shadow-hover), var(--glow-primary);
+  }
+
+  h4 {
+    color: var(--blue-600);
+  }
+}
+
+.accentGreen {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(212, 252, 121, 0.15) 0%, transparent 70%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  &:hover {
+    box-shadow: var(--glass-shadow-hover), var(--glow-accent);
+  }
+
+  h4 {
+    color: var(--green-600);
+  }
+}
+
+.accentPurple {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  &:hover {
+    box-shadow: var(--glass-shadow-hover), 0 0 24px rgba(139, 92, 246, 0.3);
+  }
+
+  h4 {
+    color: var(--purple-600);
+  }
+}

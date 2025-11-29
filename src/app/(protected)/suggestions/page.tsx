@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
+import styles from './suggestions.module.scss';
 
 type SuggestionType = 'user' | 'space' | 'event' | 'discussion' | 'resource' | 'showcase';
 
@@ -223,147 +224,145 @@ export default function SuggestionsPage() {
         : MOCK_SUGGESTIONS.filter(s => s.type === filterType);
 
     return (
-        <main className="suggestions-page-container">
-            <div className="suggestions-page-main">
-                <header className="suggestions-header">
-                    <div className="suggestions-header-title">
-                        <Icon icon="sparkles" size={24} />
-                        <h1 className="suggestions-title">Suggestions for You</h1>
-                    </div>
-                    <p className="suggestions-subtitle">
-                        Discover people, spaces, and content tailored to your interests
-                    </p>
-                </header>
-
-                {/* Filter Tabs */}
-                <div className="suggestions-filters">
-                    <button
-                        onClick={() => setFilterType('all')}
-                        className={`suggestions-filter-btn ${filterType === 'all' ? 'suggestions-filter-btn--active' : ''}`}
-                    >
-                        All
-                    </button>
-                    <button
-                        onClick={() => setFilterType('user')}
-                        className={`suggestions-filter-btn ${filterType === 'user' ? 'suggestions-filter-btn--active' : ''}`}
-                    >
-                        <Icon icon="user" size={16} />
-                        People
-                    </button>
-                    <button
-                        onClick={() => setFilterType('space')}
-                        className={`suggestions-filter-btn ${filterType === 'space' ? 'suggestions-filter-btn--active' : ''}`}
-                    >
-                        <Icon icon="users" size={16} />
-                        Spaces
-                    </button>
-                    <button
-                        onClick={() => setFilterType('event')}
-                        className={`suggestions-filter-btn ${filterType === 'event' ? 'suggestions-filter-btn--active' : ''}`}
-                    >
-                        <Icon icon="calendar" size={16} />
-                        Events
-                    </button>
-                    <button
-                        onClick={() => setFilterType('discussion')}
-                        className={`suggestions-filter-btn ${filterType === 'discussion' ? 'suggestions-filter-btn--active' : ''}`}
-                    >
-                        <Icon icon="chat" size={16} />
-                        Discussions
-                    </button>
-                    <button
-                        onClick={() => setFilterType('resource')}
-                        className={`suggestions-filter-btn ${filterType === 'resource' ? 'suggestions-filter-btn--active' : ''}`}
-                    >
-                        <Icon icon="book" size={16} />
-                        Resources
-                    </button>
-                    <button
-                        onClick={() => setFilterType('showcase')}
-                        className={`suggestions-filter-btn ${filterType === 'showcase' ? 'suggestions-filter-btn--active' : ''}`}
-                    >
-                        <Icon icon="star" size={16} />
-                        Showcases
-                    </button>
+        <main className={styles.page}>
+            <header className={styles.header}>
+                <div className={styles.headerTitle}>
+                    <Icon icon="sparkles" size={24} />
+                    <h1 className={styles.title}>Suggestions for You</h1>
                 </div>
+                <p className={styles.subtitle}>
+                    Discover people, spaces, and content tailored to your interests
+                </p>
+            </header>
 
-                {/* Suggestions Grid */}
-                <div className="suggestions-grid">
-                    {filteredSuggestions.map((suggestion) => (
-                        <Link
-                            key={suggestion.id}
-                            href={suggestion.url}
-                            className="suggestion-card"
-                        >
-                            <div className="suggestion-card-header">
-                                <div className="suggestion-card-type">
-                                    <Icon icon={getTypeIcon(suggestion.type)} size={14} />
-                                    <span>{getTypeLabel(suggestion.type)}</span>
-                                </div>
-                            </div>
-
-                            <div className="suggestion-card-content">
-                                {suggestion.type === 'user' ? (
-                                    <div className="suggestion-card-avatar">
-                                        {suggestion.image ? (
-                                            <img src={suggestion.image} alt={suggestion.title} />
-                                        ) : (
-                                            <span className="suggestion-card-avatar-placeholder">
-                                                {suggestion.title.charAt(0)}
-                                            </span>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="suggestion-card-icon">
-                                        <Icon icon={getTypeIcon(suggestion.type)} size={32} />
-                                    </div>
-                                )}
-
-                                <h3 className="suggestion-card-title">{suggestion.title}</h3>
-                                <p className="suggestion-card-description">{suggestion.description}</p>
-
-                                {suggestion.metadata && (
-                                    <div className="suggestion-card-metadata">
-                                        {suggestion.metadata.memberCount && (
-                                            <span className="suggestion-card-meta-item">
-                                                <Icon icon="users" size={12} />
-                                                {suggestion.metadata.memberCount} members
-                                            </span>
-                                        )}
-                                        {suggestion.metadata.date && (
-                                            <span className="suggestion-card-meta-item">
-                                                <Icon icon="calendar" size={12} />
-                                                {suggestion.metadata.date}
-                                            </span>
-                                        )}
-                                        {suggestion.metadata.replies !== undefined && (
-                                            <span className="suggestion-card-meta-item">
-                                                <Icon icon="chat" size={12} />
-                                                {suggestion.metadata.replies} replies
-                                            </span>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="suggestion-card-reason">
-                                <Icon icon="sparkles" size={12} />
-                                <span>{suggestion.reason}</span>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-
-                {filteredSuggestions.length === 0 && (
-                    <div className="suggestions-empty">
-                        <Icon icon="sparkles" size={48} />
-                        <p className="suggestions-empty-title">No suggestions available</p>
-                        <p className="suggestions-empty-description">
-                            Check back later for personalized recommendations
-                        </p>
-                    </div>
-                )}
+            {/* Filter Tabs */}
+            <div className={styles.filters}>
+                <button
+                    onClick={() => setFilterType('all')}
+                    className={`${styles.filterBtn} ${filterType === 'all' ? styles['filterBtn--active'] : ''}`}
+                >
+                    All
+                </button>
+                <button
+                    onClick={() => setFilterType('user')}
+                    className={`${styles.filterBtn} ${filterType === 'user' ? styles['filterBtn--active'] : ''}`}
+                >
+                    <Icon icon="user" size={16} />
+                    People
+                </button>
+                <button
+                    onClick={() => setFilterType('space')}
+                    className={`${styles.filterBtn} ${filterType === 'space' ? styles['filterBtn--active'] : ''}`}
+                >
+                    <Icon icon="users" size={16} />
+                    Spaces
+                </button>
+                <button
+                    onClick={() => setFilterType('event')}
+                    className={`${styles.filterBtn} ${filterType === 'event' ? styles['filterBtn--active'] : ''}`}
+                >
+                    <Icon icon="calendar" size={16} />
+                    Events
+                </button>
+                <button
+                    onClick={() => setFilterType('discussion')}
+                    className={`${styles.filterBtn} ${filterType === 'discussion' ? styles['filterBtn--active'] : ''}`}
+                >
+                    <Icon icon="chat" size={16} />
+                    Discussions
+                </button>
+                <button
+                    onClick={() => setFilterType('resource')}
+                    className={`${styles.filterBtn} ${filterType === 'resource' ? styles['filterBtn--active'] : ''}`}
+                >
+                    <Icon icon="book" size={16} />
+                    Resources
+                </button>
+                <button
+                    onClick={() => setFilterType('showcase')}
+                    className={`${styles.filterBtn} ${filterType === 'showcase' ? styles['filterBtn--active'] : ''}`}
+                >
+                    <Icon icon="star" size={16} />
+                    Showcases
+                </button>
             </div>
+
+            {/* Suggestions Grid */}
+            <div className={styles.grid}>
+                {filteredSuggestions.map((suggestion) => (
+                    <Link
+                        key={suggestion.id}
+                        href={suggestion.url}
+                        className={styles.card}
+                    >
+                        <div className={styles.cardHeader}>
+                            <div className={styles.cardType}>
+                                <Icon icon={getTypeIcon(suggestion.type)} size={14} />
+                                <span>{getTypeLabel(suggestion.type)}</span>
+                            </div>
+                        </div>
+
+                        <div className={styles.cardContent}>
+                            {suggestion.type === 'user' ? (
+                                <div className={styles.cardAvatar}>
+                                    {suggestion.image ? (
+                                        <img src={suggestion.image} alt={suggestion.title} />
+                                    ) : (
+                                        <span className={styles.cardAvatarPlaceholder}>
+                                            {suggestion.title.charAt(0)}
+                                        </span>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className={styles.cardIcon}>
+                                    <Icon icon={getTypeIcon(suggestion.type)} size={32} />
+                                </div>
+                            )}
+
+                            <h3 className={styles.cardTitle}>{suggestion.title}</h3>
+                            <p className={styles.cardDescription}>{suggestion.description}</p>
+
+                            {suggestion.metadata && (
+                                <div className={styles.cardMetadata}>
+                                    {suggestion.metadata.memberCount && (
+                                        <span className={styles.cardMetaItem}>
+                                            <Icon icon="users" size={12} />
+                                            {suggestion.metadata.memberCount} members
+                                        </span>
+                                    )}
+                                    {suggestion.metadata.date && (
+                                        <span className={styles.cardMetaItem}>
+                                            <Icon icon="calendar" size={12} />
+                                            {suggestion.metadata.date}
+                                        </span>
+                                    )}
+                                    {suggestion.metadata.replies !== undefined && (
+                                        <span className={styles.cardMetaItem}>
+                                            <Icon icon="chat" size={12} />
+                                            {suggestion.metadata.replies} replies
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={styles.cardReason}>
+                            <Icon icon="sparkles" size={12} />
+                            <span>{suggestion.reason}</span>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+
+            {filteredSuggestions.length === 0 && (
+                <div className={styles.empty}>
+                    <Icon icon="sparkles" size={48} />
+                    <p className={styles.emptyTitle}>No suggestions available</p>
+                    <p className={styles.emptyDescription}>
+                        Check back later for personalized recommendations
+                    </p>
+                </div>
+            )}
         </main>
     );
 }

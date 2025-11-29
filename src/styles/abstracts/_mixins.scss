@@ -62,6 +62,109 @@
   border-color: var(--color-border-secondary);
 }
 
+// ============================================
+// Liquid Glass Effects
+// ============================================
+
+// Glass effect with backdrop blur
+@mixin glass-effect($blur: var(--blur-md), $background: var(--glass-bg), $border: var(--glass-border)) {
+  background: $background;
+  backdrop-filter: $blur;
+  -webkit-backdrop-filter: $blur; // Safari support
+  border: 1px solid $border;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+
+  // Fallback for browsers that don't support backdrop-filter
+  @supports not (backdrop-filter: blur(1px)) {
+    background: var(--color-bg-elevated);
+  }
+}
+
+// Glass with inner glow/highlight
+@mixin glass-elevated($blur: var(--blur-md)) {
+  @include glass-effect($blur);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--glass-border-inner);
+    border-radius: inherit;
+  }
+}
+
+// Glass hover effect
+@mixin glass-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+    box-shadow: var(--glass-shadow-hover);
+    transform: translateY(-2px);
+    border-color: var(--glass-border-inner);
+  }
+}
+
+// Glass with subtle animation
+@mixin glass-animated {
+  @include glass-effect;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: var(--glass-shadow-hover), var(--glow-subtle);
+  }
+}
+
+// Glass panel (for sidebars, modals)
+@mixin glass-panel($blur: var(--blur-lg)) {
+  background: var(--glass-bg-heavy);
+  backdrop-filter: $blur;
+  -webkit-backdrop-filter: $blur;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background: var(--color-bg-elevated);
+  }
+}
+
+// Glass button effect
+@mixin glass-button {
+  background: var(--glass-bg-light);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--glass-border);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover:not(:disabled) {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    box-shadow: var(--glass-shadow), var(--glow-subtle);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background: var(--color-secondary-bg);
+
+    &:hover:not(:disabled) {
+      background: var(--color-bg-hover);
+    }
+  }
+}
+
 // Hover Lift Effect
 @mixin hover-lift($shadow: var(--shadow-md)) {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -252,4 +355,38 @@
   @media (prefers-color-scheme: dark) {
     @content;
   }
+}
+
+// Typography - Metric Displays
+@mixin metric-display {
+  font-size: var(--font-size-metric-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+@mixin metric-display-xl {
+  font-size: var(--font-size-metric-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+@mixin metric-display-md {
+  font-size: var(--font-size-metric-md);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+@mixin metric-label {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-secondary);
+  text-transform: capitalize;
+}
+
+@mixin metric-sublabel {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
 }

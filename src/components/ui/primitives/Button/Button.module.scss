@@ -86,6 +86,30 @@
   }
 }
 
+.variant-glass {
+  @include glass-button;
+  color: var(--color-text-primary);
+  font-weight: 600;
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+.variant-glassPrimary {
+  @include glass-button;
+  color: var(--color-primary);
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    box-shadow: var(--glass-shadow), var(--glow-primary);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
 // Sizes
 .size-sm {
   padding: 0.375rem 0.75rem;

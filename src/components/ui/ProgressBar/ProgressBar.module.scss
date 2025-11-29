@@ -1,0 +1,59 @@
+@use '../../../styles/abstracts' as *;
+
+.progressBar {
+  @include flex-column;
+  gap: var(--space-xs);
+  width: 100%;
+
+  &__label {
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-align: right;
+  }
+
+  &__track {
+    background: var(--gray-100);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+
+    @include dark-mode {
+      background: var(--gray-800);
+    }
+
+    &--sm {
+      height: 6px;
+    }
+
+    &--md {
+      height: 8px;
+    }
+
+    &--lg {
+      height: 12px;
+    }
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.3s ease;
+
+    &--default {
+      background: var(--color-primary);
+    }
+
+    &--gradient {
+      background: var(--gradient-green-linear);
+    }
+
+    &--dual {
+      background: linear-gradient(90deg, var(--neon-green) 0%, var(--true-black) 100%);
+
+      @include dark-mode {
+        background: linear-gradient(90deg, var(--neon-green-mid) 0%, var(--gray-300) 100%);
+      }
+    }
+  }
+}

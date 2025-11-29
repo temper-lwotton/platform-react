@@ -101,6 +101,15 @@ export function HomeSidebar() {
           <span className={styles.linkText}>Suggestions</span>
         </Link>
 
+        {/* Glass Showcase Link */}
+        <Link
+          href="/glass-showcase"
+          className={`${styles.link} ${isActive('/glass-showcase') ? styles.linkActive : ''}`}
+        >
+          <Icon icon="sparkles" size={18} className={styles.linkIcon} />
+          <span className={styles.linkText}>Glass Showcase</span>
+        </Link>
+
         <Separator.Root className={styles.separator} />
 
         {/* My Spaces Section */}

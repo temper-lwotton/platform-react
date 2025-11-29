@@ -21,7 +21,10 @@
       "Bash(awk:*)",
       "Bash(src/components/ui/EngagementTipsList/index.ts)",
       "Bash(src/components/ui/EngagementAnalysis/index.ts)",
-      "Bash(do 'basename=$(basename $file .tsx)')"
+      "Bash(do 'basename=$(basename $file .tsx)')",
+      "WebFetch(domain:cdn.dribbble.com)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,54 @@
+@use '../../../styles/abstracts' as *;
+
+.metricDisplay {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
+  &__icon {
+    margin-bottom: var(--space-xs);
+  }
+
+  &__content {
+    @include flex-column;
+    gap: var(--space-xs);
+  }
+
+  &__value {
+    @include metric-display;
+
+    &--xl {
+      @include metric-display-xl;
+    }
+
+    &--lg {
+      @include metric-display;
+    }
+
+    &--md {
+      @include metric-display-md;
+    }
+
+    &--sm {
+      font-size: 1.5rem;
+      font-weight: var(--font-weight-bold);
+      line-height: 1;
+    }
+  }
+
+  &__suffix {
+    font-size: var(--font-size-super);
+    font-weight: var(--font-weight-medium);
+    opacity: 0.7;
+    vertical-align: super;
+    margin-left: 2px;
+  }
+
+  &__label {
+    @include metric-label;
+  }
+
+  &__sublabel {
+    @include metric-sublabel;
+  }
+}
