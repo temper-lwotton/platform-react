@@ -156,10 +156,11 @@ export function Navigation() {
                             </li>
                         );
                     })}
-
+                </ul>
                     {/* Auth-only components - only render on client after hydration */}
+
                     {isClient && isAuthenticated && (
-                        <>
+                        <ul className={styles.links}>
                             <li>
                                 <MessagesDropdown />
                             </li>
@@ -178,9 +179,11 @@ export function Navigation() {
                             <li>
                                 <UserMenu />
                             </li>
-                        </>
+                        </ul>
+
+
                     )}
-                </ul>
+
             </div>
         </nav>
     );
