@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 import type { SpaceUser } from '@/lib/spaces';
+import styles from './SpaceChatMembers.module.scss';
 
 interface SpaceChatMembersProps {
     admins: SpaceUser[];
@@ -26,21 +27,21 @@ function MemberItem({ member, isAdmin }: { member: SpaceUser; isAdmin?: boolean 
     const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
     return (
-        <Link href={`/users/${member.id}`} className="chat-member-item">
-            <div className="chat-member-avatar-container">
-                <div className="chat-member-avatar">
+        <Link href={`/users/${member.id}`} className={styles.memberItem}>
+            <div className={styles.avatarContainer}>
+                <div className={styles.avatar}>
                     {member.profile?.photo ? (
                         <img src={member.profile.photo} alt={displayName} />
                     ) : (
-                        <span className="chat-member-avatar-text">{initials}</span>
+                        <span className={styles.avatarText}>{initials}</span>
                     )}
                 </div>
-                <div className={`chat-member-status ${online ? 'online' : 'offline'}`} />
+                <div className={`${styles.status} ${online ? styles.statusOnline : styles.statusOffline}`} />
             </div>
-            <div className="chat-member-info">
-                <div className="chat-member-name">
+            <div className={styles.info}>
+                <div className={styles.name}>
                     {displayName}
-                    {isAdmin && <span className="chat-member-badge">Admin</span>}
+                    {isAdmin && <span className={styles.badge}>Admin</span>}
                 </div>
             </div>
         </Link>
@@ -57,23 +58,23 @@ export function SpaceChatMembers({ admins, members }: SpaceChatMembersProps) {
     const totalMembers = admins.length + members.length;
 
     return (
-        <aside className="chat-members-sidebar">
-            <div className="chat-members-header">
-                <div className="chat-members-count">
+        <aside className={styles.sidebar}>
+            <div className={styles.header}>
+                <div className={styles.count}>
                     <Icon icon="users" size={16} />
                     <span>{totalMembers} members</span>
                 </div>
-                <div className="chat-members-online">
-                    <div className="chat-member-status online" />
+                <div className={styles.online}>
+                    <div className={`${styles.status} ${styles.statusOnline}`} />
                     <span>{totalOnline} online</span>
                 </div>
             </div>
 
-            <div className="chat-members-list">
+            <div className={styles.list}>
                 {/* Online Admins */}
                 {onlineAdmins.length > 0 && (
                     <>
-                        <div className="chat-members-section-title">
+                        <div className={styles.sectionTitle}>
                             Admins — {onlineAdmins.length}
                         </div>
                         {onlineAdmins.map(admin => (
@@ -85,7 +86,7 @@ export function SpaceChatMembers({ admins, members }: SpaceChatMembersProps) {
                 {/* Online Members */}
                 {onlineMembers.length > 0 && (
                     <>
-                        <div className="chat-members-section-title">
+                        <div className={styles.sectionTitle}>
                             Online — {onlineMembers.length}
                         </div>
                         {onlineMembers.map(member => (
@@ -97,7 +98,7 @@ export function SpaceChatMembers({ admins, members }: SpaceChatMembersProps) {
                 {/* Offline Admins */}
                 {offlineAdmins.length > 0 && (
                     <>
-                        <div className="chat-members-section-title">
+                        <div className={styles.sectionTitle}>
                             Offline Admins — {offlineAdmins.length}
                         </div>
                         {offlineAdmins.map(admin => (
@@ -109,7 +110,7 @@ export function SpaceChatMembers({ admins, members }: SpaceChatMembersProps) {
                 {/* Offline Members */}
                 {offlineMembers.length > 0 && (
                     <>
-                        <div className="chat-members-section-title">
+                        <div className={styles.sectionTitle}>
                             Offline — {offlineMembers.length}
                         </div>
                         {offlineMembers.map(member => (

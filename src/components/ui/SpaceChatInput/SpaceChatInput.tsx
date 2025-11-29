@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 import { COMMON_EMOJIS, type MediaAttachment } from '@/lib/status-updates';
 import * as Popover from '@radix-ui/react-popover';
-import { Textarea, Input, Button } from './primitives';
+import { Textarea, Input, Button } from '../primitives';
+import styles from './SpaceChatInput.module.scss';
 
 interface SpaceChatInputProps {
     spaceId: string;
@@ -84,9 +85,9 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
     const canPost = statusText.trim().length > 0 && statusText.length <= 280;
 
     return (
-        <div className="space-chat-input">
+        <div className={styles.input}>
             {/* Text Input */}
-            <div className="space-chat-input-container">
+            <div className={styles.inputContainer}>
                 <Textarea
                     placeholder={`Share an update in ${spaceTitle}...`}
                     value={statusText}
@@ -95,16 +96,16 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
                     rows={3}
                     fullWidth
                 />
-                <div className="space-chat-char-count">
+                <div className={styles.charCount}>
                     {statusText.length}/280
                 </div>
             </div>
 
             {/* Media Preview */}
             {mediaAttachments.length > 0 && (
-                <div className="space-chat-media-preview">
+                <div className={styles.mediaPreview}>
                     {mediaAttachments.map((media) => (
-                        <div key={media.id} className="space-chat-media-item">
+                        <div key={media.id} className={styles.mediaItem}>
                             {media.type === 'image' && (
                                 <img src={media.url} alt={media.caption || ''} />
                             )}
@@ -112,18 +113,18 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
                                 <video src={media.url} controls />
                             )}
                             {media.type === 'link' && (
-                                <div className="space-chat-link-preview">
+                                <div className={styles.linkPreview}>
                                     {media.thumbnail && (
-                                        <img src={media.thumbnail} alt="" className="space-chat-link-thumb" />
+                                        <img src={media.thumbnail} alt="" className={styles.linkThumb} />
                                     )}
-                                    <div className="space-chat-link-info">
-                                        <div className="space-chat-link-title">{media.title}</div>
-                                        <div className="space-chat-link-url">{media.url}</div>
+                                    <div className={styles.linkInfo}>
+                                        <div className={styles.linkTitle}>{media.title}</div>
+                                        <div className={styles.linkUrl}>{media.url}</div>
                                     </div>
                                 </div>
                             )}
                             <button
-                                className="space-chat-media-remove"
+                                className={styles.mediaRemove}
                                 onClick={() => handleRemoveMedia(media.id)}
                                 title="Remove"
                             >
@@ -136,7 +137,7 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
 
             {/* Link Input */}
             {showLinkInput && (
-                <div className="space-chat-link-input">
+                <div className={styles.linkInput}>
                     <Input
                         type="url"
                         placeholder="Paste a link..."
@@ -156,8 +157,8 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
             )}
 
             {/* Controls */}
-            <div className="space-chat-controls">
-                <div className="space-chat-actions">
+            <div className={styles.controls}>
+                <div className={styles.actions}>
                     {/* Media Upload */}
                     <input
                         ref={fileInputRef}
@@ -168,7 +169,7 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
                         style={{ display: 'none' }}
                     />
                     <button
-                        className="space-chat-action-btn"
+                        className={styles.actionBtn}
                         onClick={() => fileInputRef.current?.click()}
                         title="Add image or video"
                     >
@@ -177,7 +178,7 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
 
                     {/* Link */}
                     <button
-                        className="space-chat-action-btn"
+                        className={styles.actionBtn}
                         onClick={() => setShowLinkInput(!showLinkInput)}
                         title="Add link"
                     >
@@ -187,24 +188,24 @@ export function SpaceChatInput({ spaceId, spaceTitle }: SpaceChatInputProps) {
                     {/* Emoji */}
                     <Popover.Root open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
                         <Popover.Trigger asChild>
-                            <button className="space-chat-action-btn" title="Add emoji">
+                            <button className={styles.actionBtn} title="Add emoji">
                                 {selectedEmoji || '😊'}
                             </button>
                         </Popover.Trigger>
                         <Popover.Portal>
-                            <Popover.Content className="space-chat-emoji-picker" sideOffset={5}>
-                                <div className="space-chat-emoji-grid">
+                            <Popover.Content className={styles.emojiPicker} sideOffset={5}>
+                                <div className={styles.emojiGrid}>
                                     {COMMON_EMOJIS.map((emoji) => (
                                         <button
                                             key={emoji}
-                                            className="space-chat-emoji-btn"
+                                            className={styles.emojiBtn}
                                             onClick={() => handleEmojiSelect(emoji)}
                                         >
                                             {emoji}
                                         </button>
                                     ))}
                                 </div>
-                                <Popover.Arrow className="space-chat-emoji-arrow" />
+                                <Popover.Arrow className={styles.emojiArrow} />
                             </Popover.Content>
                         </Popover.Portal>
                     </Popover.Root>

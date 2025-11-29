@@ -1,0 +1,179 @@
+@use '../../../styles/abstracts' as *;
+
+.input {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.inputContainer {
+  position: relative;
+}
+
+.charCount {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+.mediaPreview {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.mediaItem {
+  position: relative;
+  max-width: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-bg-primary);
+
+  img,
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+.linkPreview {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.linkThumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.linkInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.linkTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.linkUrl {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mediaRemove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+
+.linkInput {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.25rem;
+
+  &:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
+}
+
+.emojiPicker {
+  background: var(--color-surface-dropdown);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+}
+
+.emojiGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+
+.emojiBtn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: var(--color-bg-hover);
+  }
+}
+
+.emojiArrow {
+  fill: var(--color-surface-dropdown);
+}
