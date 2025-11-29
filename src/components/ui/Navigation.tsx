@@ -47,7 +47,7 @@ const navItems: NavItem[] = [
         children: [
             { href: '/showcases', label: 'Success Stories', icon: 'star' },
             { href: '/resources', label: 'Knowledge Base', icon: 'book' },
-            { href: '/events', label: 'Events', ic∑on: 'book' },
+            { href: '/events', label: 'Events', icon: 'book' },
         ]
     },
     { href: '/', label: 'Contribute', requiresAuth: true },
