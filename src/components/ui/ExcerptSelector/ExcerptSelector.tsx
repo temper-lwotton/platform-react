@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import * as Label from '@radix-ui/react-label';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import styles from './ExcerptSelector.module.scss';
 
 interface ExcerptSelectorProps {
     excerpts: string[];
@@ -51,54 +52,54 @@ export function ExcerptSelector({
     const isWithinLimit = charCount >= 30 && charCount <= 200;
 
     return (
-        <div className="excerpt-selector">
-            <Label.Root className="excerpt-selector-label">
+        <div className={styles.selector}>
+            <Label.Root className={styles.label}>
                 Choose an Excerpt
             </Label.Root>
 
             <RadioGroup.Root
                 value={selectedOption}
                 onValueChange={handleValueChange}
-                className="excerpt-selector-options"
+                className={styles.options}
             >
                 {excerpts.map((excerpt, index) => (
                     <label
                         key={index}
-                        className="excerpt-option"
+                        className={styles.option}
                         htmlFor={`excerpt-${index}`}
                     >
                         <RadioGroup.Item
                             value={excerpt}
                             id={`excerpt-${index}`}
-                            className="excerpt-radio"
+                            className={styles.radio}
                         >
-                            <RadioGroup.Indicator className="excerpt-radio-indicator" />
+                            <RadioGroup.Indicator className={styles.radioIndicator} />
                         </RadioGroup.Item>
-                        <div className="excerpt-text">
+                        <div className={styles.text}>
                             {excerpt}
                         </div>
                     </label>
                 ))}
 
                 <label
-                    className="excerpt-option excerpt-option-custom"
+                    className={`${styles.option} ${styles.optionCustom}`}
                     htmlFor="excerpt-custom"
                 >
                     <RadioGroup.Item
                         value="custom"
                         id="excerpt-custom"
-                        className="excerpt-radio"
+                        className={styles.radio}
                     >
-                        <RadioGroup.Indicator className="excerpt-radio-indicator" />
+                        <RadioGroup.Indicator className={styles.radioIndicator} />
                     </RadioGroup.Item>
-                    <div className="excerpt-custom-content">
-                        <div className="excerpt-custom-header">
-                            <Icon icon="pencil" size={16} className="excerpt-custom-icon" />
-                            <span className="excerpt-custom-label">Write your own</span>
+                    <div className={styles.customContent}>
+                        <div className={styles.customHeader}>
+                            <Icon icon="pencil" size={16} className={styles.customIcon} />
+                            <span className={styles.customLabel}>Write your own</span>
                         </div>
                         {isCustomSelected && (
                             <textarea
-                                className="excerpt-custom-input"
+                                className={styles.customInput}
                                 placeholder="Enter your custom excerpt..."
                                 value={customExcerpt}
                                 onChange={handleCustomInput}
@@ -110,13 +111,13 @@ export function ExcerptSelector({
                 </label>
             </RadioGroup.Root>
 
-            <div className="excerpt-character-count" data-valid={isWithinLimit}>
+            <div className={styles.characterCount} data-valid={isWithinLimit}>
                 {charCount}/200 characters
                 {!isWithinLimit && charCount < 30 && (
-                    <span className="excerpt-count-hint"> (minimum 30)</span>
+                    <span className={styles.countHint}> (minimum 30)</span>
                 )}
                 {!isWithinLimit && charCount > 200 && (
-                    <span className="excerpt-count-hint"> (maximum 200)</span>
+                    <span className={styles.countHint}> (maximum 200)</span>
                 )}
             </div>
         </div>
