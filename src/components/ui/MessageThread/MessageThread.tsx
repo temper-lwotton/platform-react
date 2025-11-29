@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import * as Popover from '@radix-ui/react-popover';
 import { Avatar } from '../primitives';
 import { TypingIndicator } from '../TypingIndicator';
 import { Icon } from '../Icon';
@@ -24,15 +25,7 @@ export function MessageThread({
   typingUsers = [],
 }: MessageThreadProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Debug: Log component props
-  console.log('MessageThread Rendered:', {
-    currentUserId,
-    currentUserIdType: typeof currentUserId,
-    messagesCount: messages.length,
-    firstMessageSender: messages[0]?.sender,
-    participantsCount: participants.length,
-  });
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -107,21 +100,6 @@ export function MessageThread({
                 : String(message.sender?.id);
 
               const isOwn = senderId === currentUserId;
-
-              // Debug logging
-              console.log('Message Debug:', {
-                messageId: message.id,
-                messageIndex: index,
-                currentUserId,
-                currentUserIdType: typeof currentUserId,
-                senderId,
-                senderIdType: typeof senderId,
-                senderRaw: message.sender,
-                senderRawType: typeof message.sender,
-                isOwn,
-                comparison: `${senderId} === ${currentUserId}`,
-                strictEqual: senderId === currentUserId,
-              });
 
               const prevSender = messages[index - 1]?.sender;
               const prevSenderId = typeof prevSender === 'string'
@@ -199,15 +177,68 @@ export function MessageThread({
                     </div>
                   </div>
 
-                  {isOwn && onDeleteMessage && (
+                  {isOwn && (
                     <div className={styles.messageActions}>
-                      <button
-                        className={styles.messageActionButton}
-                        onClick={() => onDeleteMessage(message.id)}
-                        title="Delete message"
+                      <Popover.Root
+                        open={openMenuId === message.id}
+                        onOpenChange={(open) => setOpenMenuId(open ? message.id : null)}
                       >
-                        <Icon icon="x" size={16} />
-                      </button>
+                        <Popover.Trigger asChild>
+                          <button
+                            className={styles.messageActionButton}
+                            aria-label="Message actions"
+                          >
+                            <Icon icon="chevronDown" size={16} />
+                          </button>
+                        </Popover.Trigger>
+
+                        <Popover.Portal>
+                          <Popover.Content
+                            className={styles.messageActionsMenu}
+                            align="end"
+                            sideOffset={5}
+                          >
+                            <button
+                              className={styles.messageActionsMenuItem}
+                              onClick={() => {
+                                // TODO: Implement reply
+                                console.log('Reply to message:', message.id);
+                                setOpenMenuId(null);
+                              }}
+                            >
+                              <Icon icon="arrowLeft" size={16} />
+                              <span>Reply</span>
+                            </button>
+
+                            <button
+                              className={styles.messageActionsMenuItem}
+                              onClick={() => {
+                                // TODO: Implement edit
+                                console.log('Edit message:', message.id);
+                                setOpenMenuId(null);
+                              }}
+                            >
+                              <Icon icon="pencil" size={16} />
+                              <span>Edit</span>
+                            </button>
+
+                            <div className={styles.messageActionsMenuSeparator} />
+
+                            <button
+                              className={`${styles.messageActionsMenuItem} ${styles.messageActionsMenuItemDanger}`}
+                              onClick={() => {
+                                if (onDeleteMessage) {
+                                  onDeleteMessage(message.id);
+                                }
+                                setOpenMenuId(null);
+                              }}
+                            >
+                              <Icon icon="x" size={16} />
+                              <span>Delete</span>
+                            </button>
+                          </Popover.Content>
+                        </Popover.Portal>
+                      </Popover.Root>
                     </div>
                   )}
                 </div>
