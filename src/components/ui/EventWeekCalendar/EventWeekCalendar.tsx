@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Event } from '@/lib/events';
 import {
-  getWeekBounds,
   getDaysInWeek,
   getEventsForWeek,
   formatDateKey,
@@ -15,7 +14,8 @@ import {
   isAllDayEvent,
   getEventDateSpan,
 } from '@/lib/calendar-utils';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import styles from './EventWeekCalendar.module.scss';
 
 interface EventWeekCalendarProps {
   events: Event[];
@@ -115,22 +115,22 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
   };
 
   return (
-    <div className="event-week-calendar" role="region" aria-label="Week calendar view">
+    <div className={styles.calendar} role="region" aria-label="Week calendar view">
       {/* Week Header */}
-      <div className="event-week-calendar-header" role="toolbar" aria-label="Week navigation">
-        <div className="event-week-calendar-header-title">
-          <h2 className="event-week-calendar-title">
+      <div className={styles.header} role="toolbar" aria-label="Week navigation">
+        <div className={styles.headerTitle}>
+          <h2 className={styles.title}>
             {formatWeekRange()}
           </h2>
           <button
-            className="event-week-calendar-today-btn"
+            className={styles.todayBtn}
             onClick={goToToday}
             aria-label="Go to today"
           >
             Today
           </button>
           <button
-            className="event-week-calendar-export-btn"
+            className={styles.exportBtn}
             onClick={handleExportWeek}
             aria-label="Export week to calendar"
             title="Export week to calendar (.ics)"
@@ -140,16 +140,16 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
           </button>
         </div>
 
-        <div className="event-week-calendar-nav">
+        <div className={styles.nav}>
           <button
-            className="event-week-calendar-nav-btn"
+            className={styles.navBtn}
             onClick={goToPreviousWeek}
             aria-label="Previous week"
           >
             <Icon icon="chevronLeft" size={20} />
           </button>
           <button
-            className="event-week-calendar-nav-btn"
+            className={styles.navBtn}
             onClick={goToNextWeek}
             aria-label="Next week"
           >
@@ -160,9 +160,9 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
 
       {/* All-Day Events Section */}
       {allDayEvents.length > 0 && (
-        <div className="event-week-calendar-all-day">
-          <div className="event-week-calendar-all-day-label">All Day</div>
-          <div className="event-week-calendar-all-day-grid">
+        <div className={styles.allDay}>
+          <div className={styles.allDayLabel}>All Day</div>
+          <div className={styles.allDayGrid}>
             {weekDays.map(day => {
               const dateKey = formatDateKey(day);
               const dayAllDayEvents = allDayEvents.filter(event => {
@@ -171,16 +171,16 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
               });
 
               return (
-                <div key={dateKey} className="event-week-calendar-all-day-column">
+                <div key={dateKey} className={styles.allDayColumn}>
                   {dayAllDayEvents.map(event => (
                     <button
                       key={event.id}
-                      className="event-week-calendar-all-day-event"
+                      className={styles.allDayEvent}
                       style={{ backgroundColor: getSpaceColor(event.space.id) }}
                       onClick={() => handleEventClick(event)}
                       title={event.title}
                     >
-                      <span className="event-week-calendar-all-day-event-title">
+                      <span className={styles.allDayEventTitle}>
                         {event.title}
                       </span>
                     </button>
@@ -193,40 +193,40 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
       )}
 
       {/* Week Grid */}
-      <div className="event-week-calendar-grid">
+      <div className={styles.grid}>
         {/* Time column */}
-        <div className="event-week-calendar-times">
-          <div className="event-week-calendar-corner"></div>
+        <div className={styles.times}>
+          <div className={styles.corner}></div>
           {timeSlots.map((time, index) => (
-            <div key={index} className="event-week-calendar-time">
+            <div key={index} className={styles.time}>
               {time}
             </div>
           ))}
         </div>
 
         {/* Days columns */}
-        {weekDays.map((day, dayIndex) => {
+        {weekDays.map((day) => {
           const dateKey = formatDateKey(day);
           const dayEvents = eventsByDay.get(dateKey) || [];
           const isTodayCell = isToday(day);
 
           return (
-            <div key={dateKey} className="event-week-calendar-day-column">
+            <div key={dateKey} className={styles.dayColumn}>
               {/* Day header */}
-              <div className={`event-week-calendar-day-header ${isTodayCell ? 'event-week-calendar-day-header--today' : ''}`}>
-                <div className="event-week-calendar-day-name">
+              <div className={`${styles.dayHeader} ${isTodayCell ? styles.dayHeaderToday : ''}`}>
+                <div className={styles.dayName}>
                   {day.toLocaleDateString('en-US', { weekday: 'short' })}
                 </div>
-                <div className={`event-week-calendar-day-number ${isTodayCell ? 'event-week-calendar-day-number--today' : ''}`}>
+                <div className={`${styles.dayNumber} ${isTodayCell ? styles.dayNumberToday : ''}`}>
                   {day.getDate()}
                 </div>
               </div>
 
               {/* Time slots grid */}
-              <div className="event-week-calendar-day-grid">
+              <div className={styles.dayGrid}>
                 {/* Hour lines */}
                 {timeSlots.map((_, index) => (
-                  <div key={index} className="event-week-calendar-hour-slot"></div>
+                  <div key={index} className={styles.hourSlot}></div>
                 ))}
 
                 {/* Events */}
@@ -235,7 +235,7 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
                   return (
                     <button
                       key={event.id}
-                      className="event-week-calendar-event"
+                      className={styles.event}
                       style={{
                         top: `${top}%`,
                         height: `${height}%`,
@@ -244,13 +244,13 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
                       onClick={() => handleEventClick(event)}
                       title={event.title}
                     >
-                      <div className="event-week-calendar-event-time">
+                      <div className={styles.eventTime}>
                         {new Date(event.eventStart).toLocaleTimeString('en-US', {
                           hour: 'numeric',
                           minute: '2-digit',
                         })}
                       </div>
-                      <div className="event-week-calendar-event-title">
+                      <div className={styles.eventTitle}>
                         {event.title}
                       </div>
                     </button>
@@ -260,10 +260,10 @@ export function EventWeekCalendar({ events }: EventWeekCalendarProps) {
                 {/* Current time indicator */}
                 {isTodayCell && isCurrentWeek && (
                   <div
-                    className="event-week-calendar-now-line"
+                    className={styles.nowLine}
                     style={{ top: `${currentHourPercent}%` }}
                   >
-                    <div className="event-week-calendar-now-dot"></div>
+                    <div className={styles.nowDot}></div>
                   </div>
                 )}
               </div>

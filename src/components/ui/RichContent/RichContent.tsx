@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import styles from './RichContent.module.scss';
 
 interface RichContentProps {
     content: string;
@@ -15,7 +16,7 @@ interface RichContentProps {
 export function RichContent({ content, className = '' }: RichContentProps) {
     return (
         <div
-            className={`rich-content ${className}`}
+            className={`${styles.content} ${className}`}
             dangerouslySetInnerHTML={{ __html: content }}
         />
     );

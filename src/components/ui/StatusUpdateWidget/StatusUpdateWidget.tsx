@@ -5,9 +5,10 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchCurrentUser } from '@/lib/auth';
 import { getCurrentUserStatus, QUICK_TEMPLATES, COMMON_EMOJIS, formatTimeAgo, type QuickTemplate, type MediaAttachment } from '@/lib/status-updates';
 import { getSpace } from '@/lib/spaces';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 import * as Popover from '@radix-ui/react-popover';
-import { Textarea, Input, Button, Select } from './primitives';
+import { Textarea, Input, Button, Select } from '../primitives';
+import styles from './StatusUpdateWidget.module.scss';
 
 export function StatusUpdateWidget() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -130,10 +131,10 @@ export function StatusUpdateWidget() {
     const firstName = userName.split(' ')[0];
 
     return (
-        <div className="status-update-widget">
+        <div className={styles.widget}>
             {/* User Avatar and Input */}
-            <div className="status-update-header">
-                <div className="status-update-avatar">
+            <div className={styles.header}>
+                <div className={styles.avatar}>
                     {userPhoto ? (
                         <img src={userPhoto} alt={userName} />
                     ) : (
@@ -141,16 +142,16 @@ export function StatusUpdateWidget() {
                     )}
                 </div>
 
-                <div className="status-update-input-container">
+                <div className={styles.inputContainer}>
                     {!isExpanded ? (
                         <button
-                            className="status-update-placeholder"
+                            className={styles.placeholder}
                             onClick={handleFocus}
                         >
                             What are you working on, {firstName}?
                         </button>
                     ) : (
-                        <div className="status-update-input-expanded">
+                        <div className={styles.inputExpanded}>
                             <Textarea
                                 placeholder={selectedTemplate?.placeholder || "Share what you're working on..."}
                                 value={statusText}
@@ -160,7 +161,7 @@ export function StatusUpdateWidget() {
                                 autoFocus
                                 fullWidth
                             />
-                            <div className="status-update-char-count">
+                            <div className={styles.charCount}>
                                 {statusText.length}/280
                             </div>
                         </div>
@@ -170,14 +171,14 @@ export function StatusUpdateWidget() {
 
             {/* Current Status Display (when collapsed) */}
             {!isExpanded && currentStatus && (
-                <div className="status-update-current">
-                    <div className="status-update-current-content">
+                <div className={styles.current}>
+                    <div className={styles.currentContent}>
                         {currentStatus.emoji && (
-                            <span className="status-update-current-emoji">{currentStatus.emoji}</span>
+                            <span className={styles.currentEmoji}>{currentStatus.emoji}</span>
                         )}
-                        <span className="status-update-current-text">{currentStatus.text}</span>
+                        <span className={styles.currentText}>{currentStatus.text}</span>
                     </div>
-                    <div className="status-update-current-meta">
+                    <div className={styles.currentMeta}>
                         Last updated {formatTimeAgo(currentStatus.updatedAt)} · <button onClick={handleFocus}>Edit</button>
                     </div>
                 </div>
@@ -185,16 +186,16 @@ export function StatusUpdateWidget() {
 
             {/* Quick Templates (when collapsed) */}
             {!isExpanded && (
-                <div className="status-update-templates">
+                <div className={styles.templates}>
                     {QUICK_TEMPLATES.slice(0, 6).map((template) => (
                         <button
                             key={template.id}
-                            className="status-update-template-btn"
+                            className={styles.templateBtn}
                             onClick={() => handleTemplateSelect(template)}
                             title={template.label}
                         >
-                            <span className="status-update-template-emoji">{template.emoji}</span>
-                            <span className="status-update-template-label">{template.label}</span>
+                            <span className={styles.templateEmoji}>{template.emoji}</span>
+                            <span className={styles.templateLabel}>{template.label}</span>
                         </button>
                     ))}
                 </div>
@@ -202,9 +203,9 @@ export function StatusUpdateWidget() {
 
             {/* Media Preview */}
             {isExpanded && mediaAttachments.length > 0 && (
-                <div className="status-update-media-preview">
+                <div className={styles.mediaPreview}>
                     {mediaAttachments.map((media) => (
-                        <div key={media.id} className="status-media-preview-item">
+                        <div key={media.id} className={styles.mediaPreviewItem}>
                             {media.type === 'image' && (
                                 <img src={media.url} alt={media.caption || ''} />
                             )}
@@ -212,19 +213,19 @@ export function StatusUpdateWidget() {
                                 <video src={media.url} controls />
                             )}
                             {media.type === 'link' && (
-                                <div className="status-media-link-preview">
+                                <div className={styles.mediaLinkPreview}>
                                     {media.thumbnail && (
-                                        <img src={media.thumbnail} alt="" className="status-media-link-thumb" />
+                                        <img src={media.thumbnail} alt="" className={styles.mediaLinkThumb} />
                                     )}
-                                    <div className="status-media-link-info">
-                                        <div className="status-media-link-title">{media.title}</div>
-                                        <div className="status-media-link-desc">{media.description}</div>
-                                        <div className="status-media-link-url">{media.url}</div>
+                                    <div className={styles.mediaLinkInfo}>
+                                        <div className={styles.mediaLinkTitle}>{media.title}</div>
+                                        <div className={styles.mediaLinkDesc}>{media.description}</div>
+                                        <div className={styles.mediaLinkUrl}>{media.url}</div>
                                     </div>
                                 </div>
                             )}
                             <button
-                                className="status-media-remove"
+                                className={styles.mediaRemove}
                                 onClick={() => handleRemoveMedia(media.id)}
                                 title="Remove"
                             >
@@ -237,7 +238,7 @@ export function StatusUpdateWidget() {
 
             {/* Link Input */}
             {isExpanded && showLinkInput && (
-                <div className="status-update-link-input">
+                <div className={styles.linkInput}>
                     <Input
                         type="url"
                         placeholder="Paste a link..."
@@ -258,9 +259,9 @@ export function StatusUpdateWidget() {
 
             {/* Expanded Controls */}
             {isExpanded && (
-                <div className="status-update-controls">
+                <div className={styles.controls}>
                     {/* Media Controls */}
-                    <div className="status-update-media-controls">
+                    <div className={styles.mediaControls}>
                         <input
                             ref={fileInputRef}
                             type="file"
@@ -270,14 +271,14 @@ export function StatusUpdateWidget() {
                             style={{ display: 'none' }}
                         />
                         <button
-                            className="status-update-control-btn"
+                            className={styles.controlBtn}
                             onClick={() => fileInputRef.current?.click()}
                             title="Add image or video"
                         >
                             <Icon icon="video" size={18} />
                         </button>
                         <button
-                            className="status-update-control-btn"
+                            className={styles.controlBtn}
                             onClick={() => setShowLinkInput(!showLinkInput)}
                             title="Add link"
                         >
@@ -288,30 +289,30 @@ export function StatusUpdateWidget() {
                     {/* Emoji Picker */}
                     <Popover.Root open={showEmojiPicker} onOpenChange={setShowEmojiPicker}>
                         <Popover.Trigger asChild>
-                            <button className="status-update-control-btn" title="Add emoji">
+                            <button className={styles.controlBtn} title="Add emoji">
                                 {selectedEmoji || '😊'}
                             </button>
                         </Popover.Trigger>
                         <Popover.Portal>
-                            <Popover.Content className="status-emoji-picker" sideOffset={5}>
-                                <div className="status-emoji-grid">
+                            <Popover.Content className={styles.emojiPicker} sideOffset={5}>
+                                <div className={styles.emojiGrid}>
                                     {COMMON_EMOJIS.map((emoji) => (
                                         <button
                                             key={emoji}
-                                            className="status-emoji-btn"
+                                            className={styles.emojiBtn}
                                             onClick={() => handleEmojiSelect(emoji)}
                                         >
                                             {emoji}
                                         </button>
                                     ))}
                                 </div>
-                                <Popover.Arrow className="status-emoji-arrow" />
+                                <Popover.Arrow className={styles.emojiArrow} />
                             </Popover.Content>
                         </Popover.Portal>
                     </Popover.Root>
 
                     {/* Space Selector */}
-                    <div className="status-update-space-selector">
+                    <div className={styles.spaceSelector}>
                         <Icon icon="users" size={16} />
                         <Select
                             value={selectedSpaceId}
@@ -326,7 +327,7 @@ export function StatusUpdateWidget() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="status-update-actions">
+                    <div className={styles.actions}>
                         <Button
                             onClick={handleCancel}
                             variant="outline"

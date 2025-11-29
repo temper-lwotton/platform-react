@@ -4,8 +4,8 @@ import { useState, useMemo } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { Event, Space, Tag } from '@/lib/events';
-import { Icon } from './Icon';
-import { RadioGroup } from './primitives';
+import { Icon } from '../Icon';
+import { RadioGroup } from '../primitives';
 
 interface CalendarFiltersProps {
   events: Event[];
