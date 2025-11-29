@@ -46,7 +46,7 @@ export default function SpaceDiscussionsPage() {
                                 <p className="discussions-subtitle">Join the conversation</p>
                             </div>
                             <Link
-                                href={`/spaces/${spaceId}/discussions/new`}
+                                href={`/posts/new?spaceId=${spaceId}`}
                                 className="discussions-new-button"
                             >
                                 New Discussion

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as Popover from '@radix-ui/react-popover';
 import * as RadioGroup from '@radix-ui/react-radio-group';
@@ -21,6 +21,7 @@ type Step = 1 | 2 | 3;
 export default function NewPostPage() {
     const router = useRouter();
     const queryClient = useQueryClient();
+    const searchParams = useSearchParams();
 
     // Step 1 fields
     const [title, setTitle] = useState('');
@@ -43,7 +44,13 @@ export default function NewPostPage() {
     useEffect(() => {
         setIsClient(true);
         setCurrentUserId(getCurrentUserId());
-    }, []);
+
+        // Preselect space from URL parameter if provided
+        const spaceIdParam = searchParams.get('spaceId');
+        if (spaceIdParam) {
+            setSelectedSpaceId(spaceIdParam);
+        }
+    }, [searchParams]);
 
     // Fetch current user with their spaces
     const { data: userData, isLoading: userLoading } = useQuery({
