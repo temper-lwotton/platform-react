@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
-import { Icon } from './Icon';
-import { RadioGroup } from './primitives';
+import { Icon } from '../Icon';
+import { RadioGroup } from '../primitives';
+import styles from './SpaceSettingsPopover.module.scss';
 
 interface SpaceSettingsPopoverProps {
     spaceId: string;
@@ -30,7 +31,7 @@ export function SpaceSettingsPopover({ spaceId, spaceName }: SpaceSettingsPopove
         <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
             <Popover.Trigger asChild>
                 <button
-                    className="space-settings-trigger"
+                    className={styles.trigger}
                     aria-label={`Settings for ${spaceName}`}
                     onClick={handleSettingsClick}
                 >
@@ -40,19 +41,19 @@ export function SpaceSettingsPopover({ spaceId, spaceName }: SpaceSettingsPopove
 
             <Popover.Portal>
                 <Popover.Content
-                    className="space-settings-popover"
+                    className={styles.popover}
                     side="right"
                     align="start"
                     sideOffset={8}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="space-settings-header">
-                        <h3 className="space-settings-title">Space Settings</h3>
-                        <span className="space-settings-space-name">{spaceName}</span>
+                    <div className={styles.header}>
+                        <h3 className={styles.title}>Space Settings</h3>
+                        <span className={styles.spaceName}>{spaceName}</span>
                     </div>
 
-                    <div className="space-settings-section">
-                        <div className="space-settings-section-title">
+                    <div className={styles.section}>
+                        <div className={styles.sectionTitle}>
                             <Icon icon="bell" size={16} />
                             Notifications
                         </div>
@@ -79,7 +80,7 @@ export function SpaceSettingsPopover({ spaceId, spaceName }: SpaceSettingsPopove
                         />
                     </div>
 
-                    <Popover.Arrow className="space-settings-arrow" />
+                    <Popover.Arrow className={styles.arrow} />
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>

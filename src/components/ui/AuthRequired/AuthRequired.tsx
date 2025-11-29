@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { getCurrentUserId } from '@/lib/auth';
-import { LoginForm } from './LoginForm';
+import { LoginForm } from '../LoginForm';
+import styles from './AuthRequired.module.scss';
 
 interface AuthRequiredProps {
     children: React.ReactNode;
@@ -41,7 +42,7 @@ export function AuthRequired({
     // Still checking auth status
     if (isAuthenticated === null) {
         return (
-            <div className="auth-required-loading">
+            <div className={styles.loading}>
                 <p>Loading...</p>
             </div>
         );
@@ -50,11 +51,11 @@ export function AuthRequired({
     // Not authenticated - show login form
     if (!isAuthenticated) {
         return (
-            <div className="auth-required">
-                <div className="auth-required-container">
-                    <div className="auth-required-message">
-                        <h2 className="auth-required-title">Authentication Required</h2>
-                        <p className="auth-required-text">{message}</p>
+            <div className={styles.authRequired}>
+                <div className={styles.container}>
+                    <div className={styles.message}>
+                        <h2 className={styles.title}>Authentication Required</h2>
+                        <p className={styles.text}>{message}</p>
                     </div>
                     <LoginForm onSuccess={handleLoginSuccess} />
                 </div>

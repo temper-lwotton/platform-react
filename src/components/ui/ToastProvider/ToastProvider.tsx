@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 import * as Toast from '@radix-ui/react-toast';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import styles from './ToastProvider.module.scss';
 
 interface ToastOptions {
   title: string;
@@ -95,34 +96,34 @@ export function ToastProvider({ children }: ToastProviderProps) {
         {toasts.map((toast) => (
           <Toast.Root
             key={toast.id}
-            className={`toast-root toast-root--${toast.type}`}
+            className={`${styles.root} ${styles[`root${toast.type.charAt(0).toUpperCase() + toast.type.slice(1)}`]}`}
             open={toast.open}
             duration={toast.duration}
             onOpenChange={(open) => handleOpenChange(toast.id, open)}
           >
-            <div className="toast-content">
-              <div className="toast-icon">
+            <div className={styles.content}>
+              <div className={styles.icon}>
                 {toast.type === 'success' && <Icon icon="check" size={20} />}
                 {toast.type === 'error' && <Icon icon="alertCircle" size={20} />}
                 {toast.type === 'info' && <Icon icon="bell" size={20} />}
               </div>
-              <div className="toast-text">
-                <Toast.Title className="toast-title">
+              <div className={styles.text}>
+                <Toast.Title className={styles.title}>
                   {toast.title}
                 </Toast.Title>
                 {toast.description && (
-                  <Toast.Description className="toast-description">
+                  <Toast.Description className={styles.description}>
                     {toast.description}
                   </Toast.Description>
                 )}
               </div>
-              <Toast.Close className="toast-close">
+              <Toast.Close className={styles.close}>
                 <Icon icon="x" size={16} />
               </Toast.Close>
             </div>
           </Toast.Root>
         ))}
-        <Toast.Viewport className="toast-viewport" />
+        <Toast.Viewport className={styles.viewport} />
       </Toast.Provider>
     </ToastContext.Provider>
   );
