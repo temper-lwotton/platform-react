@@ -1,9 +1,10 @@
 'use client';
 
 import { Task } from '@/lib/tasks';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
 import * as Avatar from '@radix-ui/react-avatar';
 import * as Checkbox from '@radix-ui/react-checkbox';
+import styles from './TaskItem.module.scss';
 
 interface TaskItemProps {
   task: Task;
@@ -61,91 +62,91 @@ export function TaskItem({ task, onComplete, onStatusChange }: TaskItemProps) {
   };
 
   return (
-    <div className={`task-item ${isCompleted ? 'task-item--completed' : ''} ${isOverdue ? 'task-item--overdue' : ''}`}>
-      <div className="task-item-checkbox">
+    <div className={`${styles.item} ${isCompleted ? styles.itemCompleted : ''} ${isOverdue ? styles.itemOverdue : ''}`}>
+      <div className={styles.checkbox}>
         <Checkbox.Root
-          className="task-checkbox"
+          className={styles.checkboxInput}
           checked={isCompleted}
           onCheckedChange={handleCheckboxChange}
           disabled={!task.requiresAction}
         >
-          <Checkbox.Indicator className="task-checkbox-indicator">
+          <Checkbox.Indicator className={styles.checkboxIndicator}>
             <Icon icon="calendar" size={14} />
           </Checkbox.Indicator>
         </Checkbox.Root>
       </div>
 
-      <div className="task-item-content">
-        <div className="task-item-header">
-          <div className="task-item-title-row">
-            <h3 className="task-item-title">{task.title}</h3>
+      <div className={styles.content}>
+        <div className={styles.header}>
+          <div className={styles.titleRow}>
+            <h3 className={styles.title}>{task.title}</h3>
             {task.points && (
-              <span className="task-item-points">
+              <span className={styles.points}>
                 <Icon icon="zap" size={14} />
                 {task.points} pts
               </span>
             )}
           </div>
-          <p className="task-item-description">{task.description}</p>
+          <p className={styles.description}>{task.description}</p>
         </div>
 
         {task.progress !== undefined && task.progress > 0 && !isCompleted && (
-          <div className="task-item-progress">
-            <div className="task-item-progress-bar">
+          <div className={styles.progress}>
+            <div className={styles.progressBar}>
               <div
-                className="task-item-progress-fill"
+                className={styles.progressFill}
                 style={{ width: `${task.progress}%` }}
               />
             </div>
-            <span className="task-item-progress-text">{task.progress}%</span>
+            <span className={styles.progressText}>{task.progress}%</span>
           </div>
         )}
 
-        <div className="task-item-footer">
-          <div className="task-item-meta">
-            <span className={`task-item-type ${task.type === 'admin_assigned' ? 'task-item-type--admin' : ''}`}>
+        <div className={styles.footer}>
+          <div className={styles.meta}>
+            <span className={`${styles.type} ${task.type === 'admin_assigned' ? styles.typeAdmin : ''}`}>
               <Icon icon={getCategoryIcon(task.category)} size={14} />
               {task.type === 'platform_engagement' ? 'Platform Task' : 'Assigned Task'}
             </span>
 
             {task.dueDate && (
-              <span className={`task-item-due ${isOverdue ? 'task-item-due--overdue' : ''}`}>
+              <span className={`${styles.due} ${isOverdue ? styles.dueOverdue : ''}`}>
                 <Icon icon="calendar" size={14} />
                 {formatDueDate(task.dueDate)}
               </span>
             )}
 
             {isInProgress && (
-              <span className="task-item-status task-item-status--in-progress">
+              <span className={`${styles.status} ${styles.statusInProgress}`}>
                 In Progress
               </span>
             )}
 
             {isCompleted && task.completedAt && (
-              <span className="task-item-completed-date">
+              <span className={styles.completedDate}>
                 Completed {new Date(task.completedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </span>
             )}
           </div>
 
           {task.assignedBy && (
-            <div className="task-item-assigned-by">
-              <span className="task-item-assigned-label">Assigned by</span>
-              <Avatar.Root className="task-item-assigned-avatar">
+            <div className={styles.assignedBy}>
+              <span className={styles.assignedLabel}>Assigned by</span>
+              <Avatar.Root className={styles.assignedAvatar}>
                 {task.assignedBy.avatar && (
                   <Avatar.Image src={task.assignedBy.avatar} alt={task.assignedBy.name} />
                 )}
-                <Avatar.Fallback className="task-item-assigned-avatar-fallback">
+                <Avatar.Fallback className={styles.assignedAvatarFallback}>
                   {task.assignedBy.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                 </Avatar.Fallback>
               </Avatar.Root>
-              <span className="task-item-assigned-name">{task.assignedBy.name}</span>
+              <span className={styles.assignedName}>{task.assignedBy.name}</span>
             </div>
           )}
         </div>
 
         {task.link && !isCompleted && (
-          <a href={task.link} className="task-item-action">
+          <a href={task.link} className={styles.action}>
             Take action
             <Icon icon="chevronRight" size={16} />
           </a>

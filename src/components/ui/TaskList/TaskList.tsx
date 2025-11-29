@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import { Task, TaskType, TaskStatus } from '@/lib/tasks';
-import { TaskItem } from './TaskItem';
-import { Icon } from './Icon';
+import { TaskItem } from '../TaskItem';
+import { Icon } from '../Icon';
+import styles from './TaskList.module.scss';
 
 interface TaskListProps {
   tasks: Task[];
@@ -67,27 +68,27 @@ export function TaskList({ tasks, onComplete, onStatusChange }: TaskListProps) {
   }, [tasks]);
 
   return (
-    <div className="task-list">
+    <div className={styles.list}>
       {/* Filters */}
-      <div className="task-list-filters">
-        <div className="task-list-filter-group">
-          <label className="task-list-filter-label">Type</label>
-          <div className="task-list-filter-buttons">
+      <div className={styles.filters}>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Type</label>
+          <div className={styles.filterButtons}>
             <button
-              className={`task-list-filter-btn ${filterType === 'all' ? 'task-list-filter-btn--active' : ''}`}
+              className={`${styles.filterBtn} ${filterType === 'all' ? styles.filterBtnActive : ''}`}
               onClick={() => setFilterType('all')}
             >
               All ({taskCounts.all})
             </button>
             <button
-              className={`task-list-filter-btn ${filterType === 'platform_engagement' ? 'task-list-filter-btn--active' : ''}`}
+              className={`${styles.filterBtn} ${filterType === 'platform_engagement' ? styles.filterBtnActive : ''}`}
               onClick={() => setFilterType('platform_engagement')}
             >
               <Icon icon="zap" size={14} />
               Platform ({taskCounts.platform})
             </button>
             <button
-              className={`task-list-filter-btn ${filterType === 'admin_assigned' ? 'task-list-filter-btn--active' : ''}`}
+              className={`${styles.filterBtn} ${filterType === 'admin_assigned' ? styles.filterBtnActive : ''}`}
               onClick={() => setFilterType('admin_assigned')}
             >
               <Icon icon="clipboard" size={14} />
@@ -96,29 +97,29 @@ export function TaskList({ tasks, onComplete, onStatusChange }: TaskListProps) {
           </div>
         </div>
 
-        <div className="task-list-filter-group">
-          <label className="task-list-filter-label">Status</label>
-          <div className="task-list-filter-buttons">
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Status</label>
+          <div className={styles.filterButtons}>
             <button
-              className={`task-list-filter-btn ${filterStatus === 'all' ? 'task-list-filter-btn--active' : ''}`}
+              className={`${styles.filterBtn} ${filterStatus === 'all' ? styles.filterBtnActive : ''}`}
               onClick={() => setFilterStatus('all')}
             >
               All
             </button>
             <button
-              className={`task-list-filter-btn ${filterStatus === 'pending' ? 'task-list-filter-btn--active' : ''}`}
+              className={`${styles.filterBtn} ${filterStatus === 'pending' ? styles.filterBtnActive : ''}`}
               onClick={() => setFilterStatus('pending')}
             >
               To Do ({taskCounts.pending})
             </button>
             <button
-              className={`task-list-filter-btn ${filterStatus === 'in_progress' ? 'task-list-filter-btn--active' : ''}`}
+              className={`${styles.filterBtn} ${filterStatus === 'in_progress' ? styles.filterBtnActive : ''}`}
               onClick={() => setFilterStatus('in_progress')}
             >
               In Progress ({taskCounts.inProgress})
             </button>
             <button
-              className={`task-list-filter-btn ${filterStatus === 'completed' ? 'task-list-filter-btn--active' : ''}`}
+              className={`${styles.filterBtn} ${filterStatus === 'completed' ? styles.filterBtnActive : ''}`}
               onClick={() => setFilterStatus('completed')}
             >
               Done ({taskCounts.completed})
@@ -126,10 +127,10 @@ export function TaskList({ tasks, onComplete, onStatusChange }: TaskListProps) {
           </div>
         </div>
 
-        <div className="task-list-filter-group">
-          <label className="task-list-filter-label">Sort by</label>
+        <div className={styles.filterGroup}>
+          <label className={styles.filterLabel}>Sort by</label>
           <select
-            className="task-list-sort-select"
+            className={styles.sortSelect}
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
           >
@@ -141,12 +142,12 @@ export function TaskList({ tasks, onComplete, onStatusChange }: TaskListProps) {
       </div>
 
       {/* Task Items */}
-      <div className="task-list-items">
+      <div className={styles.items}>
         {filteredTasks.length === 0 ? (
-          <div className="task-list-empty">
+          <div className={styles.empty}>
             <Icon icon="clipboard" size={48} />
-            <h3 className="task-list-empty-title">No tasks found</h3>
-            <p className="task-list-empty-description">
+            <h3 className={styles.emptyTitle}>No tasks found</h3>
+            <p className={styles.emptyDescription}>
               {filterType !== 'all' || filterStatus !== 'all'
                 ? 'Try adjusting your filters to see more tasks.'
                 : 'You\'re all caught up! New tasks will appear here.'}

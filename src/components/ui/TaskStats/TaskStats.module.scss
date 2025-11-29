@@ -1,0 +1,156 @@
+@use '../../../styles/abstracts' as *;
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 480px) {
+    .value {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.card {
+  background: var(--background);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-border-primary);
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+.cardPoints {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  border: none;
+  color: white;
+
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  }
+
+  .icon,
+  .value,
+  .label {
+    color: white;
+  }
+
+  .icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--color-bg-hover);
+  color: var(--color-primary);
+  flex-shrink: 0;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-bg-tertiary);
+    color: #60a5fa;
+  }
+}
+
+.iconSuccess {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--color-success);
+
+  @media (prefers-color-scheme: dark) {
+    background: rgba(34, 197, 94, 0.2);
+  }
+}
+
+.iconPending {
+  background: rgba(251, 146, 60, 0.1);
+  color: #f97316;
+
+  @media (prefers-color-scheme: dark) {
+    background: rgba(251, 146, 60, 0.2);
+  }
+}
+
+.iconRate {
+  background: rgba(168, 85, 247, 0.1);
+  color: #a855f7;
+
+  @media (prefers-color-scheme: dark) {
+    background: rgba(168, 85, 247, 0.2);
+  }
+}
+
+.content {
+  flex: 1;
+}
+
+.value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  color: var(--foreground);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--foreground);
+  }
+}
+
+.label {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-text-secondary);
+  }
+}
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--color-bg-hover);
+  overflow: hidden;
+
+  @media (prefers-color-scheme: dark) {
+    background: var(--color-bg-tertiary);
+  }
+}
+
+.progressFill {
+  height: 100%;
+  background: #a855f7;
+  transition: width 0.3s ease;
+}
