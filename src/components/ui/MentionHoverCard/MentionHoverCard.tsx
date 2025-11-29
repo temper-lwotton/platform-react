@@ -4,6 +4,7 @@ import * as HoverCard from '@radix-ui/react-hover-card';
 import * as Avatar from '@radix-ui/react-avatar';
 import { MentionUser } from '@/hooks/useMentions';
 import Link from 'next/link';
+import styles from './MentionHoverCard.module.scss';
 
 interface MentionHoverCardProps {
     user: MentionUser;
@@ -26,35 +27,35 @@ export function MentionHoverCard({ user, children }: MentionHoverCardProps) {
             </HoverCard.Trigger>
             <HoverCard.Portal>
                 <HoverCard.Content
-                    className="mention-hover-card"
+                    className={styles.card}
                     sideOffset={5}
                     side="top"
                 >
-                    <div className="mention-hover-card-content">
-                        <div className="mention-hover-card-header">
-                            <Avatar.Root className="mention-hover-card-avatar">
+                    <div className={styles.content}>
+                        <div className={styles.header}>
+                            <Avatar.Root className={styles.avatar}>
                                 {user.avatar && (
                                     <Avatar.Image src={user.avatar} alt={user.name} />
                                 )}
-                                <Avatar.Fallback className="mention-hover-card-avatar-fallback">
+                                <Avatar.Fallback className={styles.avatarFallback}>
                                     {getUserInitials(user.name)}
                                 </Avatar.Fallback>
                             </Avatar.Root>
-                            <div className="mention-hover-card-info">
-                                <div className="mention-hover-card-name">{user.name}</div>
+                            <div className={styles.info}>
+                                <div className={styles.name}>{user.name}</div>
                                 {user.email && (
-                                    <div className="mention-hover-card-email">{user.email}</div>
+                                    <div className={styles.email}>{user.email}</div>
                                 )}
                             </div>
                         </div>
                         <Link
                             href={`/users/${user.id}`}
-                            className="mention-hover-card-link"
+                            className={styles.link}
                         >
                             View Profile →
                         </Link>
                     </div>
-                    <HoverCard.Arrow className="mention-hover-card-arrow" />
+                    <HoverCard.Arrow className={styles.arrow} />
                 </HoverCard.Content>
             </HoverCard.Portal>
         </HoverCard.Root>
