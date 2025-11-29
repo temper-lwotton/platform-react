@@ -1,6 +1,8 @@
 'use client';
 
 import type { EngagementPredictions as EngagementPredictionsType } from '@/types/engagement';
+import { Badge } from '../primitives';
+import styles from './EngagementPredictions.module.scss';
 
 interface EngagementPredictionsProps {
     predictions: EngagementPredictionsType;
@@ -20,25 +22,25 @@ export function EngagementPredictions({ predictions }: EngagementPredictionsProp
     };
 
     return (
-        <div className="engagement-predictions">
-            <div className="predictions-title">Expected Performance</div>
-            <div className="predictions-items">
-                <div className="prediction-item" data-level={predictions.expectedViews}>
-                    <span className="prediction-icon">{getLevelIcon(predictions.expectedViews)}</span>
-                    <span className="prediction-label">
+        <div className={styles.container}>
+            <div className={styles.title}>Expected Performance</div>
+            <div className={styles.items}>
+                <div className={`${styles.item} ${styles[`level-${predictions.expectedViews}`]}`}>
+                    <span className={styles.icon}>{getLevelIcon(predictions.expectedViews)}</span>
+                    <span className={styles.label}>
                         {getLevelLabel(predictions.expectedViews)} views
                     </span>
                 </div>
-                <span className="prediction-separator">•</span>
-                <div className="prediction-item" data-level={predictions.expectedReplies}>
-                    <span className="prediction-icon">{getLevelIcon(predictions.expectedReplies)}</span>
-                    <span className="prediction-label">
+                <span className={styles.separator}>•</span>
+                <div className={`${styles.item} ${styles[`level-${predictions.expectedReplies}`]}`}>
+                    <span className={styles.icon}>{getLevelIcon(predictions.expectedReplies)}</span>
+                    <span className={styles.label}>
                         {getLevelLabel(predictions.expectedReplies)} replies
                     </span>
                 </div>
-                <span className="prediction-separator">•</span>
-                <div className="prediction-item">
-                    <span className="prediction-label">
+                <span className={styles.separator}>•</span>
+                <div className={styles.item}>
+                    <span className={styles.label}>
                         ~{predictions.expectedEngagementRate}% engagement
                     </span>
                 </div>

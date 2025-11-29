@@ -1,6 +1,7 @@
 'use client';
 
 import type { EngagementScores } from '@/types/engagement';
+import styles from './EngagementScoreBar.module.scss';
 
 interface EngagementScoreBarProps {
     scores: EngagementScores;
@@ -8,7 +9,7 @@ interface EngagementScoreBarProps {
 
 export function EngagementScoreBar({ scores }: EngagementScoreBarProps) {
     return (
-        <div className="engagement-scores">
+        <div className={styles.scores}>
             <ScoreItem label="Clarity" score={scores.clarity} />
             <ScoreItem label="Structure" score={scores.structure} />
             <ScoreItem label="Appeal" score={scores.appeal} />
@@ -29,15 +30,14 @@ function ScoreItem({ label, score }: ScoreItemProps) {
     };
 
     return (
-        <div className="score-item">
-            <div className="score-label">{label}</div>
-            <div className="score-value" data-level={getScoreLevel(score)}>
+        <div className={styles.item}>
+            <div className={styles.label}>{label}</div>
+            <div className={`${styles.value} ${styles[`level-${getScoreLevel(score)}`]}`}>
                 {score}
             </div>
-            <div className="score-bar">
+            <div className={styles.bar}>
                 <div
-                    className="score-bar-fill"
-                    data-level={getScoreLevel(score)}
+                    className={`${styles.barFill} ${styles[`level-${getScoreLevel(score)}`]}`}
                     style={{ width: `${score}%` }}
                 />
             </div>

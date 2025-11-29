@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { Discussion } from '@/lib/discussions';
+import { Badge } from '../primitives';
+import styles from './UnansweredDiscussions.module.scss';
 
 interface UnansweredDiscussionsProps {
     discussions: Discussion[];
@@ -30,37 +32,39 @@ export function UnansweredDiscussions({ discussions, spaceId }: UnansweredDiscus
 
     if (unanswered.length === 0) {
         return (
-            <div className="discussion-sidebar-panel">
-                <h3 className="discussion-sidebar-panel-title">Unanswered Talks</h3>
-                <div className="discussion-sidebar-panel-content">
-                    <p className="discussion-sidebar-empty">All discussions have responses!</p>
-                    <p className="discussion-sidebar-hint">Great job keeping the conversation going!</p>
+            <div className={styles.panel}>
+                <h3 className={styles.title}>Unanswered Talks</h3>
+                <div className={styles.content}>
+                    <p className={styles.emptyMessage}>All discussions have responses!</p>
+                    <p className={styles.emptyHint}>Great job keeping the conversation going!</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="discussion-sidebar-panel">
-            <h3 className="discussion-sidebar-panel-title">Unanswered Talks</h3>
-            <p className="discussion-sidebar-description">
+        <div className={styles.panel}>
+            <h3 className={styles.title}>Unanswered Talks</h3>
+            <p className={styles.description}>
                 Be the first to join the conversation on these topics
             </p>
-            <div className="discussion-sidebar-panel-content">
-                <ul className="unanswered-list">
+            <div className={styles.content}>
+                <ul className={styles.list}>
                     {unanswered.map((discussion) => (
-                        <li key={discussion.id} className="unanswered-item">
+                        <li key={discussion.id} className={styles.item}>
                             <Link
                                 href={`/spaces/${spaceId}/discussions/${discussion.id}`}
-                                className="unanswered-link"
+                                className={styles.link}
                             >
-                                <h4 className="unanswered-title">{discussion.title}</h4>
+                                <h4 className={styles.discussionTitle}>{discussion.title}</h4>
                                 {discussion.excerpt && (
-                                    <p className="unanswered-excerpt">{discussion.excerpt}</p>
+                                    <p className={styles.excerpt}>{discussion.excerpt}</p>
                                 )}
-                                <div className="unanswered-meta">
-                                    <span className="unanswered-time">{getTimeAgo(discussion.createdAt)}</span>
-                                    <span className="unanswered-badge">No replies yet</span>
+                                <div className={styles.meta}>
+                                    <span className={styles.time}>{getTimeAgo(discussion.createdAt)}</span>
+                                    <Badge variant="outline" size="sm">
+                                        No replies yet
+                                    </Badge>
                                 </div>
                             </Link>
                         </li>

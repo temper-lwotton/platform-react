@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import * as Avatar from '@radix-ui/react-avatar';
 import { Discussion } from '@/lib/discussions';
+import { Avatar, Badge } from '../primitives';
+import styles from './TopContributors.module.scss';
 
 interface Contributor {
     id: string;
@@ -54,10 +55,10 @@ export function TopContributors({ discussions }: TopContributorsProps) {
 
     if (topContributors.length === 0) {
         return (
-            <div className="discussion-sidebar-panel">
-                <h3 className="discussion-sidebar-panel-title">Top Contributors</h3>
-                <div className="discussion-sidebar-panel-content">
-                    <p className="discussion-sidebar-empty">No contributors yet</p>
+            <div className={styles.panel}>
+                <h3 className={styles.title}>Top Contributors</h3>
+                <div className={styles.content}>
+                    <p className={styles.emptyState}>No contributors yet</p>
                 </div>
             </div>
         );
@@ -74,30 +75,25 @@ export function TopContributors({ discussions }: TopContributorsProps) {
     };
 
     return (
-        <div className="discussion-sidebar-panel">
-            <h3 className="discussion-sidebar-panel-title">Top Contributors</h3>
-            <div className="discussion-sidebar-panel-content">
-                <ul className="top-contributors-list">
+        <div className={styles.panel}>
+            <h3 className={styles.title}>Top Contributors</h3>
+            <div className={styles.content}>
+                <ul className={styles.list}>
                     {topContributors.map((contributor, index) => (
-                        <li key={contributor.id} className="top-contributor-item">
-                            <span className="top-contributor-rank">#{index + 1}</span>
-                            <Link href={`/users/${contributor.id}`} className="top-contributor-link">
-                                <Avatar.Root className="top-contributor-avatar">
-                                    {contributor.photo ? (
-                                        <Avatar.Image
-                                            src={contributor.photo}
-                                            alt={contributor.name}
-                                            className="top-contributor-avatar-img"
-                                        />
-                                    ) : (
-                                        <Avatar.Fallback className="top-contributor-avatar-fallback">
-                                            {getInitials(contributor.name)}
-                                        </Avatar.Fallback>
-                                    )}
-                                </Avatar.Root>
-                                <div className="top-contributor-info">
-                                    <span className="top-contributor-name">{contributor.name}</span>
-                                    <span className="top-contributor-count">
+                        <li key={contributor.id} className={styles.item}>
+                            <Badge variant="outline" size="sm" className={styles.rank}>
+                                #{index + 1}
+                            </Badge>
+                            <Link href={`/users/${contributor.id}`} className={styles.link}>
+                                <Avatar
+                                    src={contributor.photo}
+                                    alt={contributor.name}
+                                    fallback={getInitials(contributor.name)}
+                                    size="sm"
+                                />
+                                <div className={styles.info}>
+                                    <span className={styles.name}>{contributor.name}</span>
+                                    <span className={styles.count}>
                                         {contributor.discussionCount} discussion{contributor.discussionCount !== 1 ? 's' : ''}
                                     </span>
                                 </div>

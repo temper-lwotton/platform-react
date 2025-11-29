@@ -1,9 +1,11 @@
 'use client';
 
 import type { EngagementAnalysis as EngagementAnalysisType } from '@/types/engagement';
-import { EngagementScoreBar } from './EngagementScoreBar';
-import { EngagementTipsList } from './EngagementTipsList';
-import { EngagementPredictions } from './EngagementPredictions';
+import { EngagementScoreBar } from '../EngagementScoreBar';
+import { EngagementTipsList } from '../EngagementTipsList';
+import { EngagementPredictions } from '../EngagementPredictions';
+import { Button } from '../primitives';
+import styles from './EngagementAnalysis.module.scss';
 
 interface EngagementAnalysisProps {
     analysis: EngagementAnalysisType | null;
@@ -20,9 +22,9 @@ export function EngagementAnalysis({
 }: EngagementAnalysisProps) {
     if (isLoading) {
         return (
-            <div className="engagement-analysis-card">
-                <div className="engagement-loading">
-                    <div className="loading-spinner" />
+            <div className={styles.card}>
+                <div className={styles.loading}>
+                    <div className={styles.spinner} />
                     <p>Analyzing engagement potential...</p>
                 </div>
             </div>
@@ -31,19 +33,15 @@ export function EngagementAnalysis({
 
     if (error) {
         return (
-            <div className="engagement-analysis-card">
-                <div className="engagement-error">
-                    <p className="error-message">
+            <div className={styles.card}>
+                <div className={styles.error}>
+                    <p className={styles.errorMessage}>
                         Unable to analyze engagement at this time.
                     </p>
                     {onRetry && (
-                        <button
-                            type="button"
-                            onClick={onRetry}
-                            className="retry-button"
-                        >
+                        <Button variant="secondary" size="sm" onClick={onRetry}>
                             Try Again
-                        </button>
+                        </Button>
                     )}
                 </div>
             </div>
@@ -66,24 +64,19 @@ export function EngagementAnalysis({
         return 'Your post could benefit from some enhancements.';
     };
 
+    const scoreLevel = getOverallScoreLevel(analysis.scores.overall);
+
     return (
-        <div className="engagement-analysis-card">
-            <header className="engagement-header">
-                <div className="engagement-header-content">
-                    <h3 className="engagement-title">📊 Engagement Analysis</h3>
-                    <div className="overall-score-container">
-                        <div
-                            className="overall-score-circle"
-                            data-level={getOverallScoreLevel(analysis.scores.overall)}
-                        >
-                            <span className="overall-score-value">
-                                {analysis.scores.overall}
-                            </span>
-                            <span className="overall-score-label">/ 100</span>
-                        </div>
-                        <div className="overall-score-message">
-                            {getScoreMessage(analysis.scores.overall)}
-                        </div>
+        <div className={styles.card}>
+            <header className={styles.header}>
+                <h3 className={styles.title}>📊 Engagement Analysis</h3>
+                <div className={styles.overallScore}>
+                    <div className={`${styles.scoreCircle} ${styles[`level-${scoreLevel}`]}`}>
+                        <span className={styles.scoreValue}>{analysis.scores.overall}</span>
+                        <span className={styles.scoreLabel}>/ 100</span>
+                    </div>
+                    <div className={styles.scoreMessage}>
+                        {getScoreMessage(analysis.scores.overall)}
                     </div>
                 </div>
             </header>
