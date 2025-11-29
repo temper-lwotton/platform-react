@@ -9,7 +9,8 @@ import * as Label from '@radix-ui/react-label';
 import * as Separator from '@radix-ui/react-separator';
 import { MagnifyingGlassIcon, MixerHorizontalIcon, Cross2Icon, ChevronDownIcon } from '@radix-ui/react-icons';
 import type { SpaceTag, SpacesQueryParams } from '@/lib/spaces';
-import { Input, Button } from './primitives';
+import { Input, Button } from '../primitives';
+import styles from './SpacesFilter.module.scss';
 
 interface SpacesFilterProps {
     tags: SpaceTag[];
@@ -62,10 +63,10 @@ export function SpacesFilter({ tags, onFilterChange, isLoading }: SpacesFilterPr
     const activeFilterCount = (search ? 1 : 0) + (selectedTags.length > 0 ? 1 : 0);
 
     return (
-        <div className="spaces-filter">
+        <div className={styles.filter}>
             {/* Search Bar */}
-            <div className="spaces-filter-search">
-                <MagnifyingGlassIcon className="spaces-filter-search-icon" />
+            <div className={styles.search}>
+                <MagnifyingGlassIcon className={styles.searchIcon} />
                 <Input
                     type="text"
                     placeholder="Search spaces..."
@@ -87,28 +88,28 @@ export function SpacesFilter({ tags, onFilterChange, isLoading }: SpacesFilterPr
                 )}
             </div>
 
-            <div className="spaces-filter-actions">
+            <div className={styles.actions}>
                 {/* Sort Select */}
                 <Select.Root value={sortOrder} onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}>
-                    <Select.Trigger className="spaces-filter-sort-trigger" disabled={isLoading}>
+                    <Select.Trigger className={styles.sortTrigger} disabled={isLoading}>
                         <Select.Value placeholder="Sort by..." />
-                        <Select.Icon className="spaces-filter-sort-icon">
+                        <Select.Icon className={styles.sortIcon}>
                             <ChevronDownIcon />
                         </Select.Icon>
                     </Select.Trigger>
 
                     <Select.Portal>
-                        <Select.Content className="spaces-filter-sort-content">
+                        <Select.Content className={styles.sortContent}>
                             <Select.Viewport>
-                                <Select.Item value="asc" className="spaces-filter-sort-item">
+                                <Select.Item value="asc" className={styles.sortItem}>
                                     <Select.ItemText>A → Z</Select.ItemText>
-                                    <Select.ItemIndicator className="spaces-filter-sort-indicator">
+                                    <Select.ItemIndicator className={styles.sortIndicator}>
                                         ✓
                                     </Select.ItemIndicator>
                                 </Select.Item>
-                                <Select.Item value="desc" className="spaces-filter-sort-item">
+                                <Select.Item value="desc" className={styles.sortItem}>
                                     <Select.ItemText>Z → A</Select.ItemText>
-                                    <Select.ItemIndicator className="spaces-filter-sort-indicator">
+                                    <Select.ItemIndicator className={styles.sortIndicator}>
                                         ✓
                                     </Select.ItemIndicator>
                                 </Select.Item>
@@ -122,30 +123,30 @@ export function SpacesFilter({ tags, onFilterChange, isLoading }: SpacesFilterPr
                     <Popover.Trigger asChild>
                         <button
                             type="button"
-                            className="spaces-filter-button"
+                            className={styles.button}
                             disabled={isLoading}
                             aria-label="Open filters"
                         >
                             <MixerHorizontalIcon />
                             <span>Filters</span>
                             {activeFilterCount > 0 && (
-                                <span className="spaces-filter-badge">{activeFilterCount}</span>
+                                <span className={styles.badge}>{activeFilterCount}</span>
                             )}
                         </button>
                     </Popover.Trigger>
 
                     <Popover.Portal>
                         <Popover.Content
-                            className="spaces-filter-popover"
+                            className={styles.popover}
                             align="end"
                             sideOffset={8}
                         >
-                            <div className="spaces-filter-popover-header">
-                                <h3 className="spaces-filter-popover-title">Filter Spaces</h3>
+                            <div className={styles.popoverHeader}>
+                                <h3 className={styles.popoverTitle}>Filter Spaces</h3>
                                 {hasActiveFilters && (
                                     <button
                                         type="button"
-                                        className="spaces-filter-clear-button"
+                                        className={styles.clearButton}
                                         onClick={handleClearFilters}
                                     >
                                         Clear all
@@ -153,31 +154,31 @@ export function SpacesFilter({ tags, onFilterChange, isLoading }: SpacesFilterPr
                                 )}
                             </div>
 
-                            <Separator.Root className="spaces-filter-separator" />
+                            <Separator.Root className={styles.separator} />
 
                             {/* Tags Filter */}
                             {tags.length > 0 && (
-                                <div className="spaces-filter-section">
-                                    <Label.Root className="spaces-filter-section-label">
+                                <div className={styles.section}>
+                                    <Label.Root className={styles.sectionLabel}>
                                         Tags
                                     </Label.Root>
 
-                                    <div className="spaces-filter-tags">
+                                    <div className={styles.tags}>
                                         {tags.map((tag) => (
                                             <label
                                                 key={tag.id}
-                                                className="spaces-filter-tag-item"
+                                                className={styles.tagItem}
                                             >
                                                 <Checkbox.Root
-                                                    className="spaces-filter-checkbox"
+                                                    className={styles.checkbox}
                                                     checked={selectedTags.includes(tag.id)}
                                                     onCheckedChange={() => handleTagToggle(tag.id)}
                                                 >
-                                                    <Checkbox.Indicator className="spaces-filter-checkbox-indicator">
+                                                    <Checkbox.Indicator className={styles.checkboxIndicator}>
                                                         ✓
                                                     </Checkbox.Indicator>
                                                 </Checkbox.Root>
-                                                <span className="spaces-filter-tag-label">{tag.name}</span>
+                                                <span className={styles.tagLabel}>{tag.name}</span>
                                             </label>
                                         ))}
                                     </div>
@@ -185,28 +186,28 @@ export function SpacesFilter({ tags, onFilterChange, isLoading }: SpacesFilterPr
                                     {/* Match All Tags Option */}
                                     {selectedTags.length > 1 && (
                                         <>
-                                            <Separator.Root className="spaces-filter-separator" />
-                                            <div className="spaces-filter-match-mode">
-                                                <Label.Root className="spaces-filter-section-label">
+                                            <Separator.Root className={styles.separator} />
+                                            <div className={styles.matchMode}>
+                                                <Label.Root className={styles.sectionLabel}>
                                                     Match Mode
                                                 </Label.Root>
                                                 <RadioGroup.Root
                                                     value={matchAllTags ? 'all' : 'any'}
                                                     onValueChange={(value) => setMatchAllTags(value === 'all')}
                                                 >
-                                                    <label className="spaces-filter-radio-item">
-                                                        <RadioGroup.Item value="any" className="spaces-filter-radio">
-                                                            <RadioGroup.Indicator className="spaces-filter-radio-indicator" />
+                                                    <label className={styles.radioItem}>
+                                                        <RadioGroup.Item value="any" className={styles.radio}>
+                                                            <RadioGroup.Indicator className={styles.radioIndicator} />
                                                         </RadioGroup.Item>
-                                                        <span className="spaces-filter-radio-label">
+                                                        <span className={styles.radioLabel}>
                                                             Match <strong>any</strong> tag (OR)
                                                         </span>
                                                     </label>
-                                                    <label className="spaces-filter-radio-item">
-                                                        <RadioGroup.Item value="all" className="spaces-filter-radio">
-                                                            <RadioGroup.Indicator className="spaces-filter-radio-indicator" />
+                                                    <label className={styles.radioItem}>
+                                                        <RadioGroup.Item value="all" className={styles.radio}>
+                                                            <RadioGroup.Indicator className={styles.radioIndicator} />
                                                         </RadioGroup.Item>
-                                                        <span className="spaces-filter-radio-label">
+                                                        <span className={styles.radioLabel}>
                                                             Match <strong>all</strong> tags (AND)
                                                         </span>
                                                     </label>
@@ -218,12 +219,12 @@ export function SpacesFilter({ tags, onFilterChange, isLoading }: SpacesFilterPr
                             )}
 
                             {tags.length === 0 && (
-                                <div className="spaces-filter-empty">
+                                <div className={styles.empty}>
                                     <p>No tags available</p>
                                 </div>
                             )}
 
-                            <Popover.Arrow className="spaces-filter-popover-arrow" />
+                            <Popover.Arrow className={styles.popoverArrow} />
                         </Popover.Content>
                     </Popover.Portal>
                 </Popover.Root>

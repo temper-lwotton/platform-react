@@ -20,7 +20,8 @@ export function MentionContent({ content, users, className }: MentionContentProp
     // Regex to match @mentions
     const mentionRegex = /@([\w\s]+?)(?=\s|$|[.,!?;:])/g;
     const parts: (string | React.JSX.Element)[] = [];
-    let lastIndex = 0;
+    let lastIndex = 0
+
     let match;
     let keyCounter = 0;
 
