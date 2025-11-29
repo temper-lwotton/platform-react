@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
 import { MentionUser } from '@/hooks/useMentions';
+import styles from './MentionDropdown.module.scss';
 
 interface MentionDropdownProps {
   users: MentionUser[];
@@ -64,20 +65,20 @@ export function MentionDropdown({
   return (
     <div
       ref={dropdownRef}
-      className="mention-dropdown"
+      className={styles.dropdown}
       style={{
         position: 'fixed',
         top: `${absolutePosition.top}px`,
         left: `${absolutePosition.left}px`,
       }}
     >
-      <div className="mention-dropdown-content">
+      <div className={styles.content}>
         {users.map((user, index) => (
           <button
             key={user.id}
             ref={index === selectedIndex ? selectedItemRef : null}
-            className={`mention-dropdown-item ${
-              index === selectedIndex ? 'mention-dropdown-item--selected' : ''
+            className={`${styles.item} ${
+              index === selectedIndex ? styles.itemSelected : ''
             }`}
             onClick={() => onSelect(user)}
             onMouseEnter={() => {
@@ -85,24 +86,24 @@ export function MentionDropdown({
             }}
             type="button"
           >
-            <Avatar.Root className="mention-dropdown-avatar">
+            <Avatar.Root className={styles.avatar}>
               {user.avatar && (
                 <Avatar.Image src={user.avatar} alt={user.name} />
               )}
-              <Avatar.Fallback className="mention-dropdown-avatar-fallback">
+              <Avatar.Fallback className={styles.avatarFallback}>
                 {getUserInitials(user)}
               </Avatar.Fallback>
             </Avatar.Root>
-            <div className="mention-dropdown-info">
-              <div className="mention-dropdown-name">{user.name}</div>
+            <div className={styles.info}>
+              <div className={styles.name}>{user.name}</div>
               {user.email && (
-                <div className="mention-dropdown-email">{user.email}</div>
+                <div className={styles.email}>{user.email}</div>
               )}
             </div>
           </button>
         ))}
       </div>
-      <div className="mention-dropdown-hint">
+      <div className={styles.hint}>
         ↑↓ to navigate • ↵ to select • esc to dismiss
       </div>
     </div>

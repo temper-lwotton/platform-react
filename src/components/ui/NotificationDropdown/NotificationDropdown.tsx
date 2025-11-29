@@ -17,7 +17,8 @@ import {
     Notification,
 } from '@/lib/notifications';
 import { getCurrentUserId } from '@/lib/auth';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import styles from './NotificationDropdown.module.scss';
 
 export function NotificationDropdown() {
     const router = useRouter();
@@ -117,41 +118,41 @@ export function NotificationDropdown() {
         return (
             <button
                 key={notification.id}
-                className={`notification-item ${
-                    !notification.readAt ? 'notification-item--unread' : ''
+                className={`${styles.item} ${
+                    !notification.readAt ? styles.itemUnread : ''
                 }`}
                 onClick={() => handleNotificationClick(notification)}
             >
-                <div className="notification-item-avatar">
+                <div className={styles.itemAvatar}>
                     {hasPhoto ? (
                         <img
                             src={notification.actor.profile!.photo}
                             alt={actorName}
-                            className="notification-item-avatar-img"
+                            className={styles.itemAvatarImg}
                         />
                     ) : (
-                        <div className="notification-item-avatar-placeholder">
+                        <div className={styles.itemAvatarPlaceholder}>
                             {actorInitial}
                         </div>
                     )}
                 </div>
 
-                <div className="notification-item-content">
-                    <h4 className="notification-item-title">
+                <div className={styles.itemContent}>
+                    <h4 className={styles.itemTitle}>
                         {getNotificationTitle(notification)}
                     </h4>
 
-                    <p className="notification-item-text">
+                    <p className={styles.itemText}>
                         {getNotificationText(notification)}
                     </p>
 
-                    <span className="notification-item-time">
+                    <span className={styles.itemTime}>
                         {getTimeAgo(notification.createdAt)}
                     </span>
                 </div>
 
                 {!notification.readAt && (
-                    <span className="notification-item-dot" />
+                    <span className={styles.itemDot} />
                 )}
             </button>
         );
@@ -162,12 +163,12 @@ export function NotificationDropdown() {
             <Popover.Trigger asChild>
                 <button
                     type="button"
-                    className="notification-button"
+                    className={styles.button}
                     aria-label="Notifications"
                 >
-                    <Icon icon="bell" size={20} className="notification-icon" />
+                    <Icon icon="bell" size={20} className={styles.icon} />
                     {unreadCount > 0 && (
-                        <span className="notification-badge">
+                        <span className={styles.badge}>
                             {unreadCount > 9 ? '9+' : unreadCount}
                         </span>
                     )}
@@ -176,17 +177,17 @@ export function NotificationDropdown() {
 
             <Popover.Portal>
                 <Popover.Content
-                    className="notification-dropdown-menu"
+                    className={styles.dropdownMenu}
                     align="end"
                     sideOffset={8}
                 >
-                    <div className="notification-dropdown-header">
-                        <span className="notification-dropdown-title">Notifications</span>
+                    <div className={styles.dropdownHeader}>
+                        <span className={styles.dropdownTitle}>Notifications</span>
 
                         {unreadCount > 0 && (
                             <button
                                 type="button"
-                                className="notification-mark-all-read"
+                                className={styles.markAllRead}
                                 onClick={handleMarkAllRead}
                                 disabled={markAllReadMutation.isPending}
                             >
@@ -196,61 +197,61 @@ export function NotificationDropdown() {
                     </div>
 
                     {isLoading ? (
-                        <div className="notification-list">
-                            <div className="notification-loading">Loading...</div>
+                        <div className={styles.list}>
+                            <div className={styles.loading}>Loading...</div>
                         </div>
                     ) : notifications.length === 0 ? (
-                        <div className="notification-list">
-                            <div className="notification-empty">No notifications</div>
+                        <div className={styles.list}>
+                            <div className={styles.empty}>No notifications</div>
                         </div>
                     ) : (
-                        <Tabs.Root defaultValue="inbox" className="notification-tabs">
-                            <Tabs.List className="notification-tabs-list">
-                                <Tabs.Trigger value="inbox" className="notification-tab-trigger">
+                        <Tabs.Root defaultValue="inbox" className={styles.tabs}>
+                            <Tabs.List className={styles.tabsList}>
+                                <Tabs.Trigger value="inbox" className={styles.tabTrigger}>
                                     Inbox
                                     {inboxNotifications.length > 0 && (
-                                        <span className="notification-tab-badge">
+                                        <span className={styles.tabBadge}>
                                             {inboxNotifications.length}
                                         </span>
                                     )}
                                 </Tabs.Trigger>
-                                <Tabs.Trigger value="mentions" className="notification-tab-trigger">
+                                <Tabs.Trigger value="mentions" className={styles.tabTrigger}>
                                     Mentions
                                     {mentionNotifications.length > 0 && (
-                                        <span className="notification-tab-badge">
+                                        <span className={styles.tabBadge}>
                                             {mentionNotifications.length}
                                         </span>
                                     )}
                                 </Tabs.Trigger>
-                                <Tabs.Trigger value="archived" className="notification-tab-trigger">
+                                <Tabs.Trigger value="archived" className={styles.tabTrigger}>
                                     Archived
                                 </Tabs.Trigger>
                             </Tabs.List>
 
-                            <Tabs.Content value="inbox" className="notification-tab-content">
-                                <div className="notification-list">
+                            <Tabs.Content value="inbox" className={styles.tabContent}>
+                                <div className={styles.list}>
                                     {inboxNotifications.length === 0 ? (
-                                        <div className="notification-empty">No unread notifications</div>
+                                        <div className={styles.empty}>No unread notifications</div>
                                     ) : (
                                         inboxNotifications.slice(0, 5).map(renderNotification)
                                     )}
                                 </div>
                             </Tabs.Content>
 
-                            <Tabs.Content value="mentions" className="notification-tab-content">
-                                <div className="notification-list">
+                            <Tabs.Content value="mentions" className={styles.tabContent}>
+                                <div className={styles.list}>
                                     {mentionNotifications.length === 0 ? (
-                                        <div className="notification-empty">No mentions yet</div>
+                                        <div className={styles.empty}>No mentions yet</div>
                                     ) : (
                                         mentionNotifications.slice(0, 5).map(renderNotification)
                                     )}
                                 </div>
                             </Tabs.Content>
 
-                            <Tabs.Content value="archived" className="notification-tab-content">
-                                <div className="notification-list">
+                            <Tabs.Content value="archived" className={styles.tabContent}>
+                                <div className={styles.list}>
                                     {archivedNotifications.length === 0 ? (
-                                        <div className="notification-empty">No archived notifications</div>
+                                        <div className={styles.empty}>No archived notifications</div>
                                     ) : (
                                         archivedNotifications.slice(0, 5).map(renderNotification)
                                     )}
@@ -261,13 +262,13 @@ export function NotificationDropdown() {
 
                     {notifications.length > 0 && (
                         <>
-                            <div className="notification-dropdown-separator" />
+                            <div className={styles.dropdownSeparator} />
 
-                            <div className="notification-dropdown-footer">
+                            <div className={styles.dropdownFooter}>
                                 <Popover.Close asChild>
                                     <Link
                                         href="/notifications"
-                                        className="notification-view-all"
+                                        className={styles.viewAll}
                                     >
                                         View all notifications
                                     </Link>
