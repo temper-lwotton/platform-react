@@ -1,0 +1,1 @@
+export { RichContentWithMentions } from './RichContentWithMentions';

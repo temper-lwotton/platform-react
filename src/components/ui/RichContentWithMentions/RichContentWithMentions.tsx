@@ -3,7 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { MentionUser } from '@/hooks/useMentions';
-import { MentionHoverCard } from './MentionHoverCard';
+import { MentionHoverCard } from '../MentionHoverCard';
+import styles from './RichContentWithMentions.module.scss';
 
 interface RichContentWithMentionsProps {
     content: string;
@@ -39,7 +40,7 @@ export function RichContentWithMentions({ content, users, className = '' }: Rich
 
                 // Create a wrapper span for the hover card
                 const wrapper = document.createElement('span');
-                wrapper.className = 'mention-hover-wrapper';
+                wrapper.className = styles.mentionHoverWrapper;
 
                 // Clone the link to preserve it
                 const linkClone = link.cloneNode(true) as HTMLElement;
@@ -55,7 +56,7 @@ export function RichContentWithMentions({ content, users, className = '' }: Rich
                     <MentionHoverCard user={user}>
                         <a
                             href={`/users/${user.id}`}
-                            className="mention-link"
+                            className={styles.mentionLink}
                             data-user-id={user.id}
                         >
                             {linkClone.textContent}
