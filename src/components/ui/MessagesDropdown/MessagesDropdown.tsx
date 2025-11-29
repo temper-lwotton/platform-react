@@ -12,7 +12,8 @@ import {
     ConversationHead,
 } from '@/lib/conversations';
 import { getCurrentUserId } from '@/lib/auth';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import styles from './MessagesDropdown.module.scss';
 
 export function MessagesDropdown() {
     const router = useRouter();
@@ -120,41 +121,41 @@ export function MessagesDropdown() {
             <button
                 key={conversation.id}
                 type="button"
-                className={`messages-item ${
+                className={`${styles.item} ${
                     conversation.unread > 0
-                        ? 'messages-item--unread'
+                        ? styles.itemUnread
                         : ''
                 }`}
                 onClick={() =>
                     handleConversationClick(conversation.id)
                 }
             >
-                <div className="messages-item-avatar">
+                <div className={styles.itemAvatar}>
                     {hasPhoto ? (
                         <img
                             src={hasPhoto}
                             alt={displayName}
-                            className="messages-item-avatar-img"
+                            className={styles.itemAvatarImg}
                         />
                     ) : (
-                        <div className="messages-item-avatar-placeholder">
+                        <div className={styles.itemAvatarPlaceholder}>
                             {initials}
                         </div>
                     )}
                 </div>
-                <div className="messages-item-content">
-                    <h4 className="messages-item-name">
+                <div className={styles.itemContent}>
+                    <h4 className={styles.itemName}>
                         {displayName}
                     </h4>
-                    <p className="messages-item-preview">
+                    <p className={styles.itemPreview}>
                         {conversation.lastMessage}
                     </p>
-                    <span className="messages-item-time">
+                    <span className={styles.itemTime}>
                         {getTimeAgo(conversation.updatedAt)}
                     </span>
                 </div>
                 {conversation.unread > 0 && (
-                    <span className="messages-item-badge">
+                    <span className={styles.itemBadge}>
                         {conversation.unread}
                     </span>
                 )}
@@ -167,12 +168,12 @@ export function MessagesDropdown() {
             <Popover.Trigger asChild>
                 <button
                     type="button"
-                    className="messages-button"
+                    className={styles.button}
                     aria-label="Messages"
                 >
-                    <Icon icon="comment" size={20} className="messages-icon" />
+                    <Icon icon="comment" size={20} className={styles.icon} />
                     {unreadCount > 0 && (
-                        <span className="messages-badge">
+                        <span className={styles.badge}>
                             {unreadCount > 9 ? '9+' : unreadCount}
                         </span>
                     )}
@@ -181,52 +182,52 @@ export function MessagesDropdown() {
 
             <Popover.Portal>
                 <Popover.Content
-                    className="messages-dropdown-menu"
+                    className={styles.dropdownMenu}
                     align="end"
                     sideOffset={8}
                 >
-                    <div className="messages-dropdown-header">
-                        <h3 className="messages-dropdown-title">Messages</h3>
+                    <div className={styles.dropdownHeader}>
+                        <h3 className={styles.dropdownTitle}>Messages</h3>
                     </div>
 
                     {isLoading ? (
-                        <div className="messages-list">
-                            <div className="messages-loading">Loading...</div>
+                        <div className={styles.list}>
+                            <div className={styles.loading}>Loading...</div>
                         </div>
                     ) : conversations.length === 0 ? (
-                        <div className="messages-list">
-                            <div className="messages-empty">No messages</div>
+                        <div className={styles.list}>
+                            <div className={styles.empty}>No messages</div>
                         </div>
                     ) : (
-                        <Tabs.Root defaultValue="unread" className="messages-tabs">
-                            <Tabs.List className="messages-tabs-list">
-                                <Tabs.Trigger value="unread" className="messages-tab-trigger">
+                        <Tabs.Root defaultValue="unread" className={styles.tabs}>
+                            <Tabs.List className={styles.tabsList}>
+                                <Tabs.Trigger value="unread" className={styles.tabTrigger}>
                                     Unread
                                     {unreadConversations.length > 0 && (
-                                        <span className="messages-tab-badge">
+                                        <span className={styles.tabBadge}>
                                             {unreadConversations.length}
                                         </span>
                                     )}
                                 </Tabs.Trigger>
-                                <Tabs.Trigger value="read" className="messages-tab-trigger">
+                                <Tabs.Trigger value="read" className={styles.tabTrigger}>
                                     Read
                                 </Tabs.Trigger>
                             </Tabs.List>
 
-                            <Tabs.Content value="unread" className="messages-tab-content">
-                                <div className="messages-list">
+                            <Tabs.Content value="unread" className={styles.tabContent}>
+                                <div className={styles.list}>
                                     {unreadConversations.length === 0 ? (
-                                        <div className="messages-empty">No unread messages</div>
+                                        <div className={styles.empty}>No unread messages</div>
                                     ) : (
                                         unreadConversations.slice(0, 5).map(renderConversation)
                                     )}
                                 </div>
                             </Tabs.Content>
 
-                            <Tabs.Content value="read" className="messages-tab-content">
-                                <div className="messages-list">
+                            <Tabs.Content value="read" className={styles.tabContent}>
+                                <div className={styles.list}>
                                     {readConversations.length === 0 ? (
-                                        <div className="messages-empty">No read messages</div>
+                                        <div className={styles.empty}>No read messages</div>
                                     ) : (
                                         readConversations.slice(0, 5).map(renderConversation)
                                     )}
@@ -237,13 +238,13 @@ export function MessagesDropdown() {
 
                     {conversations.length > 0 && (
                         <>
-                            <div className="messages-dropdown-separator" />
+                            <div className={styles.dropdownSeparator} />
 
-                            <div className="messages-dropdown-footer">
+                            <div className={styles.dropdownFooter}>
                                 <Popover.Close asChild>
                                     <Link
                                         href="/messages"
-                                        className="messages-view-all"
+                                        className={styles.viewAll}
                                     >
                                         View all messages
                                     </Link>
