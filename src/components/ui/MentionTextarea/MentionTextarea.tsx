@@ -4,6 +4,9 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { useMentions, MentionUser } from '@/hooks/useMentions';
 import * as Popover from '@radix-ui/react-popover';
 import * as Avatar from '@radix-ui/react-avatar';
+import styles from './MentionTextarea.module.scss';
+// Import MentionDropdown styles for the dropdown part
+import mentionDropdownStyles from '../MentionDropdown/MentionDropdown.module.scss';
 
 interface MentionTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   users: MentionUser[];
@@ -77,55 +80,55 @@ export const MentionTextarea = forwardRef<MentionTextareaHandle, MentionTextarea
     return (
       <Popover.Root open={mentionState.isOpen}>
         <Popover.Anchor asChild>
-          <div className="mention-textarea-wrapper">
+          <div className={styles.wrapper}>
             <textarea
               {...textareaProps}
               ref={handleRef}
               onChange={handleChange}
               onKeyDown={handleKeyDownCombined}
-              className={`mention-textarea ${textareaProps.className || ''}`}
+              className={`${styles.textarea} ${textareaProps.className || ''}`}
             />
           </div>
         </Popover.Anchor>
 
         <Popover.Portal>
           <Popover.Content
-            className="mention-dropdown"
+            className={mentionDropdownStyles.dropdown}
             side="bottom"
             align="start"
             sideOffset={4}
             onOpenAutoFocus={(e) => e.preventDefault()}
             onInteractOutside={(e) => e.preventDefault()}
           >
-            <div className="mention-dropdown-content">
+            <div className={mentionDropdownStyles.content}>
               {mentionState.filteredUsers.map((user, index) => (
                 <button
                   key={user.id}
-                  className={`mention-dropdown-item ${
-                    index === mentionState.selectedIndex ? 'mention-dropdown-item--selected' : ''
+                  className={`${mentionDropdownStyles.item} ${
+                    index === mentionState.selectedIndex ? mentionDropdownStyles.itemSelected : ''
                   }`}
                   onClick={() => selectUser(user)}
                   onMouseDown={(e) => e.preventDefault()} // Prevent textarea blur
                   type="button"
                 >
-                  <Avatar.Root className="mention-dropdown-avatar">
+                  <Avatar.Root className={mentionDropdownStyles.avatar}>
                     {user.avatar && (
                       <Avatar.Image src={user.avatar} alt={user.name} />
                     )}
-                    <Avatar.Fallback className="mention-dropdown-avatar-fallback">
+                    <Avatar.Fallback className={mentionDropdownStyles.avatarFallback}>
                       {getUserInitials(user)}
                     </Avatar.Fallback>
                   </Avatar.Root>
-                  <div className="mention-dropdown-info">
-                    <div className="mention-dropdown-name">{user.name}</div>
+                  <div className={mentionDropdownStyles.info}>
+                    <div className={mentionDropdownStyles.name}>{user.name}</div>
                     {user.email && (
-                      <div className="mention-dropdown-email">{user.email}</div>
+                      <div className={mentionDropdownStyles.email}>{user.email}</div>
                     )}
                   </div>
                 </button>
               ))}
             </div>
-            <div className="mention-dropdown-hint">
+            <div className={mentionDropdownStyles.hint}>
               ↑↓ to navigate • ↵ to select • esc to dismiss
             </div>
           </Popover.Content>
