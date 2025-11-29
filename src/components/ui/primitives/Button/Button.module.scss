@@ -86,6 +86,10 @@
   }
 }
 
+.variant-gradient {
+  @include button-gradient-teal;
+}
+
 // Sizes
 .size-sm {
   padding: 0.375rem 0.75rem;

@@ -155,8 +155,12 @@ export default function EventsPage() {
           {/* Events Grid */}
           {filteredEvents && filteredEvents.length > 0 && (
             <div className="events-grid">
-              {filteredEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
+              {filteredEvents.map((event, index) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  priority={activeTab === 'upcoming' && index === 0} // Feature first upcoming event with gradient accent
+                />
               ))}
             </div>
           )}

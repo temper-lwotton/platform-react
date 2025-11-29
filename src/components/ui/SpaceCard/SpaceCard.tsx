@@ -7,9 +7,10 @@ import styles from './SpaceCard.module.scss';
 
 interface SpaceCardProps {
     space: Space;
+    featured?: boolean; // Applies gradient styling for featured spaces
 }
 
-export function SpaceCard({ space }: SpaceCardProps) {
+export function SpaceCard({ space, featured = false }: SpaceCardProps) {
     // Deduplicate members by ID
     const allMembersMap = new Map();
     [...space.admins, ...space.members].forEach(member => {
@@ -42,7 +43,10 @@ export function SpaceCard({ space }: SpaceCardProps) {
     };
 
     return (
-        <Link href={`/spaces/${space.id}`} className={styles.card}>
+        <Link
+            href={`/spaces/${space.id}`}
+            className={`${styles.card} ${featured ? styles.featured : ''}`}
+        >
             <article className={styles.content}>
                 <header className={styles.header}>
                     <Avatar

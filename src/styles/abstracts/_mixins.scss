@@ -2,6 +2,8 @@
 // Mixins - Reusable Style Patterns
 // ============================================
 
+@use 'sass:math';
+
 // Responsive Breakpoints
 @mixin responsive($breakpoint) {
   @if $breakpoint == small-mobile {
@@ -47,24 +49,24 @@
   }
 }
 
-// Card Base Styles
+// Card Base Styles - Future Clean (8-12px radius, subtle shadows)
 @mixin card-base {
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border-primary);
-  border-radius: 16px;
+  border-radius: var(--radius-lg); // 12px for Future Clean
   box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
 }
 
 @mixin card-hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: var(--color-border-secondary);
+  border-color: rgba(20, 121, 255, 0.12); // Subtle brand hint
 }
 
-// Hover Lift Effect
+// Hover Lift Effect - Future Clean (calm, purposeful)
 @mixin hover-lift($shadow: var(--shadow-md)) {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
 
   &:hover {
     transform: translateY(-2px);
@@ -84,48 +86,151 @@
   outline: none;
 }
 
-// Button Base
+// Button Base - Future Clean
 @mixin button-base {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 600;
+  gap: var(--spacing-1);
+  padding: 10px 20px;
+  border-radius: var(--radius-md); // 8px consistent radius
+  font-size: var(--font-size-base); // 14px
+  font-weight: var(--font-weight-medium); // 500
+  line-height: var(--line-height-tight);
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-colors), transform var(--transition-fast), box-shadow var(--transition-fast);
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
   }
 }
 
-// Button Variants
+// Button Variants - Future Clean
 @mixin button-primary {
   @include button-base;
-  background: var(--color-primary);
+  background: var(--color-primary); // Electric Blue #1479FF
   color: var(--color-primary-text);
 
   &:hover:not(:disabled) {
-    background: var(--color-primary-hover);
+    background: var(--color-primary-hover); // #0D5FD9
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px rgba(20, 121, 255, 0.24); // Subtle brand shadow
+  }
+
+  &:active:not(:disabled) {
+    background: var(--color-primary-active); // #0A4DB3
+    transform: translateY(0);
   }
 }
 
 @mixin button-secondary {
   @include button-base;
-  background: var(--color-secondary-bg);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border-primary);
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-bg); // rgba(20, 121, 255, 0.08)
+    border-color: var(--color-primary-hover);
+  }
+
+  &:active:not(:disabled) {
+    background: rgba(20, 121, 255, 0.12);
+  }
+}
+
+@mixin button-tertiary {
+  @include button-base;
+  background: transparent;
+  color: var(--color-primary);
+  padding: 8px 12px;
 
   &:hover:not(:disabled) {
     background: var(--color-bg-hover);
-    border-color: var(--color-border-secondary);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--color-bg-active);
+  }
+}
+
+// Gradient Buttons - For key CTAs
+@mixin button-gradient-teal {
+  @include button-base;
+  background: var(--gradient-teal); // 45deg from #1CB8B4 to #2BE0BF
+  color: var(--white);
+  border: none;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #18A7A3 0%, #26CDB0 100%); // Darker on hover
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-teal);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  // Content needs to be above the ::before overlay
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+@mixin button-gradient-primary {
+  @include button-base;
+  background: var(--gradient-primary); // 45deg Electric Blue gradient
+  color: var(--white);
+  border: none;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #0A4DB3 0%, #0D5FD9 100%); // Darker on hover
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-primary);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -222,7 +327,7 @@
   &::before {
     content: '';
     display: block;
-    padding-top: ($height / $width) * 100%;
+    padding-top: math.div($height, $width) * 100%;
   }
 
   > * {
@@ -251,5 +356,233 @@
 @mixin dark-mode {
   @media (prefers-color-scheme: dark) {
     @content;
+  }
+}
+
+// Future Clean - Typography Mixins
+@mixin text-page-title {
+  font-size: var(--font-size-3xl); // 32px
+  font-weight: var(--font-weight-semibold); // 600
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+@mixin text-section-title {
+  font-size: var(--font-size-xl); // 24px
+  font-weight: var(--font-weight-semibold); // 600
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+@mixin text-heading {
+  font-size: var(--font-size-lg); // 20px
+  font-weight: var(--font-weight-semibold); // 600
+  line-height: var(--line-height-tight);
+  color: var(--color-text-primary);
+}
+
+@mixin text-body {
+  font-size: var(--font-size-base); // 14px
+  font-weight: var(--font-weight-regular); // 400
+  line-height: var(--line-height-relaxed); // 1.6 for comfortable reading
+  color: var(--color-text-primary);
+}
+
+@mixin text-body-large {
+  font-size: var(--font-size-md); // 16px
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-primary);
+}
+
+@mixin text-label {
+  font-size: var(--font-size-sm); // 13px
+  font-weight: var(--font-weight-medium); // 500
+  line-height: var(--line-height-normal);
+  color: var(--color-text-secondary);
+}
+
+@mixin text-meta {
+  font-size: var(--font-size-xs); // 12px
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-muted);
+}
+
+// Input Styles - Future Clean
+@mixin input-base {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md); // 8px
+  background: var(--color-bg-elevated);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  transition: var(--transition-colors), box-shadow var(--transition-fast);
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-border-secondary);
+  }
+
+  &:focus {
+    @include focus-ring-inset;
+  }
+
+  &:disabled {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// Tag/Pill Styles - Future Clean
+@mixin tag-base {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full); // Pill shape
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+}
+
+@mixin tag-primary {
+  @include tag-base;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+@mixin tag-secondary {
+  @include tag-base;
+  background: var(--color-secondary-bg);
+  color: var(--color-secondary);
+}
+
+@mixin tag-success {
+  @include tag-base;
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+// Gradient Card Mixins - For key highlights and featured content
+@mixin card-gradient-teal {
+  @include card-base;
+  background: var(--gradient-teal); // 45deg teal gradient
+  color: var(--white);
+  border: none;
+  position: relative;
+  overflow: hidden;
+
+  // Override text colors for gradient cards
+  h1, h2, h3, h4, h5, h6, p, span {
+    color: var(--white);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #18A7A3 0%, #26CDB0 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    z-index: 0;
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-teal);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  // Ensure content is above overlay
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+@mixin card-gradient-primary {
+  @include card-base;
+  background: var(--gradient-primary); // 45deg blue gradient
+  color: var(--white);
+  border: none;
+  position: relative;
+  overflow: hidden;
+
+  h1, h2, h3, h4, h5, h6, p, span {
+    color: var(--white);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #0A4DB3 0%, #0D5FD9 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    z-index: 0;
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-primary);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+@mixin card-gradient-border-teal {
+  @include card-base;
+  background: var(--color-bg-elevated);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: var(--gradient-teal);
+    z-index: -1;
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-teal);
+  }
+}
+
+@mixin card-gradient-accent {
+  @include card-base;
+  background: var(--color-bg-elevated);
+  position: relative;
+
+  // Gradient accent bar on the left
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--gradient-teal);
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateX(2px);
   }
 }

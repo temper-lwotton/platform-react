@@ -7,6 +7,11 @@
   &:hover {
     @include card-hover;
   }
+
+  // Priority/featured event variant with gradient accent
+  &.priority {
+    @include card-gradient-accent;
+  }
 }
 
 .imageWrapper {

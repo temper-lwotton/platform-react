@@ -8,6 +8,11 @@
   &:hover {
     @include card-hover;
   }
+
+  // Pinned/important discussion variant with gradient accent
+  &.pinned {
+    @include card-gradient-accent;
+  }
 }
 
 .space {

@@ -11,6 +11,16 @@
   &:hover {
     @include card-hover;
   }
+
+  // Featured space variant with gradient accent
+  &.featured {
+    @include card-gradient-accent;
+
+    .title {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+  }
 }
 
 .content {

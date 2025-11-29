@@ -11,9 +11,10 @@ import styles from './DiscussionCard.module.scss';
 interface DiscussionCardProps {
     discussion: Discussion;
     spaceId: string;
+    pinned?: boolean; // Applies gradient accent for pinned/important discussions
 }
 
-export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
+export function DiscussionCard({ discussion, spaceId, pinned = false }: DiscussionCardProps) {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const { showToast } = useToast();
 
@@ -53,7 +54,7 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
     };
 
     return (
-        <article className={styles.card}>
+        <article className={`${styles.card} ${pinned ? styles.pinned : ''}`}>
             {spaceName && (
                 <div className={styles.space}>
                     <Link href={`/spaces/${spaceId}`} className={styles.spaceLink}>

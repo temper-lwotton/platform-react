@@ -69,8 +69,12 @@ export default function SpacesPage() {
             {/* Spaces Grid */}
             {!isLoading && spaces && spaces.length > 0 && (
                 <div className="spaces-grid">
-                    {spaces.map((space) => (
-                        <SpaceCard key={space.id} space={space} />
+                    {spaces.map((space, index) => (
+                        <SpaceCard
+                            key={space.id}
+                            space={space}
+                            featured={index === 0} // Feature the first space with gradient accent
+                        />
                     ))}
                 </div>
             )}

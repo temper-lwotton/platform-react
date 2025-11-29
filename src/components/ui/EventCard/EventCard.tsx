@@ -14,9 +14,10 @@ type RSVPStatus = 'going' | 'maybe' | 'not_going' | null;
 interface EventCardProps {
   event: Event;
   showRSVP?: boolean; // Optional prop to show RSVP dropdown
+  priority?: boolean; // Applies gradient accent for priority/featured events
 }
 
-export function EventCard({ event, showRSVP = false }: EventCardProps) {
+export function EventCard({ event, showRSVP = false, priority = false }: EventCardProps) {
   const [rsvpStatus, setRsvpStatus] = useState<RSVPStatus>(null);
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -83,7 +84,7 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
   };
 
   return (
-    <article className={styles.card}>
+    <article className={`${styles.card} ${priority ? styles.priority : ''}`}>
       {event.photo && (
         <div className={styles.imageWrapper}>
           <img
