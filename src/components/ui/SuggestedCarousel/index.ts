@@ -1,0 +1,1 @@
+export { SuggestedCarousel } from './SuggestedCarousel';

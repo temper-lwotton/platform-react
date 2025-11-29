@@ -2,7 +2,9 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { Icon } from './Icon';
+import { Icon } from '../Icon';
+import { Badge } from '../primitives';
+import styles from './SuggestedCarousel.module.scss';
 
 type SuggestionType = 'user' | 'space' | 'event' | 'discussion' | 'resource' | 'showcase';
 
@@ -200,22 +202,22 @@ export function SuggestedCarousel() {
     };
 
     return (
-        <div className="suggested-carousel">
-            <div className="suggested-carousel-header">
-                <div className="suggested-carousel-title-row">
+        <div className={styles.carousel}>
+            <div className={styles.header}>
+                <div className={styles.titleRow}>
                     <Icon icon="sparkles" size={20} />
-                    <h2 className="suggested-carousel-title">Suggested for you</h2>
+                    <h2 className={styles.title}>Suggested for you</h2>
                 </div>
-                <Link href="/suggestions" className="suggested-carousel-view-all">
+                <Link href="/suggestions" className={styles.viewAll}>
                     View all suggestions
                     <Icon icon="chevronRight" size={16} />
                 </Link>
             </div>
 
-            <div className="suggested-carousel-container">
+            <div className={styles.container}>
                 {canScrollLeft && (
                     <button
-                        className="suggested-carousel-nav suggested-carousel-nav--left"
+                        className={`${styles.navButton} ${styles.navLeft}`}
                         onClick={() => scroll('left')}
                         aria-label="Scroll left"
                     >
@@ -225,58 +227,58 @@ export function SuggestedCarousel() {
 
                 <div
                     ref={scrollContainerRef}
-                    className="suggested-carousel-scroll"
+                    className={styles.scrollContainer}
                     onScroll={checkScroll}
                 >
                     {MOCK_SUGGESTIONS.map((suggestion) => (
                         <Link
                             key={suggestion.id}
                             href={suggestion.url}
-                            className="suggested-card"
+                            className={styles.card}
                         >
-                            <div className="suggested-card-header">
-                                <div className="suggested-card-type">
-                                    <Icon icon={getTypeIcon(suggestion.type)} size={14} />
-                                    <span>{getTypeLabel(suggestion.type)}</span>
-                                </div>
+                            <div className={styles.cardHeader}>
+                                <Badge variant="outline" size="sm">
+                                    <Icon icon={getTypeIcon(suggestion.type)} size={12} />
+                                    {getTypeLabel(suggestion.type)}
+                                </Badge>
                             </div>
 
-                            <div className="suggested-card-content">
+                            <div className={styles.cardContent}>
                                 {suggestion.type === 'user' ? (
-                                    <div className="suggested-card-avatar">
+                                    <div className={styles.avatar}>
                                         {suggestion.image ? (
                                             <img src={suggestion.image} alt={suggestion.title} />
                                         ) : (
-                                            <span className="suggested-card-avatar-placeholder">
+                                            <span className={styles.avatarPlaceholder}>
                                                 {suggestion.title.charAt(0)}
                                             </span>
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="suggested-card-icon">
+                                    <div className={styles.iconWrapper}>
                                         <Icon icon={getTypeIcon(suggestion.type)} size={24} />
                                     </div>
                                 )}
 
-                                <h3 className="suggested-card-title">{suggestion.title}</h3>
-                                <p className="suggested-card-description">{suggestion.description}</p>
+                                <h3 className={styles.cardTitle}>{suggestion.title}</h3>
+                                <p className={styles.cardDescription}>{suggestion.description}</p>
 
                                 {suggestion.metadata && (
-                                    <div className="suggested-card-metadata">
+                                    <div className={styles.metadata}>
                                         {suggestion.metadata.memberCount && (
-                                            <span className="suggested-card-meta-item">
+                                            <span className={styles.metaItem}>
                                                 <Icon icon="users" size={12} />
                                                 {suggestion.metadata.memberCount} members
                                             </span>
                                         )}
                                         {suggestion.metadata.date && (
-                                            <span className="suggested-card-meta-item">
+                                            <span className={styles.metaItem}>
                                                 <Icon icon="calendar" size={12} />
                                                 {suggestion.metadata.date}
                                             </span>
                                         )}
                                         {suggestion.metadata.replies !== undefined && (
-                                            <span className="suggested-card-meta-item">
+                                            <span className={styles.metaItem}>
                                                 <Icon icon="chat" size={12} />
                                                 {suggestion.metadata.replies} replies
                                             </span>
@@ -285,7 +287,7 @@ export function SuggestedCarousel() {
                                 )}
                             </div>
 
-                            <div className="suggested-card-reason">
+                            <div className={styles.reason}>
                                 <Icon icon="sparkles" size={12} />
                                 <span>{suggestion.reason}</span>
                             </div>
@@ -295,7 +297,7 @@ export function SuggestedCarousel() {
 
                 {canScrollRight && (
                     <button
-                        className="suggested-carousel-nav suggested-carousel-nav--right"
+                        className={`${styles.navButton} ${styles.navRight}`}
                         onClick={() => scroll('right')}
                         aria-label="Scroll right"
                     >
