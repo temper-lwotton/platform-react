@@ -50,7 +50,7 @@ const navItems: NavItem[] = [
             { href: '/events', label: 'Events', icon: 'book' },
         ]
     },
-    { href: '/users', label: 'Contribute', requiresAuth: true },
+    { href: '/', label: 'Contribute', requiresAuth: true },
     {
         label: 'Exchange',
         requiresAuth: true,
@@ -145,7 +145,7 @@ export function Navigation() {
                             : pathname.startsWith(item.href!);
 
                         return (
-                            <li key={item.href}>
+                            <li key={`${item.href}-${item.label}`}>
                                 <Link
                                     href={item.href!}
                                     className={`main-nav-link ${isActive ? 'main-nav-link--active' : ''}`}
