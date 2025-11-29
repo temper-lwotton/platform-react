@@ -1,6 +1,7 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
+import styles from './SpaceDialog.module.scss';
 
 interface SpaceDialogProps {
     triggerLabel: string;
@@ -17,8 +18,8 @@ export function SpaceDialog({ triggerLabel, title, description }: SpaceDialogPro
                 </button>
             </Dialog.Trigger>
             <Dialog.Portal>
-                <Dialog.Overlay className="dialog-overlay" />
-                <Dialog.Content className="dialog-content">
+                <Dialog.Overlay className={styles.overlay} />
+                <Dialog.Content className={styles.content}>
                     <Dialog.Title>{title}</Dialog.Title>
                     {description && <Dialog.Description>{description}</Dialog.Description>}
                     <Dialog.Close asChild>

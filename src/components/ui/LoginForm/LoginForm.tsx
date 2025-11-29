@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { login, LoginCredentials } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import { Input, Button } from '@/components/ui/primitives';
+import styles from './LoginForm.module.scss';
 
 interface LoginFormProps {
     onSuccess?: () => void;
@@ -41,8 +42,8 @@ export function LoginForm({ onSuccess, redirectTo = '/spaces' }: LoginFormProps)
     };
 
     return (
-        <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-            {error && <div className="form-error-box">{error}</div>}
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+            {error && <div className={styles.errorBox}>{error}</div>}
 
             <Input
                 id="email"
