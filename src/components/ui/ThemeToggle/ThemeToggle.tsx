@@ -4,6 +4,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { Sun, Moon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import * as Switch from '@radix-ui/react-switch';
+import styles from './ThemeToggle.module.scss';
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -14,9 +15,7 @@ export function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return (
-      <div className="theme-toggle-placeholder" style={{ width: '60px', height: '32px' }} />
-    );
+    return <div className={styles.placeholder} />;
   }
 
   const isDark = resolvedTheme === 'dark';
@@ -26,17 +25,17 @@ export function ThemeToggle() {
   };
 
   return (
-    <div className="theme-toggle-wrapper">
-      <Sun size={16} className="theme-toggle-icon theme-toggle-icon--sun" />
+    <div className={styles.wrapper}>
+      <Sun size={16} className={`${styles.icon} ${styles.iconSun}`} />
       <Switch.Root
-        className="theme-toggle-switch"
+        className={styles.switch}
         checked={isDark}
         onCheckedChange={handleToggle}
         aria-label="Toggle dark mode"
       >
-        <Switch.Thumb className="theme-toggle-thumb" />
+        <Switch.Thumb className={styles.thumb} />
       </Switch.Root>
-      <Moon size={16} className="theme-toggle-icon theme-toggle-icon--moon" />
+      <Moon size={16} className={`${styles.icon} ${styles.iconMoon}`} />
     </div>
   );
 }

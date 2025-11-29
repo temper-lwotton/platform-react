@@ -1,0 +1,1 @@
+export { GlobalPostButton } from './GlobalPostButton';
