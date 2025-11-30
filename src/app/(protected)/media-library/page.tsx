@@ -6,6 +6,7 @@ import { MediaItem, MediaType, MediaOrientation } from '@/types/media';
 import MediaCard from '@/components/ui/MediaCard';
 import AltTextGenerator from '@/components/ui/AltTextGenerator';
 import SmartCropEditor from '@/components/ui/SmartCropEditor';
+import MediaUpload, { UploadFile } from '@/components/ui/MediaUpload';
 import { Button } from '@/components/ui/primitives/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Badge } from '@/components/ui/primitives/Badge';
@@ -13,6 +14,13 @@ import { Input } from '@/components/ui/primitives/Input';
 import { RadioGroup } from '@/components/ui/primitives/Radio';
 import { ToggleGroup } from '@/components/ui/primitives/ToggleGroup';
 import { Separator } from '@/components/ui/primitives/Separator';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/primitives/Dialog';
 import styles from './page.module.scss';
 
 export default function MediaLibraryPage() {
@@ -28,6 +36,7 @@ export default function MediaLibraryPage() {
   const [altTextMedia, setAltTextMedia] = useState<MediaItem | null>(null);
   const [smartCropMedia, setSmartCropMedia] = useState<MediaItem | null>(null);
   const [editMedia, setEditMedia] = useState<MediaItem | null>(null);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
 
   // Get all unique AI tags
   const allAITags = useMemo(() => {
@@ -137,6 +146,12 @@ export default function MediaLibraryPage() {
     // In a real app, this would trigger the AI cropping process
   };
 
+  const handleUploadComplete = (files: UploadFile[]) => {
+    console.log('Upload complete:', files);
+    // In a real app, this would add the files to the media library
+    // Keep dialog open so user can review results and add more files
+  };
+
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
@@ -175,7 +190,7 @@ export default function MediaLibraryPage() {
             AI-powered media management with smart tagging and cropping
           </p>
         </div>
-        <Button variant="primary" size="md">
+        <Button variant="primary" size="md" onClick={() => setShowUploadDialog(true)}>
           <Icon icon="upload" size={16} />
           Upload Media
         </Button>
@@ -373,6 +388,29 @@ export default function MediaLibraryPage() {
         onClose={() => setSmartCropMedia(null)}
         onSave={handleSaveSmartCrop}
       />
+
+      {/* Upload Dialog */}
+      <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
+        <DialogContent size="xl">
+          <DialogHeader>
+            <DialogTitle>Upload Media</DialogTitle>
+            <DialogDescription>
+              Upload images to your media library. Files will be automatically analyzed with AI for tags, colors, and content detection.
+            </DialogDescription>
+          </DialogHeader>
+
+          <MediaUpload onUploadComplete={handleUploadComplete} />
+
+          <div className={styles.uploadDialogFooter}>
+            <Button
+              variant="primary"
+              onClick={() => setShowUploadDialog(false)}
+            >
+              Done
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
