@@ -42,6 +42,12 @@ export type { RadioGroupProps, RadioOption, RadioSize, RadioOrientation } from '
 export { Switch } from './Switch';
 export type { SwitchProps, SwitchSize } from './Switch';
 
+export { ToggleGroup } from './ToggleGroup';
+export type { ToggleGroupProps, ToggleGroupSingleProps, ToggleGroupMultipleProps, ToggleOption, ToggleGroupSize, ToggleGroupOrientation } from './ToggleGroup';
+
+export { Separator } from './Separator';
+export type { SeparatorProps, SeparatorOrientation } from './Separator';
+
 export { Dropdown, DropdownItem, DropdownSeparator, DropdownLabel } from './Dropdown';
 export type { DropdownProps, DropdownItemProps, DropdownSeparatorProps, DropdownLabelProps } from './Dropdown';
 

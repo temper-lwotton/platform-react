@@ -11,6 +11,8 @@ import {
   DialogFooter,
 } from '../primitives/Dialog/Dialog';
 import { Button } from '../primitives/Button';
+import { RadioGroup } from '../primitives/Radio';
+import { Switch } from '../primitives/Switch';
 import { Icon } from '../Icon';
 import styles from './SmartCropEditor.module.scss';
 
@@ -106,22 +108,16 @@ export default function SmartCropEditor({
 
           {/* Aspect Ratio Selection */}
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Target Aspect Ratio</h3>
-            <div className={styles.ratioGrid}>
-              {aspectRatios.map((ratio) => (
-                <button
-                  key={ratio.value}
-                  className={`${styles.ratioButton} ${
-                    selectedRatio === ratio.value ? styles.selected : ''
-                  }`}
-                  onClick={() => setSelectedRatio(ratio.value)}
-                >
-                  <Icon icon={ratio.icon as any} size={24} />
-                  <span className={styles.ratioLabel}>{ratio.label}</span>
-                  <span className={styles.ratioValue}>{ratio.value}</span>
-                </button>
-              ))}
-            </div>
+            <RadioGroup
+              label="Target Aspect Ratio"
+              value={selectedRatio}
+              onValueChange={(value) => setSelectedRatio(value as AspectRatio)}
+              options={aspectRatios.map((ratio) => ({
+                value: ratio.value,
+                label: `${ratio.label} (${ratio.value})`,
+              }))}
+              orientation="horizontal"
+            />
           </div>
 
           {/* Preview */}
@@ -155,14 +151,10 @@ export default function SmartCropEditor({
                   <Icon icon="sparkles" size={20} className={styles.sparkleIcon} />
                   <h4>Generative Fill</h4>
                 </div>
-                <label className={styles.switch}>
-                  <input
-                    type="checkbox"
-                    checked={useGenerativeFill}
-                    onChange={(e) => setUseGenerativeFill(e.target.checked)}
-                  />
-                  <span className={styles.slider} />
-                </label>
+                <Switch
+                  checked={useGenerativeFill}
+                  onCheckedChange={setUseGenerativeFill}
+                />
               </div>
               <p className={styles.optionDescription}>
                 {useGenerativeFill

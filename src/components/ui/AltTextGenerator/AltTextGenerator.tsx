@@ -11,6 +11,8 @@ import {
   DialogFooter,
 } from '../primitives/Dialog/Dialog';
 import { Button } from '../primitives/Button';
+import { Textarea } from '../primitives/Textarea';
+import { RadioGroup } from '../primitives/Radio';
 import { Icon } from '../Icon';
 import styles from './AltTextGenerator.module.scss';
 
@@ -27,7 +29,7 @@ export default function AltTextGenerator({
   onClose,
   onSave,
 }: AltTextGeneratorProps) {
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string>('');
   const [customText, setCustomText] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -43,10 +45,11 @@ export default function AltTextGenerator({
     if (!media) return;
 
     let textToSave = '';
-    if (selectedOption !== null && selectedOption < 3) {
-      textToSave = media.aiAnalysis.suggestedAltTexts[selectedOption];
-    } else if (customText.trim()) {
+    if (selectedOption === 'custom') {
       textToSave = customText.trim();
+    } else if (selectedOption) {
+      const optionIndex = parseInt(selectedOption);
+      textToSave = media.aiAnalysis.suggestedAltTexts[optionIndex];
     }
 
     if (textToSave) {
@@ -56,7 +59,7 @@ export default function AltTextGenerator({
   };
 
   const handleClose = () => {
-    setSelectedOption(null);
+    setSelectedOption('');
     setCustomText('');
     onClose();
   };
@@ -112,53 +115,37 @@ export default function AltTextGenerator({
                 <p>Generating new alt text options...</p>
               </div>
             ) : (
-              <div className={styles.optionsList}>
-                {options.map((option, index) => (
-                  <button
-                    key={index}
-                    className={`${styles.option} ${
-                      selectedOption === index ? styles.selected : ''
-                    }`}
-                    onClick={() => {
-                      setSelectedOption(index);
-                      setCustomText('');
-                    }}
-                  >
-                    <div className={styles.optionHeader}>
-                      <Icon
-                        icon={selectedOption === index ? 'check-circle-2' : 'circle'}
-                        size={18}
-                        className={styles.optionIcon}
-                      />
-                      <span className={styles.optionLabel}>Option {index + 1}</span>
-                    </div>
-                    <p className={styles.optionText}>{option}</p>
-                  </button>
-                ))}
-              </div>
+              <RadioGroup
+                value={selectedOption !== 'custom' ? selectedOption : ''}
+                onValueChange={(value) => {
+                  setSelectedOption(value);
+                  setCustomText('');
+                }}
+                options={options.map((option, index) => ({
+                  value: String(index),
+                  label: `Option ${index + 1}`,
+                  helperText: option,
+                }))}
+                orientation="vertical"
+              />
             )}
           </div>
 
           {/* Custom Text */}
           <div className={styles.custom}>
-            <div className={styles.sectionHeader}>
-              <h3 className={styles.sectionTitle}>Custom Alt Text</h3>
-            </div>
-            <textarea
-              className={styles.textarea}
+            <Textarea
+              label="Custom Alt Text"
               placeholder="Write your own alt text..."
               value={customText}
               onChange={(e) => {
                 setCustomText(e.target.value);
                 if (e.target.value.trim()) {
-                  setSelectedOption(null);
+                  setSelectedOption('custom');
                 }
               }}
               rows={3}
+              helperText="Describe what the image shows. Be concise but descriptive."
             />
-            <p className={styles.hint}>
-              Describe what the image shows. Be concise but descriptive.
-            </p>
           </div>
 
           {/* Current Alt Text */}
@@ -177,7 +164,7 @@ export default function AltTextGenerator({
           <Button
             variant="primary"
             onClick={handleSave}
-            disabled={selectedOption === null && !customText.trim()}
+            disabled={!selectedOption && !customText.trim()}
           >
             Save Alt Text
           </Button>

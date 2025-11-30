@@ -9,6 +9,10 @@ import SmartCropEditor from '@/components/ui/SmartCropEditor';
 import { Button } from '@/components/ui/primitives/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Badge } from '@/components/ui/primitives/Badge';
+import { Input } from '@/components/ui/primitives/Input';
+import { RadioGroup } from '@/components/ui/primitives/Radio';
+import { ToggleGroup } from '@/components/ui/primitives/ToggleGroup';
+import { Separator } from '@/components/ui/primitives/Separator';
 import styles from './page.module.scss';
 
 export default function MediaLibraryPage() {
@@ -191,113 +195,98 @@ export default function MediaLibraryPage() {
 
           {/* Search */}
           <div className={styles.filterSection}>
-            <div className={styles.searchBox}>
-              <Icon icon="search" size={16} className={styles.searchIcon} />
-              <input
-                type="text"
-                placeholder="Search media..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchInput}
-              />
-              {searchQuery && (
-                <button
-                  className={styles.clearSearch}
-                  onClick={() => setSearchQuery('')}
-                >
-                  <Icon icon="x" size={14} />
-                </button>
-              )}
-            </div>
+            <Input
+              type="text"
+              placeholder="Search media..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              leftIcon={<Icon icon="search" size={16} />}
+              rightIcon={
+                searchQuery ? (
+                  <button
+                    className={styles.clearSearch}
+                    onClick={() => setSearchQuery('')}
+                    type="button"
+                  >
+                    <Icon icon="x" size={14} />
+                  </button>
+                ) : undefined
+              }
+              fullWidth
+            />
           </div>
+
+          <Separator />
 
           {/* Type Filter */}
           <div className={styles.filterSection}>
-            <h3 className={styles.filterTitle}>Type</h3>
-            <div className={styles.filterOptions}>
-              <button
-                className={`${styles.filterOption} ${
-                  selectedType === 'all' ? styles.active : ''
-                }`}
-                onClick={() => setSelectedType('all')}
-              >
-                <Icon icon="layers" size={16} />
-                All Types
-              </button>
-              <button
-                className={`${styles.filterOption} ${
-                  selectedType === 'image' ? styles.active : ''
-                }`}
-                onClick={() => setSelectedType('image')}
-              >
-                <Icon icon="image" size={16} />
-                Images
-              </button>
-            </div>
+            <RadioGroup
+              label="Type"
+              value={selectedType}
+              onValueChange={(value) => setSelectedType(value as MediaType | 'all')}
+              options={[
+                { value: 'all', label: 'All Types' },
+                { value: 'image', label: 'Images' },
+              ]}
+              orientation="vertical"
+            />
           </div>
+
+          <Separator />
 
           {/* Orientation Filter */}
           <div className={styles.filterSection}>
-            <h3 className={styles.filterTitle}>Orientation</h3>
-            <div className={styles.filterOptions}>
-              {(['all', 'portrait', 'landscape', 'square'] as const).map((orientation) => (
-                <button
-                  key={orientation}
-                  className={`${styles.filterOption} ${
-                    selectedOrientation === orientation ? styles.active : ''
-                  }`}
-                  onClick={() => setSelectedOrientation(orientation)}
-                >
-                  {orientation === 'all' && <Icon icon="grid-3x3" size={16} />}
-                  {orientation === 'portrait' && <Icon icon="rectangle-vertical" size={16} />}
-                  {orientation === 'landscape' && <Icon icon="rectangle-horizontal" size={16} />}
-                  {orientation === 'square' && <Icon icon="square" size={16} />}
-                  {orientation.charAt(0).toUpperCase() + orientation.slice(1)}
-                </button>
-              ))}
-            </div>
+            <RadioGroup
+              label="Orientation"
+              value={selectedOrientation}
+              onValueChange={(value) => setSelectedOrientation(value as MediaOrientation | 'all')}
+              options={[
+                { value: 'all', label: 'All' },
+                { value: 'portrait', label: 'Portrait' },
+                { value: 'landscape', label: 'Landscape' },
+                { value: 'square', label: 'Square' },
+              ]}
+              orientation="vertical"
+            />
           </div>
+
+          <Separator />
 
           {/* People Count Filter */}
           <div className={styles.filterSection}>
-            <h3 className={styles.filterTitle}>People</h3>
-            <div className={styles.filterOptions}>
-              {(['any', 'none', 'one', 'multiple'] as const).map((count) => (
-                <button
-                  key={count}
-                  className={`${styles.filterOption} ${
-                    peopleCountFilter === count ? styles.active : ''
-                  }`}
-                  onClick={() => setPeopleCountFilter(count)}
-                >
-                  <Icon icon="users" size={16} />
-                  {count === 'any' && 'Any'}
-                  {count === 'none' && 'No People'}
-                  {count === 'one' && 'One Person'}
-                  {count === 'multiple' && 'Multiple People'}
-                </button>
-              ))}
-            </div>
+            <RadioGroup
+              label="People"
+              value={peopleCountFilter}
+              onValueChange={(value) => setPeopleCountFilter(value as 'any' | 'none' | 'one' | 'multiple')}
+              options={[
+                { value: 'any', label: 'Any' },
+                { value: 'none', label: 'No People' },
+                { value: 'one', label: 'One Person' },
+                { value: 'multiple', label: 'Multiple People' },
+              ]}
+              orientation="vertical"
+            />
           </div>
+
+          <Separator />
 
           {/* AI Tags Filter */}
           <div className={styles.filterSection}>
-            <h3 className={styles.filterTitle}>AI-Detected Tags</h3>
-            <div className={styles.tagsList}>
-              {allAITags.slice(0, 20).map((tag) => (
-                <button
-                  key={tag}
-                  className={`${styles.tagButton} ${
-                    selectedTags.includes(tag) ? styles.active : ''
-                  }`}
-                  onClick={() => toggleTag(tag)}
-                >
-                  {tag}
-                  {selectedTags.includes(tag) && <Icon icon="x" size={12} />}
-                </button>
-              ))}
-            </div>
+            <ToggleGroup
+              label="AI-Detected Tags"
+              type="multiple"
+              value={selectedTags}
+              onValueChange={setSelectedTags}
+              options={allAITags.slice(0, 20).map((tag) => ({
+                value: tag,
+                label: tag,
+              }))}
+              orientation="vertical"
+              size="sm"
+            />
           </div>
+
+          <Separator />
 
           {/* Colors Filter */}
           <div className={styles.filterSection}>

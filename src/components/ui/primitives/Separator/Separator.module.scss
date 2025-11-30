@@ -1,0 +1,15 @@
+@use '../../../../styles/abstracts' as *;
+
+.separator {
+  background: var(--color-border);
+
+  &.orientation-horizontal {
+    height: 1px;
+    width: 100%;
+  }
+
+  &.orientation-vertical {
+    width: 1px;
+    height: 100%;
+  }
+}
