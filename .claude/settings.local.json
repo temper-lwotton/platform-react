@@ -23,7 +23,8 @@
       "Bash(src/components/ui/EngagementAnalysis/index.ts)",
       "Bash(do 'basename=$(basename $file .tsx)')",
       "Bash(tree:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { mockMediaItems } from '@/lib/mockMediaData';
+import { useState, useMemo, useEffect } from 'react';
 import { MediaItem, MediaType, MediaOrientation } from '@/types/media';
+import { getMediaList, updateMediaItem } from '@/lib/media-api';
+import type { MediaItem as APIMediaItem } from '@/lib/media-api';
 import MediaCard from '@/components/ui/MediaCard';
 import AltTextGenerator from '@/components/ui/AltTextGenerator';
 import SmartCropEditor from '@/components/ui/SmartCropEditor';
@@ -23,8 +24,43 @@ import {
 } from '@/components/ui/primitives/Dialog';
 import styles from './page.module.scss';
 
+/**
+ * Convert API MediaItem to local MediaItem format
+ */
+function convertAPIMediaItem(apiItem: APIMediaItem): MediaItem {
+  return {
+    id: String(apiItem.id),
+    url: apiItem.url,
+    thumbnailUrl: apiItem.thumbnailUrl || apiItem.url,
+    filename: apiItem.filename,
+    type: 'image' as MediaType,
+    orientation: apiItem.orientation || 'landscape',
+    width: apiItem.width || 0,
+    height: apiItem.height || 0,
+    size: apiItem.size,
+    uploadedAt: new Date(apiItem.uploadedAt),
+    uploadedBy: {
+      id: String(apiItem.uploadedBy.id),
+      name: apiItem.uploadedBy.name,
+      avatar: apiItem.uploadedBy.avatar || undefined,
+    },
+    altText: apiItem.altText || undefined,
+    aiAnalysis: {
+      tags: apiItem.aiAnalysis?.tags || [],
+      peopleCount: apiItem.aiAnalysis?.peopleCount || 0,
+      dominantColors: apiItem.aiAnalysis?.dominantColors || [],
+      suggestedAltTexts: apiItem.aiAnalysis?.suggestedAltTexts || [],
+      faces: apiItem.aiAnalysis?.faces,
+    },
+    smartCrops: [],
+    tags: apiItem.userTags || [],
+  };
+}
+
 export default function MediaLibraryPage() {
-  const [mediaItems, setMediaItems] = useState<MediaItem[]>(mockMediaItems);
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<MediaType | 'all'>('all');
   const [selectedOrientation, setSelectedOrientation] = useState<MediaOrientation | 'all'>('all');
@@ -37,6 +73,25 @@ export default function MediaLibraryPage() {
   const [smartCropMedia, setSmartCropMedia] = useState<MediaItem | null>(null);
   const [editMedia, setEditMedia] = useState<MediaItem | null>(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
+
+  // Load media items from API
+  useEffect(() => {
+    loadMediaItems();
+  }, []);
+
+  const loadMediaItems = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const items = await getMediaList({ sortOrder: 'desc' });
+      setMediaItems(items.map(convertAPIMediaItem));
+    } catch (err) {
+      console.error('Failed to load media:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load media');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Get all unique AI tags
   const allAITags = useMemo(() => {
@@ -129,12 +184,21 @@ export default function MediaLibraryPage() {
     peopleCountFilter,
   ]);
 
-  const handleSaveAltText = (mediaId: string, altText: string) => {
-    setMediaItems((items) =>
-      items.map((item) =>
-        item.id === mediaId ? { ...item, altText } : item
-      )
-    );
+  const handleSaveAltText = async (mediaId: string, altText: string) => {
+    try {
+      // Update via API
+      await updateMediaItem(Number(mediaId), { altText });
+
+      // Update local state
+      setMediaItems((items) =>
+        items.map((item) =>
+          item.id === mediaId ? { ...item, altText } : item
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update alt text:', err);
+      alert('Failed to update alt text. Please try again.');
+    }
   };
 
   const handleSaveSmartCrop = (
@@ -146,10 +210,11 @@ export default function MediaLibraryPage() {
     // In a real app, this would trigger the AI cropping process
   };
 
-  const handleUploadComplete = (files: UploadFile[]) => {
+  const handleUploadComplete = async (files: UploadFile[]) => {
     console.log('Upload complete:', files);
-    // In a real app, this would add the files to the media library
-    // Keep dialog open so user can review results and add more files
+
+    // Refresh the media library to show newly uploaded items
+    await loadMediaItems();
   };
 
   const toggleTag = (tag: string) => {
@@ -328,48 +393,79 @@ export default function MediaLibraryPage() {
 
         {/* Media Grid */}
         <main className={styles.main}>
-          <div className={styles.resultsHeader}>
-            <p className={styles.resultsCount}>
-              {filteredMedia.length} {filteredMedia.length === 1 ? 'item' : 'items'}
-            </p>
-            {activeFiltersCount > 0 && (
-              <div className={styles.activeFilters}>
-                {selectedTags.map((tag) => (
-                  <Badge key={tag} variant="primary" size="sm">
-                    {tag}
-                    <button
-                      className={styles.removeBadge}
-                      onClick={() => toggleTag(tag)}
-                    >
-                      <Icon icon="x" size={12} />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {filteredMedia.length === 0 ? (
-            <div className={styles.emptyState}>
-              <Icon icon="image-off" size={48} />
-              <h3>No media found</h3>
-              <p>Try adjusting your filters or uploading new media</p>
-              <Button variant="primary" onClick={clearFilters}>
-                Clear Filters
+          {loading ? (
+            <div className={styles.loadingState}>
+              <Icon icon="loader-2" size={48} className={styles.spinner} />
+              <h3>Loading media library...</h3>
+              <p>Please wait while we fetch your images</p>
+            </div>
+          ) : error ? (
+            <div className={styles.errorState}>
+              <Icon icon="alertCircle" size={48} />
+              <h3>Failed to load media</h3>
+              <p>{error}</p>
+              <Button variant="primary" onClick={loadMediaItems}>
+                <Icon icon="refresh-cw" size={16} />
+                Retry
               </Button>
             </div>
           ) : (
-            <div className={styles.grid}>
-              {filteredMedia.map((media) => (
-                <MediaCard
-                  key={media.id}
-                  media={media}
-                  onEdit={setEditMedia}
-                  onGenerateAltText={setAltTextMedia}
-                  onSmartCrop={setSmartCropMedia}
-                />
-              ))}
-            </div>
+            <>
+              <div className={styles.resultsHeader}>
+                <p className={styles.resultsCount}>
+                  {filteredMedia.length} {filteredMedia.length === 1 ? 'item' : 'items'}
+                </p>
+                {activeFiltersCount > 0 && (
+                  <div className={styles.activeFilters}>
+                    {selectedTags.map((tag) => (
+                      <Badge key={tag} variant="primary" size="sm">
+                        {tag}
+                        <button
+                          className={styles.removeBadge}
+                          onClick={() => toggleTag(tag)}
+                        >
+                          <Icon icon="x" size={12} />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {filteredMedia.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <Icon icon="image-off" size={48} />
+                  <h3>No media found</h3>
+                  <p>
+                    {mediaItems.length === 0
+                      ? 'Upload your first image to get started'
+                      : 'Try adjusting your filters or uploading new media'}
+                  </p>
+                  {mediaItems.length === 0 ? (
+                    <Button variant="primary" onClick={() => setShowUploadDialog(true)}>
+                      <Icon icon="upload" size={16} />
+                      Upload Media
+                    </Button>
+                  ) : (
+                    <Button variant="primary" onClick={clearFilters}>
+                      Clear Filters
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className={styles.grid}>
+                  {filteredMedia.map((media) => (
+                    <MediaCard
+                      key={media.id}
+                      media={media}
+                      onEdit={setEditMedia}
+                      onGenerateAltText={setAltTextMedia}
+                      onSmartCrop={setSmartCropMedia}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </main>
       </div>

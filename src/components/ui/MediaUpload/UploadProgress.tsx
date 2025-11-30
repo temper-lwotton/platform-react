@@ -133,31 +133,31 @@ export default function UploadProgress({
         )}
 
         {/* AI Analysis Results */}
-        {uploadFile.status === 'complete' && uploadFile.aiAnalysis && (
+        {uploadFile.status === 'complete' && uploadFile.mediaItem?.aiAnalysis && (
           <div className={styles.analysis}>
             <div className={styles.analysisSection}>
               <Icon icon="sparkles" size={14} />
               <div className={styles.tags}>
-                {uploadFile.aiAnalysis.tags.map((tag, index) => (
-                  <Badge key={index} variant="outline" size="sm">
-                    {tag}
+                {uploadFile.mediaItem.aiAnalysis.tags.slice(0, 5).map((tag) => (
+                  <Badge key={tag.id} variant="outline" size="sm">
+                    {tag.label}
                   </Badge>
                 ))}
               </div>
             </div>
-            {uploadFile.aiAnalysis.peopleCount > 0 && (
+            {uploadFile.mediaItem.aiAnalysis.peopleCount > 0 && (
               <div className={styles.analysisSection}>
                 <Icon icon="users" size={14} />
                 <span className={styles.analysisText}>
-                  {uploadFile.aiAnalysis.peopleCount}{' '}
-                  {uploadFile.aiAnalysis.peopleCount === 1 ? 'person' : 'people'} detected
+                  {uploadFile.mediaItem.aiAnalysis.peopleCount}{' '}
+                  {uploadFile.mediaItem.aiAnalysis.peopleCount === 1 ? 'person' : 'people'} detected
                 </span>
               </div>
             )}
             <div className={styles.analysisSection}>
               <Icon icon="image" size={14} />
               <div className={styles.colors}>
-                {uploadFile.aiAnalysis.dominantColors.map((color, index) => (
+                {uploadFile.mediaItem.aiAnalysis.dominantColors.map((color, index) => (
                   <div
                     key={index}
                     className={styles.colorSwatch}

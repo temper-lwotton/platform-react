@@ -5,6 +5,8 @@ import { Button } from '../primitives/Button';
 import { Icon } from '../Icon';
 import { Badge } from '../primitives/Badge';
 import UploadProgress from './UploadProgress';
+import { uploadMedia } from '@/lib/media-api';
+import type { MediaItem as APIMediaItem } from '@/lib/media-api';
 import styles from './MediaUpload.module.scss';
 
 export interface UploadFile {
@@ -14,11 +16,7 @@ export interface UploadFile {
   status: 'pending' | 'uploading' | 'processing' | 'analyzing' | 'complete' | 'error';
   progress: number;
   error?: string;
-  aiAnalysis?: {
-    tags: string[];
-    dominantColors: string[];
-    peopleCount: number;
-  };
+  mediaItem?: APIMediaItem;
 }
 
 interface MediaUploadProps {
@@ -26,6 +24,7 @@ interface MediaUploadProps {
   maxFiles?: number;
   maxFileSize?: number; // in MB
   acceptedFormats?: string[];
+  spaceId?: number; // Optional space ID to associate uploads
 }
 
 export default function MediaUpload({
@@ -33,6 +32,7 @@ export default function MediaUpload({
   maxFiles = 20,
   maxFileSize = 10,
   acceptedFormats = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+  spaceId,
 }: MediaUploadProps) {
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -105,7 +105,7 @@ export default function MediaUpload({
     setIsUploading(true);
 
     for (const uploadFile of files) {
-      await simulateUpload(uploadFile.id);
+      await performUpload(uploadFile.id, uploadFile.file);
     }
 
     setIsUploading(false);
@@ -114,37 +114,56 @@ export default function MediaUpload({
     onUploadComplete?.(completedFiles);
   };
 
-  const simulateUpload = async (fileId: string) => {
-    // Simulate upload progress
-    updateFileStatus(fileId, 'uploading', 0);
+  const performUpload = async (fileId: string, file: File) => {
+    try {
+      // Set uploading status
+      updateFileStatus(fileId, 'uploading', 0);
 
-    for (let i = 0; i <= 100; i += 10) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      updateFileStatus(fileId, 'uploading', i);
+      // Simulate progress for UI feedback (actual upload happens in one go)
+      const progressInterval = setInterval(() => {
+        setUploadFiles((prev) =>
+          prev.map((f) =>
+            f.id === fileId && f.progress < 90
+              ? { ...f, progress: f.progress + 10 }
+              : f
+          )
+        );
+      }, 200);
+
+      // Perform actual upload
+      const mediaItem = await uploadMedia(file, { spaceId });
+
+      // Clear progress simulation
+      clearInterval(progressInterval);
+
+      // Set analyzing status
+      updateFileStatus(fileId, 'analyzing', 100);
+
+      // Small delay to show the analyzing state
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Complete with real API response
+      setUploadFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileId
+            ? { ...f, status: 'complete', progress: 100, mediaItem }
+            : f
+        )
+      );
+    } catch (error) {
+      console.error('Upload error:', error);
+      setUploadFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileId
+            ? {
+                ...f,
+                status: 'error',
+                error: error instanceof Error ? error.message : 'Upload failed',
+              }
+            : f
+        )
+      );
     }
-
-    // Simulate processing
-    updateFileStatus(fileId, 'processing', 100);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    // Simulate AI analysis
-    updateFileStatus(fileId, 'analyzing', 100);
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    // Complete with mock AI analysis
-    const mockAnalysis = {
-      tags: ['nature', 'landscape', 'outdoor'],
-      dominantColors: ['#4A90E2', '#7ED321', '#F5A623'],
-      peopleCount: Math.floor(Math.random() * 3),
-    };
-
-    setUploadFiles((prev) =>
-      prev.map((f) =>
-        f.id === fileId
-          ? { ...f, status: 'complete', aiAnalysis: mockAnalysis }
-          : f
-      )
-    );
   };
 
   const updateFileStatus = (
