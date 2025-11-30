@@ -101,6 +101,15 @@ export function HomeSidebar() {
           <span className={styles.linkText}>Suggestions</span>
         </Link>
 
+        {/* Media Library Link */}
+        <Link
+          href="/media-library"
+          className={`${styles.link} ${isActive('/media-library') ? styles.linkActive : ''}`}
+        >
+          <Icon icon="image" size={18} className={styles.linkIcon} />
+          <span className={styles.linkText}>Media Library</span>
+        </Link>
+
         <Separator.Root className={styles.separator} />
 
         {/* My Spaces Section */}

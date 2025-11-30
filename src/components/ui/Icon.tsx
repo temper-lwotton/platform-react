@@ -70,10 +70,24 @@ import {
   Gift,
   DollarSign,
   Eye,
+  Upload,
+  Image,
+  Wand2,
+  Crop,
+  Loader2,
+  RefreshCw,
+  CheckCircle2,
+  ImageOff,
+  RectangleHorizontal,
+  RectangleVertical,
+  Grid3x3,
+  Maximize,
+  Layers,
+  CheckSquare,
 } from 'lucide-react';
 import { CSSProperties } from 'react';
 
-export type IconName = 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'mapPin' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'arrowUp' | 'arrowDown' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles' | 'lock' | 'rss' | 'globe' | 'plus' | 'search' | 'arrowUpDown' | 'list' | 'info' | 'package' | 'gift' | 'dollarSign' | 'eye';
+export type IconName = 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'mapPin' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'arrowUp' | 'arrowDown' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles' | 'lock' | 'rss' | 'globe' | 'plus' | 'search' | 'arrowUpDown' | 'list' | 'info' | 'package' | 'gift' | 'dollarSign' | 'eye' | 'upload' | 'image' | 'wand-2' | 'crop' | 'loader-2' | 'refresh-cw' | 'check-circle-2' | 'image-off' | 'rectangle-horizontal' | 'rectangle-vertical' | 'grid-3x3' | 'maximize' | 'layers' | 'check-square' | 'alert-circle' | 'square';
 
 interface IconProps {
   icon: IconName;
@@ -157,6 +171,22 @@ export function Icon({ icon, size = 24, className = '', style }: IconProps) {
     gift: Gift,
     dollarSign: DollarSign,
     eye: Eye,
+    upload: Upload,
+    image: Image,
+    'wand-2': Wand2,
+    crop: Crop,
+    'loader-2': Loader2,
+    'refresh-cw': RefreshCw,
+    'check-circle-2': CheckCircle2,
+    'image-off': ImageOff,
+    'rectangle-horizontal': RectangleHorizontal,
+    'rectangle-vertical': RectangleVertical,
+    'grid-3x3': Grid3x3,
+    maximize: Maximize,
+    layers: Layers,
+    'check-square': CheckSquare,
+    'alert-circle': AlertCircle,
+    square: Square,
   };
 
   const LucideIcon = iconMap[icon];

@@ -33,6 +33,11 @@
   flex-direction: column;
 }
 
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 // Text Truncation
 @mixin truncate($lines: 1) {
   @if $lines == 1 {
@@ -245,6 +250,45 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+// Typography Utilities
+@mixin font-heading-lg {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@mixin font-heading-md {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+@mixin font-heading-sm {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@mixin font-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+@mixin font-body-md {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+@mixin font-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@mixin font-body-xs {
+  font-size: 0.75rem;
+  line-height: 1.4;
 }
 
 // Dark Mode Support

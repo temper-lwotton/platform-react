@@ -28,18 +28,18 @@ const navItems: NavItem[] = [
         label: 'Grow',
         requiresAuth: true,
         children: [
-            { href: '/showcases', label: 'Funding', icon: 'star' },
-            { href: '/resources', label: 'Opportunities', icon: 'book' },
-            { href: '/exchanges', label: 'Find an expert', icon: 'repeat' }
+            { href: '/testing', label: 'Funding', icon: 'star' },
+            { href: '/testing', label: 'Opportunities', icon: 'book' },
+            { href: '/testing', label: 'Find an expert', icon: 'repeat' }
         ]
     },
     {
         label: 'Collaborate',
         requiresAuth: true,
         children: [
-            { href: '/showcases', label: 'Success Stories', icon: 'star' },
-            { href: '/resources', label: 'Knowledge Base', icon: 'book' },
-            { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
+            { href: '/test', label: 'Navigation item', icon: 'star' },
+            { href: '/test', label: 'Navigation item', icon: 'book' },
+            { href: '/test', label: 'Navigation item', icon: 'repeat' }
         ]
     },
     {
@@ -51,13 +51,20 @@ const navItems: NavItem[] = [
             { href: '/events', label: 'Events', icon: 'book' },
         ]
     },
-    { href: '/', label: 'Contribute', requiresAuth: true },
+    {
+        label: 'Contribute',
+        requiresAuth: true,
+        children: [
+            { href: '/test', label: 'Navigation item', icon: 'star' },
+            { href: '/test', label: 'Navigation item', icon: 'book' },
+            { href: '/test', label: 'Navigation item', icon: 'book' },
+        ]
+    },
     {
         label: 'Exchange',
         requiresAuth: true,
         children: [
-            { href: '/showcases', label: 'Success Stories', icon: 'star' },
-            { href: '/resources', label: 'Knowledge Base', icon: 'book' },
+            { href: '/test', label: 'Navigation item', icon: 'star' },
             { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
         ]
     },

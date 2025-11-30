@@ -1,0 +1,307 @@
+@use '../../../styles/abstracts' as *;
+
+.page {
+  @include flex-column;
+  gap: 24px;
+  padding: 24px;
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+}
+
+.header {
+  @include flex-row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.titleSection {
+  @include flex-column;
+  gap: 6px;
+}
+
+.title {
+  @include font-heading-lg;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  @include font-body-md;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.content {
+  @include flex-row;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.sidebar {
+  @include flex-column;
+  gap: 20px;
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 20px;
+  position: sticky;
+  top: 24px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+.sidebarHeader {
+  @include flex-row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.sidebarTitle {
+  @include font-body-md;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.filterSection {
+  @include flex-column;
+  gap: 12px;
+}
+
+.filterTitle {
+  @include font-body-sm;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+}
+
+.searchBox {
+  position: relative;
+  @include flex-row;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 36px 10px 36px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  @include font-body-sm;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--color-bg-primary);
+  }
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.clearSearch {
+  position: absolute;
+  right: 8px;
+  @include flex-center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+}
+
+.filterOptions {
+  @include flex-column;
+  gap: 6px;
+}
+
+.filterOption {
+  @include flex-row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--color-text-secondary);
+  @include font-body-sm;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+
+  &:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
+
+  &.active {
+    background: rgba(var(--color-primary-rgb), 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 500;
+  }
+}
+
+.tagsList {
+  @include flex-row;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tagButton {
+  @include flex-row;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 6px;
+  color: var(--color-text-secondary);
+  @include font-body-xs;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-border-hover);
+    background: var(--color-bg-tertiary);
+  }
+
+  &.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    font-weight: 500;
+  }
+}
+
+.colorsList {
+  @include flex-row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.colorButton {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  @include flex-center;
+
+  &:hover {
+    transform: scale(1.1);
+    border-color: var(--color-border-hover);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    border-width: 3px;
+    transform: scale(1.15);
+  }
+}
+
+.colorCheck {
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.main {
+  @include flex-column;
+  gap: 20px;
+  flex: 1;
+  min-width: 0;
+}
+
+.resultsHeader {
+  @include flex-row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.resultsCount {
+  @include font-body-sm;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.activeFilters {
+  @include flex-row;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.removeBadge {
+  @include flex-center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-left: 4px;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.emptyState {
+  @include flex-column;
+  @include flex-center;
+  gap: 16px;
+  padding: 80px 20px;
+  text-align: center;
+  color: var(--color-text-tertiary);
+
+  svg {
+    opacity: 0.5;
+  }
+
+  h3 {
+    @include font-heading-sm;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  p {
+    @include font-body-md;
+    margin: 0;
+  }
+}

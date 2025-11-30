@@ -1,0 +1,195 @@
+@use '../../../styles/abstracts' as *;
+
+.content {
+  @include flex-column;
+  gap: 24px;
+}
+
+.preview {
+  @include flex-row;
+  gap: 16px;
+  padding: 16px;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  align-items: center;
+}
+
+.previewImage {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-primary);
+}
+
+.previewInfo {
+  @include flex-column;
+  gap: 4px;
+}
+
+.filename {
+  @include font-body-sm;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.dimensions {
+  @include font-body-xs;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.options {
+  @include flex-column;
+  gap: 12px;
+}
+
+.sectionHeader {
+  @include flex-row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  @include font-body-sm;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.generating {
+  @include flex-column;
+  @include flex-center;
+  gap: 12px;
+  padding: 40px;
+  color: var(--color-text-secondary);
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.optionsList {
+  @include flex-column;
+  gap: 12px;
+}
+
+.option {
+  @include flex-column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--color-bg-primary);
+  border: 2px solid var(--color-border-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-border-hover);
+    background: var(--color-bg-tertiary);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb), 0.05);
+  }
+}
+
+.optionHeader {
+  @include flex-row;
+  align-items: center;
+  gap: 8px;
+}
+
+.optionIcon {
+  color: var(--color-text-tertiary);
+
+  .option.selected & {
+    color: var(--color-primary);
+  }
+}
+
+.optionLabel {
+  @include font-body-xs;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.optionText {
+  @include font-body-sm;
+  color: var(--color-text-primary);
+  margin: 0 0 0 26px;
+  line-height: 1.5;
+}
+
+.custom {
+  @include flex-column;
+  gap: 12px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.hint {
+  @include font-body-xs;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.current {
+  @include flex-column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.currentLabel {
+  @include font-body-xs;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.currentText {
+  @include font-body-sm;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.5;
+}
