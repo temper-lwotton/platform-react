@@ -81,7 +81,11 @@ export default function UploadProgress({
       {/* File Info */}
       <div className={styles.info}>
         <div className={styles.header}>
-          <h4 className={styles.filename}>{uploadFile.file.name}</h4>
+          <h4 className={styles.filename}>
+            {uploadFile.status === 'complete' && uploadFile.mediaItem?.seoFilename
+              ? uploadFile.mediaItem.seoFilename
+              : uploadFile.file.name}
+          </h4>
           <div className={styles.actions}>
             {uploadFile.status === 'complete' && (
               <Icon icon="check-circle-2" size={16} className={styles.successIcon} />
@@ -107,6 +111,15 @@ export default function UploadProgress({
           <span className={styles.separator}>•</span>
           <span className={styles.fileType}>{uploadFile.file.type.split('/')[1].toUpperCase()}</span>
         </div>
+
+        {/* SEO Filename Info */}
+        {uploadFile.status === 'complete' && uploadFile.mediaItem?.seoFilename && (
+          <div className={styles.seoFilename}>
+            <Icon icon="fileText" size={14} />
+            <span className={styles.seoLabel}>Original:</span>
+            <span className={styles.originalFilename}>{uploadFile.file.name}</span>
+          </div>
+        )}
 
         {/* Status */}
         <div className={styles.status}>
@@ -135,16 +148,28 @@ export default function UploadProgress({
         {/* AI Analysis Results */}
         {uploadFile.status === 'complete' && uploadFile.mediaItem?.aiAnalysis && (
           <div className={styles.analysis}>
-            <div className={styles.analysisSection}>
-              <Icon icon="sparkles" size={14} />
-              <div className={styles.tags}>
-                {uploadFile.mediaItem.aiAnalysis.tags.slice(0, 5).map((tag) => (
-                  <Badge key={tag.id} variant="outline" size="sm">
-                    {tag.label}
-                  </Badge>
-                ))}
+            {/* Show tags if available */}
+            {uploadFile.mediaItem.aiAnalysis.tags && uploadFile.mediaItem.aiAnalysis.tags.length > 0 ? (
+              <div className={styles.analysisSection}>
+                <Icon icon="sparkles" size={14} />
+                <div className={styles.tags}>
+                  {uploadFile.mediaItem.aiAnalysis.tags.slice(0, 5).map((tag) => (
+                    <Badge key={tag.id} variant="outline" size="sm">
+                      {tag.label}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className={styles.analysisSection}>
+                <Icon icon="alertCircle" size={14} />
+                <span className={styles.analysisWarning}>
+                  No AI tags detected - backend AI may not be fully configured
+                </span>
+              </div>
+            )}
+
+            {/* Show people count if detected */}
             {uploadFile.mediaItem.aiAnalysis.peopleCount > 0 && (
               <div className={styles.analysisSection}>
                 <Icon icon="users" size={14} />
@@ -154,19 +179,23 @@ export default function UploadProgress({
                 </span>
               </div>
             )}
-            <div className={styles.analysisSection}>
-              <Icon icon="image" size={14} />
-              <div className={styles.colors}>
-                {uploadFile.mediaItem.aiAnalysis.dominantColors.map((color, index) => (
-                  <div
-                    key={index}
-                    className={styles.colorSwatch}
-                    style={{ backgroundColor: color }}
-                    title={color}
-                  />
-                ))}
+
+            {/* Show colors if available */}
+            {uploadFile.mediaItem.aiAnalysis.dominantColors && uploadFile.mediaItem.aiAnalysis.dominantColors.length > 0 && (
+              <div className={styles.analysisSection}>
+                <Icon icon="image" size={14} />
+                <div className={styles.colors}>
+                  {uploadFile.mediaItem.aiAnalysis.dominantColors.map((color, index) => (
+                    <div
+                      key={index}
+                      className={styles.colorSwatch}
+                      style={{ backgroundColor: color }}
+                      title={color}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>

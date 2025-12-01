@@ -17,6 +17,8 @@ export interface UploadFile {
   progress: number;
   error?: string;
   mediaItem?: APIMediaItem;
+  renameMode?: 'auto' | 'custom' | 'none';
+  customFilename?: string;
 }
 
 interface MediaUploadProps {
@@ -37,6 +39,8 @@ export default function MediaUpload({
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [renameMode, setRenameMode] = useState<'auto' | 'custom' | 'none'>('auto');
+  const [customFilename, setCustomFilename] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const createFilePreview = (file: File): Promise<string> => {
@@ -87,6 +91,8 @@ export default function MediaUpload({
         status: validation.valid ? 'pending' : 'error',
         progress: 0,
         error: validation.error,
+        renameMode,
+        customFilename: renameMode === 'custom' ? customFilename : undefined,
       };
 
       newUploadFiles.push(uploadFile);
@@ -130,8 +136,22 @@ export default function MediaUpload({
         );
       }, 200);
 
+      // Get upload file to access rename mode
+      const uploadFile = uploadFiles.find(f => f.id === fileId);
+
+      // Build upload options based on rename mode
+      const uploadOptions: any = { spaceId };
+
+      if (uploadFile?.renameMode === 'auto') {
+        uploadOptions.autoRename = true;
+      } else if (uploadFile?.renameMode === 'custom' && uploadFile.customFilename) {
+        uploadOptions.customFilename = uploadFile.customFilename;
+      } else if (uploadFile?.renameMode === 'none') {
+        uploadOptions.autoRename = false;
+      }
+
       // Perform actual upload
-      const mediaItem = await uploadMedia(file, { spaceId });
+      const mediaItem = await uploadMedia(file, uploadOptions);
 
       // Clear progress simulation
       clearInterval(progressInterval);
@@ -240,6 +260,68 @@ export default function MediaUpload({
 
   return (
     <div className={styles.container}>
+      {/* SEO Filename Settings */}
+      <div className={styles.seoSettings}>
+        <h3 className={styles.seoTitle}>Filename SEO</h3>
+        <div className={styles.radioGroup}>
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="renameMode"
+              value="auto"
+              checked={renameMode === 'auto'}
+              onChange={(e) => setRenameMode('auto')}
+              disabled={isUploading}
+            />
+            <div className={styles.radioContent}>
+              <strong>Auto-generate (Recommended)</strong>
+              <p>AI analyzes images and creates SEO-friendly filenames</p>
+            </div>
+          </label>
+
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="renameMode"
+              value="custom"
+              checked={renameMode === 'custom'}
+              onChange={(e) => setRenameMode('custom')}
+              disabled={isUploading}
+            />
+            <div className={styles.radioContent}>
+              <strong>Custom filename</strong>
+              <p>Provide your own SEO-friendly filename</p>
+            </div>
+          </label>
+
+          {renameMode === 'custom' && (
+            <input
+              type="text"
+              className={styles.customFilenameInput}
+              placeholder="e.g., florida-keys-resort-2025"
+              value={customFilename}
+              onChange={(e) => setCustomFilename(e.target.value)}
+              disabled={isUploading}
+            />
+          )}
+
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="renameMode"
+              value="none"
+              checked={renameMode === 'none'}
+              onChange={(e) => setRenameMode('none')}
+              disabled={isUploading}
+            />
+            <div className={styles.radioContent}>
+              <strong>Keep original</strong>
+              <p>Use random hash (original behavior)</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
       {/* Drop Zone */}
       <div
         className={`${styles.dropZone} ${isDragging ? styles.dragging : ''} ${

@@ -29,6 +29,7 @@ export interface ApiResponse<T> {
 export interface MediaItem {
   id: number;
   filename: string;
+  seoFilename?: string; // SEO-optimized filename
   url: string;
   thumbnailUrl: string | null;
   size: number;
@@ -99,6 +100,8 @@ export interface MediaUploadOptions {
   description?: string;
   altText?: string;
   userTags?: string[];
+  autoRename?: boolean; // Enable AI-generated SEO filename (default: true)
+  customFilename?: string; // Custom SEO filename (overrides autoRename)
 }
 
 export interface MediaUpdateRequest {
@@ -159,6 +162,14 @@ export async function uploadMedia(
     options.userTags.forEach(tag => {
       formData.append('userTags[]', tag);
     });
+  }
+
+  // SEO filename options
+  if (options?.customFilename) {
+    formData.append('customFilename', options.customFilename);
+  }
+  if (options?.autoRename !== undefined) {
+    formData.append('autoRename', options.autoRename.toString());
   }
 
   const token = getToken();
