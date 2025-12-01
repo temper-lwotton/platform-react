@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { MediaItem, MediaType, MediaOrientation } from '@/types/media';
-import { getMediaList, updateMediaItem } from '@/lib/media-api';
+import { getMediaList, updateMediaItem, deleteMediaItem } from '@/lib/media-api';
 import type { MediaItem as APIMediaItem } from '@/lib/media-api';
 import MediaCard from '@/components/ui/MediaCard';
 import AltTextGenerator from '@/components/ui/AltTextGenerator';
@@ -33,6 +33,7 @@ function convertAPIMediaItem(apiItem: APIMediaItem): MediaItem {
     url: apiItem.url,
     thumbnailUrl: apiItem.thumbnailUrl || apiItem.url,
     filename: apiItem.filename,
+    seoFilename: apiItem.seoFilename,
     type: 'image' as MediaType,
     orientation: apiItem.orientation || 'landscape',
     width: apiItem.width || 0,
@@ -73,6 +74,8 @@ export default function MediaLibraryPage() {
   const [smartCropMedia, setSmartCropMedia] = useState<MediaItem | null>(null);
   const [editMedia, setEditMedia] = useState<MediaItem | null>(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const [deleteConfirmMedia, setDeleteConfirmMedia] = useState<MediaItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Load media items from API
   useEffect(() => {
@@ -215,6 +218,30 @@ export default function MediaLibraryPage() {
 
     // Refresh the media library to show newly uploaded items
     await loadMediaItems();
+  };
+
+  const handleDelete = async (media: MediaItem) => {
+    setDeleteConfirmMedia(media);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmMedia) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteMediaItem(Number(deleteConfirmMedia.id));
+
+      // Remove from local state
+      setMediaItems((items) => items.filter((item) => item.id !== deleteConfirmMedia.id));
+
+      // Close dialog
+      setDeleteConfirmMedia(null);
+    } catch (err) {
+      console.error('Failed to delete media:', err);
+      alert('Failed to delete media item. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const toggleTag = (tag: string) => {
@@ -461,6 +488,7 @@ export default function MediaLibraryPage() {
                       onEdit={setEditMedia}
                       onGenerateAltText={setAltTextMedia}
                       onSmartCrop={setSmartCropMedia}
+                      onDelete={handleDelete}
                     />
                   ))}
                 </div>
@@ -503,6 +531,45 @@ export default function MediaLibraryPage() {
               onClick={() => setShowUploadDialog(false)}
             >
               Done
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteConfirmMedia} onOpenChange={(open) => !open && setDeleteConfirmMedia(null)}>
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>Delete Media Item</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{deleteConfirmMedia?.filename}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className={styles.dialogActions}>
+            <Button
+              variant="ghost"
+              onClick={() => setDeleteConfirmMedia(null)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={confirmDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Icon icon="loader-2" size={16} className={styles.spinner} />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Icon icon="x" size={16} />
+                  Delete
+                </>
+              )}
             </Button>
           </div>
         </DialogContent>

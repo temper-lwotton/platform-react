@@ -12,6 +12,7 @@ interface MediaCardProps {
   onEdit: (media: MediaItem) => void;
   onGenerateAltText: (media: MediaItem) => void;
   onSmartCrop: (media: MediaItem) => void;
+  onDelete?: (media: MediaItem) => void;
   onSelect?: (media: MediaItem) => void;
   isSelected?: boolean;
 }
@@ -21,6 +22,7 @@ export default function MediaCard({
   onEdit,
   onGenerateAltText,
   onSmartCrop,
+  onDelete,
   onSelect,
   isSelected = false,
 }: MediaCardProps) {
@@ -106,6 +108,15 @@ export default function MediaCard({
             >
               <Icon icon="pencil" size={16} />
             </button>
+            {onDelete && (
+              <button
+                className={`${styles.actionButton} ${styles.deleteButton}`}
+                onClick={() => onDelete(media)}
+                title="Delete"
+              >
+                <Icon icon="x" size={16} />
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -113,7 +124,9 @@ export default function MediaCard({
       {/* Media Info */}
       <div className={styles.info}>
         <div className={styles.header}>
-          <h3 className={styles.filename}>{media.filename}</h3>
+          <h3 className={styles.filename}>
+            {media.seoFilename || media.filename}
+          </h3>
           {!media.altText && (
             <Icon
               icon="alert-circle"

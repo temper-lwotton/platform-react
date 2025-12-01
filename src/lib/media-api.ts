@@ -365,8 +365,29 @@ export async function deleteMediaItem(id: number): Promise<void> {
     headers,
   });
 
+  // Handle 204 No Content (empty response body)
+  if (response.status === 204) {
+    return;
+  }
+
+  // Handle JSON response
   if (!response.ok) {
-    throw new Error('Delete failed');
+    // Try to parse error response
+    try {
+      const result: ApiResponse<null> = await response.json();
+      throw new Error(result.error?.message || 'Delete failed');
+    } catch {
+      throw new Error('Delete failed');
+    }
+  }
+
+  // If response has content, parse it
+  const text = await response.text();
+  if (text) {
+    const result: ApiResponse<null> = JSON.parse(text);
+    if (!result.success) {
+      throw new Error(result.error?.message || 'Delete failed');
+    }
   }
 }
 

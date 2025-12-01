@@ -136,6 +136,15 @@ export function UserMenu() {
                     <span>Preferences</span>
                 </Link>
 
+                {/* Media Library Link */}
+                <Link
+                    href="/media-library"
+                    className={styles.item}>
+
+                    <Icon icon="image" size={16} />
+                    <span>Media Library</span>
+                </Link>
+
                 <div className={styles.divider} />
 
                 <button

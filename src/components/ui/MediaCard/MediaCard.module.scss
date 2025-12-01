@@ -47,6 +47,13 @@
   @include flex-row;
   gap: 6px;
   z-index: 2;
+
+  // Style badges with white background and blur
+  > * {
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(4px);
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
 }
 
 .selectButton {
@@ -112,6 +119,13 @@
     background: var(--color-primary);
     color: white;
     transform: scale(1.1);
+  }
+
+  &.deleteButton {
+    &:hover {
+      background: var(--color-error, #ef4444);
+      color: white;
+    }
   }
 }
 

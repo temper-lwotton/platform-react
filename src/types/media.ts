@@ -38,6 +38,7 @@ export interface MediaItem {
   url: string;
   thumbnailUrl: string;
   filename: string;
+  seoFilename?: string; // SEO-optimized filename
   type: MediaType;
   orientation: MediaOrientation;
   width: number;
