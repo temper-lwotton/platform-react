@@ -18,7 +18,9 @@ import FieldPalette from './palette/FieldPalette';
 import FormCanvas from './canvas/FormCanvas';
 import FieldSettingsPanel from './settings/FieldSettingsPanel';
 import FormPreview from './preview/FormPreview';
+import KeyboardShortcutsHelp from './KeyboardShortcutsHelp';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { FormField } from '@/types/form-builder';
 import styles from './FormBuilder.module.scss';
 
 function FormBuilderContent() {
@@ -35,8 +37,11 @@ function FormBuilderContent() {
     bulkDuplicateFields,
     copyFields,
     pasteFields,
+    addField,
+    selectField,
   } = useFormBuilder();
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [showShortcutsHelp, setShowShortcutsHelp] = React.useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -47,12 +52,98 @@ function FormBuilderContent() {
     useSensor(KeyboardSensor)
   );
 
+  // Helper function to create a field with default config
+  const createQuickField = (type: FormField['type'], label: string): FormField => {
+    return {
+      id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      type,
+      label,
+      validations: [],
+      required: false,
+    };
+  };
+
   // Keyboard shortcuts
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Ignore shortcuts when typing in inputs/textareas
       const target = event.target as HTMLElement;
       const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+
+      // Show shortcuts help with ?
+      if (event.key === '?' && !isInputField && state.mode === 'builder') {
+        event.preventDefault();
+        setShowShortcutsHelp((prev) => !prev);
+        return;
+      }
+
+      // Quick field insertion (only in builder mode, not in input fields)
+      if (state.mode === 'builder' && !isInputField && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        let field: FormField | null = null;
+
+        switch (event.key.toLowerCase()) {
+          case 't':
+            field = createQuickField('text', 'Text Field');
+            break;
+          case 'e':
+            field = createQuickField('email', 'Email Address');
+            break;
+          case 'n':
+            field = createQuickField('number', 'Number');
+            break;
+          case 'p':
+            field = createQuickField('tel', 'Phone Number');
+            break;
+          case 's':
+            field = createQuickField('select', 'Select');
+            break;
+          case 'r':
+            field = createQuickField('radio', 'Radio Group');
+            break;
+          case 'c':
+            field = createQuickField('checkbox', 'Checkbox');
+            break;
+          case 'd':
+            field = createQuickField('date', 'Date');
+            break;
+          case 'f':
+            field = createQuickField('file', 'File Upload');
+            break;
+        }
+
+        if (field) {
+          event.preventDefault();
+          addField(field, state.selectedSectionId || undefined);
+          return;
+        }
+      }
+
+      // Arrow key navigation between fields
+      if (!isInputField && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+        if (state.selectedFieldIds.length === 1 && state.fields.length > 0) {
+          event.preventDefault();
+          const currentIndex = state.fields.findIndex((f) => f.id === state.selectedFieldIds[0]);
+
+          if (currentIndex !== -1) {
+            let newIndex: number;
+            if (event.key === 'ArrowUp') {
+              newIndex = currentIndex > 0 ? currentIndex - 1 : state.fields.length - 1;
+            } else {
+              newIndex = currentIndex < state.fields.length - 1 ? currentIndex + 1 : 0;
+            }
+            selectField(state.fields[newIndex].id);
+          }
+          return;
+        }
+      }
+
+      // Enter to focus settings panel (when field is selected)
+      if (event.key === 'Enter' && !isInputField && state.selectedFieldIds.length === 1) {
+        event.preventDefault();
+        // The field is already selected, settings panel should be visible
+        // We could add auto-focus to first input in settings panel here
+        return;
+      }
 
       // Cmd/Ctrl + Z for undo
       if ((event.metaKey || event.ctrlKey) && event.key === 'z' && !event.shiftKey) {
@@ -132,6 +223,8 @@ function FormBuilderContent() {
     bulkDuplicateFields,
     copyFields,
     pasteFields,
+    addField,
+    selectField,
   ]);
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -240,6 +333,11 @@ function FormBuilderContent() {
           </main>
         )}
       </div>
+
+      <KeyboardShortcutsHelp
+        open={showShortcutsHelp}
+        onOpenChange={setShowShortcutsHelp}
+      />
     </div>
   );
 }

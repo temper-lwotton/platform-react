@@ -1,47 +1,96 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FIELD_PALETTE_ITEMS } from '../field-palette-config';
 import FieldPaletteItem from './FieldPaletteItem';
 import FieldTemplateItem from './FieldTemplateItem';
 import { useFormBuilder } from '../FormBuilderProvider';
 import * as Separator from '@radix-ui/react-separator';
 import * as Tabs from '@radix-ui/react-tabs';
-import { FolderOpen, LayoutList, Star, Mail, MapPin, CreditCard, Calendar, User } from 'lucide-react';
+import { FolderOpen, LayoutList, Star, Mail, MapPin, CreditCard, Calendar, User, Search, X } from 'lucide-react';
 import styles from './FieldPalette.module.scss';
 
 export default function FieldPalette() {
   const { state } = useFormBuilder();
   const [activeTab, setActiveTab] = useState('fields');
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Listen for Cmd+K or / to focus search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+
+      if (((e.metaKey || e.ctrlKey) && e.key === 'k') || (e.key === '/' && !isInputField)) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Get the selected section if any
   const selectedSection = state.sections.find((s) => s.id === state.selectedSectionId);
 
-  // Group fields by category
+  // Filter function for search
+  const matchesSearch = (text: string) => {
+    if (!searchQuery) return true;
+    return text.toLowerCase().includes(searchQuery.toLowerCase());
+  };
+
+  // Group fields by category with search filter
   const basicFields = FIELD_PALETTE_ITEMS.filter((item) =>
-    ['text', 'textarea', 'email', 'number', 'tel', 'url', 'currency'].includes(item.type)
+    ['text', 'textarea', 'email', 'number', 'tel', 'url', 'currency'].includes(item.type) &&
+    (matchesSearch(item.label) || matchesSearch(item.description))
   );
 
   const choiceFields = FIELD_PALETTE_ITEMS.filter((item) =>
-    ['select', 'radio', 'checkbox', 'checkbox-group'].includes(item.type)
+    ['select', 'radio', 'checkbox', 'checkbox-group'].includes(item.type) &&
+    (matchesSearch(item.label) || matchesSearch(item.description))
   );
 
   const dateTimeFields = FIELD_PALETTE_ITEMS.filter((item) =>
-    ['date', 'time'].includes(item.type)
+    ['date', 'time'].includes(item.type) &&
+    (matchesSearch(item.label) || matchesSearch(item.description))
   );
 
   const advancedFields = FIELD_PALETTE_ITEMS.filter((item) =>
-    ['file', 'file-multiple', 'switch', 'rating', 'slider', 'signature', 'color'].includes(item.type)
+    ['file', 'file-multiple', 'switch', 'rating', 'slider', 'signature', 'color'].includes(item.type) &&
+    (matchesSearch(item.label) || matchesSearch(item.description))
   );
 
-  // Group templates by category
-  const contactTemplates = state.templates.filter((t) => t.category === 'contact');
-  const addressTemplates = state.templates.filter((t) => t.category === 'address');
-  const paymentTemplates = state.templates.filter((t) => t.category === 'payment');
-  const dateTimeTemplates = state.templates.filter((t) => t.category === 'date-time');
-  const personalTemplates = state.templates.filter((t) => t.category === 'personal');
-  const customTemplates = state.templates.filter((t) => t.category === 'custom');
-  const otherTemplates = state.templates.filter((t) => t.category === 'other');
+  // Group templates by category with search filter
+  const contactTemplates = state.templates.filter((t) =>
+    t.category === 'contact' &&
+    (matchesSearch(t.name) || matchesSearch(t.description || ''))
+  );
+  const addressTemplates = state.templates.filter((t) =>
+    t.category === 'address' &&
+    (matchesSearch(t.name) || matchesSearch(t.description || ''))
+  );
+  const paymentTemplates = state.templates.filter((t) =>
+    t.category === 'payment' &&
+    (matchesSearch(t.name) || matchesSearch(t.description || ''))
+  );
+  const dateTimeTemplates = state.templates.filter((t) =>
+    t.category === 'date-time' &&
+    (matchesSearch(t.name) || matchesSearch(t.description || ''))
+  );
+  const personalTemplates = state.templates.filter((t) =>
+    t.category === 'personal' &&
+    (matchesSearch(t.name) || matchesSearch(t.description || ''))
+  );
+  const customTemplates = state.templates.filter((t) =>
+    t.category === 'custom' &&
+    (matchesSearch(t.name) || matchesSearch(t.description || ''))
+  );
+  const otherTemplates = state.templates.filter((t) =>
+    t.category === 'other' &&
+    (matchesSearch(t.name) || matchesSearch(t.description || ''))
+  );
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -67,6 +116,27 @@ export default function FieldPalette() {
       <div className={styles.header}>
         <h3>Form Builder</h3>
         <p>Click to add to form</p>
+      </div>
+
+      <div className={styles.searchBox}>
+        <Search size={16} className={styles.searchIcon} />
+        <input
+          ref={searchInputRef}
+          type="text"
+          className={styles.searchInput}
+          placeholder="Search fields... (Cmd+K or /)"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {searchQuery && (
+          <button
+            className={styles.clearSearch}
+            onClick={() => setSearchQuery('')}
+            aria-label="Clear search"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
 
       <Tabs.Root value={activeTab} onValueChange={setActiveTab} className={styles.tabs}>
