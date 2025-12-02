@@ -10,6 +10,7 @@ interface SliderFieldProps {
   min?: number;
   max?: number;
   step?: number;
+  disabled?: boolean;
 }
 
 export default function SliderField({
@@ -18,6 +19,7 @@ export default function SliderField({
   min = 0,
   max = 100,
   step = 1,
+  disabled = false,
 }: SliderFieldProps) {
   return (
     <div className={styles.sliderWrapper}>
@@ -28,6 +30,7 @@ export default function SliderField({
         min={min}
         max={max}
         step={step}
+        disabled={disabled}
       >
         <Slider.Track className={styles.sliderTrack}>
           <Slider.Range className={styles.sliderRange} />

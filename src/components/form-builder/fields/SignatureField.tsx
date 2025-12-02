@@ -8,9 +8,10 @@ import styles from './SignatureField.module.scss';
 interface SignatureFieldProps {
   value: string;
   onChange?: (value: string) => void;
+  disabled?: boolean;
 }
 
-export default function SignatureField({ value, onChange }: SignatureFieldProps) {
+export default function SignatureField({ value, onChange, disabled = false }: SignatureFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -100,13 +101,14 @@ export default function SignatureField({ value, onChange }: SignatureFieldProps)
         width={600}
         height={200}
         className={styles.canvas}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-        onTouchStart={startDrawing}
-        onTouchMove={draw}
-        onTouchEnd={stopDrawing}
+        onMouseDown={disabled ? undefined : startDrawing}
+        onMouseMove={disabled ? undefined : draw}
+        onMouseUp={disabled ? undefined : stopDrawing}
+        onMouseLeave={disabled ? undefined : stopDrawing}
+        onTouchStart={disabled ? undefined : startDrawing}
+        onTouchMove={disabled ? undefined : draw}
+        onTouchEnd={disabled ? undefined : stopDrawing}
+        style={disabled ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
       />
       {isEmpty && (
         <div className={styles.placeholder}>
@@ -119,7 +121,7 @@ export default function SignatureField({ value, onChange }: SignatureFieldProps)
           variant="ghost"
           size="sm"
           onClick={clearSignature}
-          disabled={isEmpty}
+          disabled={isEmpty || disabled}
         >
           <RotateCcw size={16} />
           Clear

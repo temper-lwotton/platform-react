@@ -21,6 +21,7 @@ interface FieldRendererProps {
   value?: any;
   onChange?: (value: any) => void;
   error?: string;
+  disabled?: boolean;
 }
 
 export default function FieldRenderer({
@@ -28,6 +29,7 @@ export default function FieldRenderer({
   value,
   onChange,
   error,
+  disabled = false,
 }: FieldRendererProps) {
   const renderField = () => {
     switch (field.type) {
@@ -41,6 +43,7 @@ export default function FieldRenderer({
             value={value || ''}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -55,6 +58,7 @@ export default function FieldRenderer({
             max={field.max}
             step={field.step}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -66,6 +70,7 @@ export default function FieldRenderer({
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange?.(e.target.value)}
             rows={field.rows || 4}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -77,6 +82,7 @@ export default function FieldRenderer({
             onValueChange={onChange}
             placeholder={field.placeholder}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -87,6 +93,7 @@ export default function FieldRenderer({
             value={value || ''}
             onValueChange={onChange}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -97,6 +104,7 @@ export default function FieldRenderer({
               checked={value || false}
               onCheckedChange={onChange}
               label={field.label}
+              disabled={disabled}
             />
           </div>
         );
@@ -107,6 +115,7 @@ export default function FieldRenderer({
             field={field}
             value={value || []}
             onChange={onChange}
+            disabled={disabled}
           />
         );
 
@@ -119,6 +128,7 @@ export default function FieldRenderer({
             min={field.min?.toString()}
             max={field.max?.toString()}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -129,6 +139,7 @@ export default function FieldRenderer({
             value={value || ''}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -140,6 +151,7 @@ export default function FieldRenderer({
             accept={field.accept}
             multiple={field.multiple}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -149,6 +161,7 @@ export default function FieldRenderer({
             checked={value || false}
             onCheckedChange={onChange}
             label={field.label}
+            disabled={disabled}
           />
         );
 
@@ -158,6 +171,7 @@ export default function FieldRenderer({
             value={value || 0}
             onChange={onChange}
             max={field.max || 5}
+            disabled={disabled}
           />
         );
 
@@ -169,6 +183,7 @@ export default function FieldRenderer({
             min={field.min || 0}
             max={field.max || 100}
             step={field.step || 1}
+            disabled={disabled}
           />
         );
 
@@ -177,6 +192,7 @@ export default function FieldRenderer({
           <SignatureField
             value={value || ''}
             onChange={onChange}
+            disabled={disabled}
           />
         );
 
@@ -187,6 +203,7 @@ export default function FieldRenderer({
             value={value || field.defaultValue || '#3b82f6'}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -198,6 +215,7 @@ export default function FieldRenderer({
             value={value || ''}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
             error={error}
+            disabled={disabled}
           />
         );
 
@@ -213,6 +231,7 @@ export default function FieldRenderer({
               min={0}
               step={0.01}
               error={error}
+              disabled={disabled}
             />
           </div>
         );
@@ -225,6 +244,7 @@ export default function FieldRenderer({
             accept={field.accept}
             multiple={true}
             error={error}
+            disabled={disabled}
           />
         );
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FormField, ValidationRule } from '@/types/form-builder';
+import { FormField, ValidationRule, ComparisonOperator } from '@/types/form-builder';
 import { useFormBuilder } from '../FormBuilderProvider';
 import { Input } from '@/components/ui/primitives/Input';
 import { Label } from '@/components/ui/primitives/Label';
@@ -15,7 +15,7 @@ interface ValidationSettingsProps {
 }
 
 export default function ValidationSettings({ field }: ValidationSettingsProps) {
-  const { updateField } = useFormBuilder();
+  const { state, updateField } = useFormBuilder();
 
   const hasValidation = (type: string) =>
     field.validations.some((v) => v.type === type);
@@ -352,6 +352,126 @@ export default function ValidationSettings({ field }: ValidationSettingsProps) {
                 updateValidation('pattern', { message: e.target.value })
               }
               placeholder="Invalid format"
+            />
+          </div>
+        </>
+      )}
+
+      {/* Custom Validation */}
+      <div className={styles.switchField}>
+        <div>
+          <span className={styles.switchLabel}>Custom Validation</span>
+          <p className={styles.fieldHint}>Write custom JavaScript validation function</p>
+        </div>
+        <Switch
+          checked={hasValidation('custom')}
+          onCheckedChange={() =>
+            toggleValidation('custom', 'Validation failed')
+          }
+        />
+      </div>
+
+      {hasValidation('custom') && (
+        <>
+          <div className={styles.field}>
+            <Label htmlFor="custom-function">Validation Function</Label>
+            <textarea
+              id="custom-function"
+              className={styles.textarea}
+              value={getValidation('custom')?.customFunction || ''}
+              onChange={(e) =>
+                updateValidation('custom', { customFunction: e.target.value })
+              }
+              placeholder="function(value) { return value.length > 5; }"
+              rows={5}
+            />
+            <p className={styles.fieldHint}>
+              Function receives the field value and should return true if valid, false otherwise.
+              Example: <code>function(value) {`{`} return value.startsWith('A'); {`}`}</code>
+            </p>
+          </div>
+          <div className={styles.field}>
+            <Label htmlFor="custom-message">Error Message</Label>
+            <Input
+              id="custom-message"
+              value={getValidation('custom')?.message || ''}
+              onChange={(e) =>
+                updateValidation('custom', { message: e.target.value })
+              }
+              placeholder="Validation failed"
+            />
+          </div>
+        </>
+      )}
+
+      {/* Cross-Field Validation */}
+      <div className={styles.switchField}>
+        <div>
+          <span className={styles.switchLabel}>Cross-Field Validation</span>
+          <p className={styles.fieldHint}>Compare this field with another field</p>
+        </div>
+        <Switch
+          checked={hasValidation('crossField')}
+          onCheckedChange={() =>
+            toggleValidation('crossField', 'Field comparison failed')
+          }
+        />
+      </div>
+
+      {hasValidation('crossField') && (
+        <>
+          <div className={styles.field}>
+            <Label htmlFor="crossField-compare">Compare To Field</Label>
+            <select
+              id="crossField-compare"
+              className={styles.select}
+              value={getValidation('crossField')?.compareToFieldId || ''}
+              onChange={(e) =>
+                updateValidation('crossField', { compareToFieldId: e.target.value })
+              }
+            >
+              <option value="">Select a field...</option>
+              {state.fields
+                .filter((f) => f.id !== field.id)
+                .map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.label}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className={styles.field}>
+            <Label htmlFor="crossField-operator">Comparison</Label>
+            <select
+              id="crossField-operator"
+              className={styles.select}
+              value={getValidation('crossField')?.comparisonOperator || 'equals'}
+              onChange={(e) =>
+                updateValidation('crossField', {
+                  comparisonOperator: e.target.value as ComparisonOperator,
+                })
+              }
+            >
+              <option value="equals">Must equal</option>
+              <option value="notEquals">Must not equal</option>
+              <option value="greaterThan">Must be greater than</option>
+              <option value="lessThan">Must be less than</option>
+              <option value="greaterThanOrEqual">Must be greater than or equal to</option>
+              <option value="lessThanOrEqual">Must be less than or equal to</option>
+            </select>
+            <p className={styles.fieldHint}>
+              Example: "End Date" must be greater than "Start Date"
+            </p>
+          </div>
+          <div className={styles.field}>
+            <Label htmlFor="crossField-message">Error Message</Label>
+            <Input
+              id="crossField-message"
+              value={getValidation('crossField')?.message || ''}
+              onChange={(e) =>
+                updateValidation('crossField', { message: e.target.value })
+              }
+              placeholder="Field comparison failed"
             />
           </div>
         </>

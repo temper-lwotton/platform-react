@@ -10,12 +10,14 @@ interface CheckboxGroupFieldProps {
   field: FormField;
   value: string[];
   onChange?: (value: string[]) => void;
+  disabled?: boolean;
 }
 
 export default function CheckboxGroupField({
   field,
   value,
   onChange,
+  disabled = false,
 }: CheckboxGroupFieldProps) {
   const handleToggle = (optionValue: string, checked: boolean) => {
     if (checked) {
@@ -35,6 +37,7 @@ export default function CheckboxGroupField({
               handleToggle(option.value, checked as boolean)
             }
             id={`${field.id}-${option.id}`}
+            disabled={disabled}
           />
           <Label htmlFor={`${field.id}-${option.id}`}>{option.label}</Label>
         </div>

@@ -14,38 +14,7 @@ interface AdvancedSettingsProps {
 }
 
 export default function AdvancedSettings({ field }: AdvancedSettingsProps) {
-  const { state, updateField } = useFormBuilder();
-
-  // Get list of fields that can be used for conditional logic (fields before this one)
-  const currentFieldIndex = state.fields.findIndex((f) => f.id === field.id);
-  const availableFields = state.fields.slice(0, currentFieldIndex);
-
-  const handleConditionalToggle = (enabled: boolean) => {
-    if (enabled) {
-      updateField(field.id, {
-        conditionalLogic: {
-          show: true,
-          when: '',
-          is: '',
-        },
-      });
-    } else {
-      updateField(field.id, { conditionalLogic: undefined });
-    }
-  };
-
-  const handleConditionalUpdate = (updates: Partial<NonNullable<FormField['conditionalLogic']>>) => {
-    if (field.conditionalLogic) {
-      updateField(field.id, {
-        conditionalLogic: {
-          ...field.conditionalLogic,
-          ...updates,
-        },
-      });
-    }
-  };
-
-  const selectedTargetField = availableFields.find((f) => f.id === field.conditionalLogic?.when);
+  const { updateField } = useFormBuilder();
 
   return (
     <div className={styles.settingsSection}>
@@ -114,89 +83,15 @@ export default function AdvancedSettings({ field }: AdvancedSettingsProps) {
         </dl>
       </div>
 
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>Conditional Logic</h4>
-        <div className={styles.field}>
-          <Switch
-            checked={!!field.conditionalLogic}
-            onCheckedChange={handleConditionalToggle}
-            label="Enable conditional visibility"
-          />
-          <p className={styles.fieldHint}>
-            Show or hide this field based on another field's value
-          </p>
-        </div>
-
-        {field.conditionalLogic && (
-          <div className={styles.conditionalSettings}>
-            <div className={styles.field}>
-              <Label htmlFor="conditional-action">Action</Label>
-              <Select
-                options={[
-                  { value: 'true', label: 'Show this field' },
-                  { value: 'false', label: 'Hide this field' },
-                ]}
-                value={field.conditionalLogic.show.toString()}
-                onValueChange={(value) => handleConditionalUpdate({ show: value === 'true' })}
-              />
-            </div>
-
-            <div className={styles.field}>
-              <Label htmlFor="conditional-when">When field</Label>
-              <Select
-                options={availableFields.map((f) => ({
-                  value: f.id,
-                  label: f.label,
-                }))}
-                value={field.conditionalLogic.when}
-                onValueChange={(value) => handleConditionalUpdate({ when: value })}
-                placeholder={availableFields.length === 0 ? 'No fields available' : 'Select a field...'}
-              />
-              {availableFields.length === 0 && (
-                <p className={styles.fieldHint}>
-                  Add fields above this one to enable conditional logic
-                </p>
-              )}
-            </div>
-
-            {selectedTargetField && (
-              <div className={styles.field}>
-                <Label htmlFor="conditional-is">Equals</Label>
-                {selectedTargetField.type === 'checkbox' || selectedTargetField.type === 'switch' ? (
-                  <Select
-                    options={[
-                      { value: 'true', label: 'Checked' },
-                      { value: 'false', label: 'Unchecked' },
-                    ]}
-                    value={field.conditionalLogic.is?.toString() || ''}
-                    onValueChange={(value) => handleConditionalUpdate({ is: value === 'true' })}
-                    placeholder="Select value..."
-                  />
-                ) : selectedTargetField.options && selectedTargetField.options.length > 0 ? (
-                  <Select
-                    options={selectedTargetField.options.map((opt) => ({
-                      value: opt.value,
-                      label: opt.label,
-                    }))}
-                    value={field.conditionalLogic.is?.toString() || ''}
-                    onValueChange={(value) => handleConditionalUpdate({ is: value })}
-                    placeholder="Select value..."
-                  />
-                ) : (
-                  <Input
-                    id="conditional-is"
-                    value={field.conditionalLogic.is?.toString() || ''}
-                    onChange={(e) => handleConditionalUpdate({ is: e.target.value })}
-                    placeholder="Enter value..."
-                  />
-                )}
-                <p className={styles.fieldHint}>
-                  The value that triggers this condition
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+      <div className={styles.infoBox}>
+        <h4>Additional Features</h4>
+        <p className={styles.fieldHint}>
+          Use the tabs above to access additional field configuration:
+        </p>
+        <ul className={styles.featureList}>
+          <li><strong>Logic Tab:</strong> Configure conditional visibility, dynamic required states, and field dependencies</li>
+          <li><strong>Validation Tab:</strong> Set up custom validation functions and cross-field validation</li>
+        </ul>
       </div>
 
       <div className={styles.infoBox}>
@@ -206,9 +101,8 @@ export default function AdvancedSettings({ field }: AdvancedSettingsProps) {
         </p>
         <ul className={styles.featureList}>
           <li>Custom CSS classes and styling</li>
-          <li>Field groups and sections</li>
           <li>Calculated/formula fields</li>
-          <li>Multiple conditional rules (AND/OR logic)</li>
+          <li>Field presets and quick actions</li>
         </ul>
       </div>
     </div>

@@ -5,8 +5,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { useFormBuilder } from '../FormBuilderProvider';
 import FieldRenderer from '../fields/FieldRenderer';
 import { Button } from '@/components/ui/primitives/Button';
-import { FormSubmissionData } from '@/types/form-builder';
+import { FormSubmissionData, FormField } from '@/types/form-builder';
 import { CheckCircle2 } from 'lucide-react';
+import {
+  isFieldVisible as checkFieldVisible,
+  isFieldDisabled as checkFieldDisabled,
+  isFieldRequired as checkFieldRequired,
+  validateField,
+} from '../utils/logic-evaluator';
 import styles from './FormPreview.module.scss';
 
 export default function FormPreview() {
@@ -76,79 +82,36 @@ export default function FormPreview() {
   }
 
   // Evaluate if a field should be visible based on conditional logic
-  const isFieldVisible = (field: any): boolean => {
-    if (!field.conditionalLogic) return true;
+  const isFieldVisible = (field: FormField): boolean => {
+    return checkFieldVisible(field, formValues);
+  };
 
-    const { show, when, is } = field.conditionalLogic;
-    const targetValue = formValues[when];
+  // Check if a field is disabled based on conditional logic
+  const isFieldDisabled = (field: FormField): boolean => {
+    return checkFieldDisabled(field, formValues);
+  };
 
-    // Compare values
-    let conditionMet = false;
-    if (typeof is === 'boolean') {
-      conditionMet = targetValue === is;
-    } else if (typeof targetValue === 'boolean') {
-      conditionMet = targetValue.toString() === is.toString();
-    } else {
-      conditionMet = String(targetValue) === String(is);
-    }
-
-    // Return visibility based on show flag
-    return show ? conditionMet : !conditionMet;
+  // Check if a field is required based on conditional logic
+  const isFieldDynamicallyRequired = (field: FormField): boolean => {
+    return checkFieldRequired(field, formValues);
   };
 
   // Build validation rules for React Hook Form
-  const getValidationRules = (field: any) => {
-    const rules: any = {};
+  const getValidationRules = (field: FormField) => {
+    const rules: any = {
+      validate: (value: any) => {
+        const result = validateField(field, value, formValues, state.fields);
+        if (!result.valid) {
+          return result.errors[0]; // Return first error message
+        }
+        return true;
+      },
+    };
 
-    field.validations.forEach((validation: any) => {
-      switch (validation.type) {
-        case 'required':
-          rules.required = validation.message || 'This field is required';
-          break;
-        case 'minLength':
-          rules.minLength = {
-            value: validation.value,
-            message: validation.message,
-          };
-          break;
-        case 'maxLength':
-          rules.maxLength = {
-            value: validation.value,
-            message: validation.message,
-          };
-          break;
-        case 'min':
-          rules.min = {
-            value: validation.value,
-            message: validation.message,
-          };
-          break;
-        case 'max':
-          rules.max = {
-            value: validation.value,
-            message: validation.message,
-          };
-          break;
-        case 'pattern':
-          rules.pattern = {
-            value: new RegExp(validation.value),
-            message: validation.message,
-          };
-          break;
-        case 'email':
-          rules.pattern = {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: validation.message,
-          };
-          break;
-        case 'url':
-          rules.pattern = {
-            value: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
-            message: validation.message,
-          };
-          break;
-      }
-    });
+    // Add required rule if field is required (either base or dynamic)
+    if (isFieldDynamicallyRequired(field)) {
+      rules.required = 'This field is required';
+    }
 
     return rules;
   };
@@ -192,6 +155,7 @@ export default function FormPreview() {
                               value={value}
                               onChange={onChange}
                               error={errors[field.id]?.message as string}
+                              disabled={isFieldDisabled(field)}
                             />
                           )}
                         />
@@ -227,6 +191,7 @@ export default function FormPreview() {
                         value={value}
                         onChange={onChange}
                         error={errors[field.id]?.message as string}
+                        disabled={isFieldDisabled(field)}
                       />
                     )}
                   />

@@ -31,13 +31,44 @@ export type ValidationType =
   | 'pattern'
   | 'email'
   | 'url'
-  | 'custom';
+  | 'custom'
+  | 'crossField';
 
 export interface ValidationRule {
   id: string;
   type: ValidationType;
   value?: string | number | RegExp;
   message: string;
+  // For custom validation
+  customFunction?: string; // JavaScript function as string
+  // For cross-field validation
+  compareToFieldId?: string;
+  comparisonOperator?: ComparisonOperator;
+}
+
+export type ComparisonOperator =
+  | 'equals'
+  | 'notEquals'
+  | 'contains'
+  | 'notContains'
+  | 'greaterThan'
+  | 'lessThan'
+  | 'greaterThanOrEqual'
+  | 'lessThanOrEqual'
+  | 'isEmpty'
+  | 'isNotEmpty';
+
+export interface ConditionalRule {
+  id: string;
+  fieldId: string; // The field to check
+  operator: ComparisonOperator;
+  value?: any; // The value to compare against
+}
+
+export interface ConditionalLogic {
+  action: 'show' | 'hide' | 'enable' | 'disable' | 'require'; // What to do when conditions are met
+  logicType: 'all' | 'any'; // AND or OR
+  conditions: ConditionalRule[]; // Array of conditions
 }
 
 export interface FieldOption {
@@ -66,12 +97,8 @@ export interface FormField {
   step?: number; // For number, slider
   rows?: number; // For textarea
 
-  // Conditional logic (future enhancement)
-  conditionalLogic?: {
-    show: boolean;
-    when: string; // field id
-    is: any; // value to compare
-  };
+  // Conditional logic
+  conditionalLogic?: ConditionalLogic;
 
   // Layout
   width?: 'full' | 'half' | 'third';

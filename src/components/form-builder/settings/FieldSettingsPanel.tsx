@@ -6,6 +6,7 @@ import BasicSettings from './BasicSettings';
 import ValidationSettings from './ValidationSettings';
 import OptionsSettings from './OptionsSettings';
 import AdvancedSettings from './AdvancedSettings';
+import ConditionalLogicSettings from './ConditionalLogicSettings';
 import SectionSettings from './SectionSettings';
 import * as Tabs from '@radix-ui/react-tabs';
 import { X } from 'lucide-react';
@@ -107,6 +108,9 @@ export default function FieldSettingsPanel() {
               Options
             </Tabs.Trigger>
           )}
+          <Tabs.Trigger value="logic" className={styles.tabsTrigger}>
+            Logic
+          </Tabs.Trigger>
           <Tabs.Trigger value="advanced" className={styles.tabsTrigger}>
             Advanced
           </Tabs.Trigger>
@@ -126,6 +130,10 @@ export default function FieldSettingsPanel() {
               <OptionsSettings field={selectedField} />
             </Tabs.Content>
           )}
+
+          <Tabs.Content value="logic" className={styles.tabPanel}>
+            <ConditionalLogicSettings field={selectedField} />
+          </Tabs.Content>
 
           <Tabs.Content value="advanced" className={styles.tabPanel}>
             <AdvancedSettings field={selectedField} />
