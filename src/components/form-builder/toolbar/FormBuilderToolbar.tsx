@@ -1,14 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormBuilder } from '../FormBuilderProvider';
 import { Button } from '@/components/ui/primitives/Button';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Save, Trash2, Eye, Edit3, Undo, Redo } from 'lucide-react';
+import { Save, Trash2, Eye, Edit3, Undo, Redo, Download, Upload } from 'lucide-react';
+import ImportFormDialog from '../dialogs/ImportFormDialog';
 import styles from './FormBuilderToolbar.module.scss';
 
 export default function FormBuilderToolbar() {
-  const { state, dispatch, setMode, clearForm, undo, redo, canUndo, canRedo } = useFormBuilder();
+  const { state, dispatch, setMode, clearForm, undo, redo, canUndo, canRedo, downloadFormJSON } = useFormBuilder();
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   const handleClearForm = () => {
     if (
@@ -89,6 +91,28 @@ export default function FormBuilderToolbar() {
 
         <div className={styles.buttonGroup}>
           <Button
+            onClick={() => setImportDialogOpen(true)}
+            variant="ghost"
+            size="sm"
+            title="Import form from JSON"
+          >
+            <Upload size={16} />
+            Import
+          </Button>
+          <Button
+            onClick={downloadFormJSON}
+            variant="ghost"
+            size="sm"
+            disabled={state.fields.length === 0}
+            title="Export form to JSON"
+          >
+            <Download size={16} />
+            Export
+          </Button>
+        </div>
+
+        <div className={styles.buttonGroup}>
+          <Button
             onClick={handleClearForm}
             variant="outline"
             size="sm"
@@ -103,6 +127,11 @@ export default function FormBuilderToolbar() {
           </Button>
         </div>
       </div>
+
+      <ImportFormDialog
+        open={importDialogOpen}
+        onOpenChange={setImportDialogOpen}
+      />
     </div>
   );
 }

@@ -68,6 +68,40 @@
   border-top: 1px solid var(--color-border);
 }
 
+// Sections
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.section {
+  padding: 1.5rem;
+  background: var(--color-background-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+}
+
+.sectionHeader {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
 // Success state
 .successMessage {
   display: flex;

@@ -6,19 +6,72 @@ import BasicSettings from './BasicSettings';
 import ValidationSettings from './ValidationSettings';
 import OptionsSettings from './OptionsSettings';
 import AdvancedSettings from './AdvancedSettings';
+import SectionSettings from './SectionSettings';
 import * as Tabs from '@radix-ui/react-tabs';
 import { X } from 'lucide-react';
 import styles from './FieldSettingsPanel.module.scss';
 
 export default function FieldSettingsPanel() {
-  const { state, selectField } = useFormBuilder();
-  const selectedField = state.fields.find((f) => f.id === state.selectedFieldId);
+  const { state, clearSelection, selectSection } = useFormBuilder();
+  const selectedField = state.selectedFieldIds.length === 1
+    ? state.fields.find((f) => f.id === state.selectedFieldIds[0])
+    : undefined;
+  const selectedSection = state.sections.find((s) => s.id === state.selectedSectionId);
+
+  // Show section settings if a section is selected
+  if (selectedSection) {
+    return (
+      <div className={styles.panel}>
+        <div className={styles.header}>
+          <h3>Section Settings</h3>
+          <button
+            className={styles.closeButton}
+            onClick={() => selectSection(null)}
+            aria-label="Close settings"
+          >
+            <X size={18} />
+          </button>
+        </div>
+        <div className={styles.content}>
+          <SectionSettings section={selectedSection} />
+        </div>
+      </div>
+    );
+  }
 
   if (!selectedField) {
+    // Show multi-select info if multiple fields are selected
+    if (state.selectedFieldIds.length > 1) {
+      return (
+        <div className={styles.panel}>
+          <div className={styles.header}>
+            <h3>Multiple Fields Selected</h3>
+            <button
+              className={styles.closeButton}
+              onClick={() => clearSelection()}
+              aria-label="Close settings"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <div className={styles.multiSelectInfo}>
+            <p className={styles.count}>{state.selectedFieldIds.length} fields selected</p>
+            <p className={styles.hint}>Use bulk actions in the toolbar above to:</p>
+            <ul>
+              <li>Delete selected fields</li>
+              <li>Duplicate selected fields</li>
+              <li>Copy and paste fields</li>
+            </ul>
+            <p className={styles.hint}>Or select a single field to edit its settings.</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={styles.panel}>
         <div className={styles.emptyState}>
-          <p>Select a field to configure its settings</p>
+          <p>Select a field or section to configure its settings</p>
         </div>
       </div>
     );
@@ -34,7 +87,7 @@ export default function FieldSettingsPanel() {
         <h3>Field Settings</h3>
         <button
           className={styles.closeButton}
-          onClick={() => selectField(null)}
+          onClick={() => clearSelection()}
           aria-label="Close settings"
         >
           <X size={18} />

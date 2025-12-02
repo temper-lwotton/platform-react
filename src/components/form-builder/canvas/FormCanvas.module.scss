@@ -30,6 +30,13 @@
     color: var(--color-text-secondary);
     margin: 0;
   }
+
+  .hint {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    margin-top: 0.5rem !important;
+    margin-bottom: 1rem !important;
+  }
 }
 
 .emptyIcon {
@@ -55,4 +62,124 @@
 .dragOverlay {
   opacity: 0.9;
   cursor: grabbing;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.bulkToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--color-primary-bg);
+  border: 1px solid var(--color-primary-light);
+  border-radius: 0.5rem;
+}
+
+.bulkInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bulkCount {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.clearSelection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--color-background-hover);
+    color: var(--color-text);
+  }
+}
+
+.bulkActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sectionsList {
+  margin-bottom: 2rem;
+}
+
+.unsectionedFields {
+  margin-top: 2rem;
+  transition: all 0.2s;
+  border-radius: 0.75rem;
+  min-height: 5rem;
+
+  &.dragOver {
+    background: var(--color-primary-bg);
+    border: 2px dashed var(--color-primary);
+    padding: 1rem;
+  }
+}
+
+.unsectionedHeader {
+  padding: 1rem;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+
+  h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.25rem 0;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+}
+
+.emptyUnsectioned {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--color-text-tertiary);
+
+  svg {
+    margin-bottom: 0.75rem;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
 }

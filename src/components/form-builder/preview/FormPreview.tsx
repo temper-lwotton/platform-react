@@ -162,30 +162,78 @@ export default function FormPreview() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          <div className={styles.fieldsGrid}>
-            {state.fields.map((field) => {
-              const visible = isFieldVisible(field);
+          {/* Render sections */}
+          {state.sections.length > 0 && (
+            <div className={styles.sections}>
+              {state.sections.map((section) => {
+                const sectionFields = state.fields.filter((field) =>
+                  section.fieldIds.includes(field.id)
+                );
+                const visibleFields = sectionFields.filter(isFieldVisible);
 
-              if (!visible) return null;
+                if (visibleFields.length === 0) return null;
 
-              return (
-                <Controller
-                  key={field.id}
-                  name={field.id}
-                  control={control}
-                  rules={getValidationRules(field)}
-                  render={({ field: { value, onChange } }) => (
-                    <FieldRenderer
-                      field={field}
-                      value={value}
-                      onChange={onChange}
-                      error={errors[field.id]?.message as string}
-                    />
-                  )}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <div key={section.id} className={styles.section}>
+                    <div className={styles.sectionHeader}>
+                      <h3>{section.title}</h3>
+                      {section.description && <p>{section.description}</p>}
+                    </div>
+                    <div className={styles.fieldsGrid}>
+                      {visibleFields.map((field) => (
+                        <Controller
+                          key={field.id}
+                          name={field.id}
+                          control={control}
+                          rules={getValidationRules(field)}
+                          render={({ field: { value, onChange } }) => (
+                            <FieldRenderer
+                              field={field}
+                              value={value}
+                              onChange={onChange}
+                              error={errors[field.id]?.message as string}
+                            />
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Render unsectioned fields */}
+          {(() => {
+            const fieldsInSections = state.sections.flatMap((s) => s.fieldIds);
+            const unsectionedFields = state.fields.filter(
+              (field) => !fieldsInSections.includes(field.id)
+            );
+            const visibleUnsectionedFields = unsectionedFields.filter(isFieldVisible);
+
+            if (visibleUnsectionedFields.length === 0) return null;
+
+            return (
+              <div className={styles.fieldsGrid}>
+                {visibleUnsectionedFields.map((field) => (
+                  <Controller
+                    key={field.id}
+                    name={field.id}
+                    control={control}
+                    rules={getValidationRules(field)}
+                    render={({ field: { value, onChange } }) => (
+                      <FieldRenderer
+                        field={field}
+                        value={value}
+                        onChange={onChange}
+                        error={errors[field.id]?.message as string}
+                      />
+                    )}
+                  />
+                ))}
+              </div>
+            );
+          })()}
 
           <div className={styles.formActions}>
             <Button type="button" variant="outline" onClick={handleReset}>

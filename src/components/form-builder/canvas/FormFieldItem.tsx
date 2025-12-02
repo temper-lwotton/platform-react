@@ -1,13 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FormField } from '@/types/form-builder';
 import { useFormBuilder } from '../FormBuilderProvider';
-import { GripVertical, Trash2, Settings, Copy, GitBranch } from 'lucide-react';
+import { GripVertical, Trash2, Settings, Copy, GitBranch, CheckSquare, Square, Star } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { getFieldPaletteItem } from '../field-palette-config';
+import SaveAsTemplateDialog from '../dialogs/SaveAsTemplateDialog';
 import styles from './FormFieldItem.module.scss';
 
 interface FormFieldItemProps {
@@ -20,7 +21,8 @@ export default function FormFieldItem({
   isDragOverlay = false,
 }: FormFieldItemProps) {
   const { state, deleteField, duplicateField, selectField } = useFormBuilder();
-  const isSelected = state.selectedFieldId === field.id;
+  const isSelected = state.selectedFieldIds.includes(field.id);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 
   const {
     attributes,
@@ -56,8 +58,10 @@ export default function FormFieldItem({
     duplicateField(field.id);
   };
 
-  const handleSelect = () => {
-    selectField(field.id);
+  const handleSelect = (e: React.MouseEvent) => {
+    const isMulti = e.metaKey || e.ctrlKey;
+    const isRange = e.shiftKey;
+    selectField(field.id, isMulti, isRange);
   };
 
   const className = [
@@ -76,6 +80,13 @@ export default function FormFieldItem({
       className={className}
       onClick={handleSelect}
     >
+      <div className={styles.selectionIndicator}>
+        {isSelected ? (
+          <CheckSquare size={18} className={styles.checkboxChecked} />
+        ) : (
+          <Square size={18} className={styles.checkboxUnchecked} />
+        )}
+      </div>
       <div className={styles.dragHandle} {...attributes} {...listeners}>
         <GripVertical size={16} />
       </div>
@@ -119,10 +130,23 @@ export default function FormFieldItem({
       <div className={styles.actions}>
         <button
           className={styles.actionButton}
-          onClick={handleSelect}
+          onClick={(e) => {
+            e.stopPropagation();
+            selectField(field.id);
+          }}
           aria-label="Configure field"
         >
           <Settings size={16} />
+        </button>
+        <button
+          className={styles.actionButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSaveDialogOpen(true);
+          }}
+          aria-label="Save as template"
+        >
+          <Star size={16} />
         </button>
         <button
           className={styles.actionButton}
@@ -139,6 +163,12 @@ export default function FormFieldItem({
           <Trash2 size={16} />
         </button>
       </div>
+
+      <SaveAsTemplateDialog
+        fieldId={field.id}
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+      />
     </div>
   );
 }

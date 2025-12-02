@@ -13,7 +13,7 @@ interface FieldPaletteItemProps {
 }
 
 export default function FieldPaletteItem({ item }: FieldPaletteItemProps) {
-  const { addField } = useFormBuilder();
+  const { state, addField } = useFormBuilder();
   const [isAdding, setIsAdding] = React.useState(false);
 
   // Dynamically get the icon component
@@ -30,7 +30,9 @@ export default function FieldPaletteItem({ item }: FieldPaletteItemProps) {
       validations: item.defaultConfig.validations || [],
     };
 
-    addField(newField);
+    // Add field to the selected section if one is selected
+    const sectionId = state.selectedSectionId || undefined;
+    addField(newField, sectionId);
 
     // Reset animation state
     setTimeout(() => setIsAdding(false), 300);

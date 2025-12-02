@@ -33,6 +33,31 @@
   }
 }
 
+.selectionIndicator {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  color: var(--color-text-tertiary);
+  transition: color 0.2s;
+
+  .checkboxUnchecked {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .checkboxChecked {
+    color: var(--color-primary);
+  }
+
+  .fieldItem:hover & .checkboxUnchecked {
+    opacity: 0.3;
+  }
+
+  .fieldItem.selected & .checkboxUnchecked {
+    opacity: 0;
+  }
+}
+
 .dragHandle {
   display: flex;
   align-items: center;

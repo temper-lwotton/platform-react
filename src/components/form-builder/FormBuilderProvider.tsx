@@ -5,8 +5,12 @@ import {
   FormBuilderState,
   FormBuilderAction,
   FormField,
+  FormSection,
   FormSnapshot,
+  FieldTemplate,
+  FormExport,
 } from '@/types/form-builder';
+import { BUILT_IN_TEMPLATES } from './built-in-templates';
 
 const MAX_HISTORY = 50;
 
@@ -14,7 +18,11 @@ const initialState: FormBuilderState = {
   formTitle: 'Untitled Form',
   formDescription: '',
   fields: [],
-  selectedFieldId: null,
+  sections: [],
+  selectedFieldIds: [],
+  selectedSectionId: null,
+  clipboard: [],
+  templates: BUILT_IN_TEMPLATES,
   mode: 'builder',
   history: [],
   historyIndex: -1,
@@ -38,7 +46,9 @@ function createSnapshot(state: FormBuilderState): FormSnapshot {
     formTitle: state.formTitle,
     formDescription: state.formDescription,
     fields: JSON.parse(JSON.stringify(state.fields)), // Deep copy
-    selectedFieldId: state.selectedFieldId,
+    sections: JSON.parse(JSON.stringify(state.sections)), // Deep copy
+    selectedFieldIds: [...state.selectedFieldIds],
+    selectedSectionId: state.selectedSectionId,
   };
 }
 
@@ -50,7 +60,9 @@ function restoreFromSnapshot(state: FormBuilderState, snapshot: FormSnapshot): F
     formTitle: snapshot.formTitle,
     formDescription: snapshot.formDescription,
     fields: JSON.parse(JSON.stringify(snapshot.fields)), // Deep copy
-    selectedFieldId: snapshot.selectedFieldId,
+    sections: JSON.parse(JSON.stringify(snapshot.sections)), // Deep copy
+    selectedFieldIds: [...snapshot.selectedFieldIds],
+    selectedSectionId: snapshot.selectedSectionId,
   };
 }
 
@@ -89,17 +101,30 @@ function formBuilderReducer(
 
     case 'ADD_FIELD': {
       const stateWithHistory = saveToHistory(state);
-      const { field, index } = action.payload;
+      const { field, sectionId, index } = action.payload;
       const newFields = [...stateWithHistory.fields];
+
       if (index !== undefined) {
         newFields.splice(index, 0, field);
       } else {
         newFields.push(field);
       }
+
+      let newSections = [...stateWithHistory.sections];
+      if (sectionId) {
+        newSections = newSections.map((section) =>
+          section.id === sectionId
+            ? { ...section, fieldIds: [...section.fieldIds, field.id] }
+            : section
+        );
+      }
+
       return {
         ...stateWithHistory,
         fields: newFields,
-        selectedFieldId: field.id,
+        sections: newSections,
+        selectedFieldIds: [field.id],
+        selectedSectionId: null,
       };
     }
 
@@ -116,13 +141,19 @@ function formBuilderReducer(
 
     case 'DELETE_FIELD': {
       const stateWithHistory = saveToHistory(state);
+      const fieldId = action.payload;
+
+      // Remove field from sections
+      const newSections = stateWithHistory.sections.map((section) => ({
+        ...section,
+        fieldIds: section.fieldIds.filter((id) => id !== fieldId),
+      }));
+
       return {
         ...stateWithHistory,
-        fields: stateWithHistory.fields.filter((field) => field.id !== action.payload),
-        selectedFieldId:
-          stateWithHistory.selectedFieldId === action.payload
-            ? null
-            : stateWithHistory.selectedFieldId,
+        fields: stateWithHistory.fields.filter((field) => field.id !== fieldId),
+        sections: newSections,
+        selectedFieldIds: stateWithHistory.selectedFieldIds.filter((id) => id !== fieldId),
       };
     }
 
@@ -148,21 +179,324 @@ function formBuilderReducer(
       return {
         ...stateWithHistory,
         fields: newFields,
-        selectedFieldId: duplicatedField.id,
+        selectedFieldIds: [duplicatedField.id],
+        selectedSectionId: null,
       };
     }
 
     case 'REORDER_FIELDS': {
       const stateWithHistory = saveToHistory(state);
-      const { fromIndex, toIndex } = action.payload;
+      const { fromIndex, toIndex, fromSectionId, toSectionId } = action.payload;
+
+      // Get the field being moved
+      const fieldId = stateWithHistory.fields[fromIndex]?.id;
+      if (!fieldId) return stateWithHistory;
+
+      // Reorder in the fields array
       const newFields = [...stateWithHistory.fields];
       const [removed] = newFields.splice(fromIndex, 1);
       newFields.splice(toIndex, 0, removed);
-      return { ...stateWithHistory, fields: newFields };
+
+      // Update sections if moving between sections
+      let newSections = [...stateWithHistory.sections];
+
+      // Remove from source section
+      if (fromSectionId) {
+        newSections = newSections.map((section) =>
+          section.id === fromSectionId
+            ? { ...section, fieldIds: section.fieldIds.filter((id) => id !== fieldId) }
+            : section
+        );
+      }
+
+      // Add to destination section
+      if (toSectionId) {
+        newSections = newSections.map((section) => {
+          if (section.id === toSectionId) {
+            // Add field if not already in the section
+            if (!section.fieldIds.includes(fieldId)) {
+              return { ...section, fieldIds: [...section.fieldIds, fieldId] };
+            }
+          }
+          return section;
+        });
+      }
+
+      return {
+        ...stateWithHistory,
+        fields: newFields,
+        sections: newSections,
+      };
     }
 
-    case 'SELECT_FIELD':
-      return { ...state, selectedFieldId: action.payload };
+    case 'SELECT_FIELD': {
+      const { id, multi, range } = action.payload;
+      let newSelectedIds: string[] = [];
+
+      if (range && state.selectedFieldIds.length > 0) {
+        // Shift-click: select range
+        const lastSelectedId = state.selectedFieldIds[state.selectedFieldIds.length - 1];
+        const lastIndex = state.fields.findIndex((f) => f.id === lastSelectedId);
+        const currentIndex = state.fields.findIndex((f) => f.id === id);
+
+        if (lastIndex !== -1 && currentIndex !== -1) {
+          const start = Math.min(lastIndex, currentIndex);
+          const end = Math.max(lastIndex, currentIndex);
+          newSelectedIds = state.fields.slice(start, end + 1).map((f) => f.id);
+        } else {
+          newSelectedIds = [id];
+        }
+      } else if (multi) {
+        // Cmd/Ctrl-click: toggle selection
+        if (state.selectedFieldIds.includes(id)) {
+          newSelectedIds = state.selectedFieldIds.filter((fid) => fid !== id);
+        } else {
+          newSelectedIds = [...state.selectedFieldIds, id];
+        }
+      } else {
+        // Normal click: single select
+        newSelectedIds = [id];
+      }
+
+      return {
+        ...state,
+        selectedFieldIds: newSelectedIds,
+        selectedSectionId: null,
+      };
+    }
+
+    case 'SELECT_ALL_FIELDS':
+      return {
+        ...state,
+        selectedFieldIds: state.fields.map((f) => f.id),
+        selectedSectionId: null,
+      };
+
+    case 'CLEAR_SELECTION':
+      return {
+        ...state,
+        selectedFieldIds: [],
+      };
+
+    case 'ADD_SECTION': {
+      const stateWithHistory = saveToHistory(state);
+      const { section, index } = action.payload;
+      const newSections = [...stateWithHistory.sections];
+      if (index !== undefined) {
+        newSections.splice(index, 0, section);
+      } else {
+        newSections.push(section);
+      }
+      return {
+        ...stateWithHistory,
+        sections: newSections,
+        selectedSectionId: section.id,
+        selectedFieldIds: [],
+      };
+    }
+
+    case 'UPDATE_SECTION': {
+      const stateWithHistory = saveToHistory(state);
+      const { id, updates } = action.payload;
+      return {
+        ...stateWithHistory,
+        sections: stateWithHistory.sections.map((section) =>
+          section.id === id ? { ...section, ...updates } : section
+        ),
+      };
+    }
+
+    case 'DELETE_SECTION': {
+      const stateWithHistory = saveToHistory(state);
+      const sectionId = action.payload;
+      const section = stateWithHistory.sections.find((s) => s.id === sectionId);
+
+      // Remove fields that belong to this section
+      const fieldsToRemove = section?.fieldIds || [];
+      const newFields = stateWithHistory.fields.filter(
+        (field) => !fieldsToRemove.includes(field.id)
+      );
+
+      return {
+        ...stateWithHistory,
+        sections: stateWithHistory.sections.filter((s) => s.id !== sectionId),
+        fields: newFields,
+        selectedSectionId:
+          stateWithHistory.selectedSectionId === sectionId
+            ? null
+            : stateWithHistory.selectedSectionId,
+      };
+    }
+
+    case 'DUPLICATE_SECTION': {
+      const stateWithHistory = saveToHistory(state);
+      const sectionToDuplicate = stateWithHistory.sections.find((s) => s.id === action.payload);
+      if (!sectionToDuplicate) return stateWithHistory;
+
+      // Duplicate the section
+      const duplicatedSection: FormSection = {
+        ...sectionToDuplicate,
+        id: `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        title: incrementLabel(sectionToDuplicate.title),
+        fieldIds: [],
+      };
+
+      // Duplicate fields in the section
+      const duplicatedFields: FormField[] = [];
+      const newFieldIds: string[] = [];
+
+      sectionToDuplicate.fieldIds.forEach((fieldId) => {
+        const originalField = stateWithHistory.fields.find((f) => f.id === fieldId);
+        if (originalField) {
+          const newFieldId = `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+          duplicatedFields.push({
+            ...originalField,
+            id: newFieldId,
+            validations: originalField.validations.map((v) => ({ ...v })),
+            options: originalField.options?.map((o) => ({ ...o })),
+          });
+          newFieldIds.push(newFieldId);
+        }
+      });
+
+      duplicatedSection.fieldIds = newFieldIds;
+
+      // Insert section after the original
+      const originalIndex = stateWithHistory.sections.findIndex((s) => s.id === action.payload);
+      const newSections = [...stateWithHistory.sections];
+      newSections.splice(originalIndex + 1, 0, duplicatedSection);
+
+      return {
+        ...stateWithHistory,
+        sections: newSections,
+        fields: [...stateWithHistory.fields, ...duplicatedFields],
+        selectedSectionId: duplicatedSection.id,
+        selectedFieldIds: [],
+      };
+    }
+
+    case 'REORDER_SECTIONS': {
+      const stateWithHistory = saveToHistory(state);
+      const { fromIndex, toIndex } = action.payload;
+      const newSections = [...stateWithHistory.sections];
+      const [removed] = newSections.splice(fromIndex, 1);
+      newSections.splice(toIndex, 0, removed);
+      return { ...stateWithHistory, sections: newSections };
+    }
+
+    case 'BULK_DELETE_FIELDS': {
+      const stateWithHistory = saveToHistory(state);
+      const fieldIdsToDelete = action.payload;
+
+      // Remove fields from sections
+      const newSections = stateWithHistory.sections.map((section) => ({
+        ...section,
+        fieldIds: section.fieldIds.filter((id) => !fieldIdsToDelete.includes(id)),
+      }));
+
+      return {
+        ...stateWithHistory,
+        fields: stateWithHistory.fields.filter((field) => !fieldIdsToDelete.includes(field.id)),
+        sections: newSections,
+        selectedFieldIds: [],
+      };
+    }
+
+    case 'BULK_DUPLICATE_FIELDS': {
+      const stateWithHistory = saveToHistory(state);
+      const fieldIdsToDuplicate = action.payload;
+      const newFields = [...stateWithHistory.fields];
+      const duplicatedIds: string[] = [];
+
+      fieldIdsToDuplicate.forEach((fieldId) => {
+        const fieldToDuplicate = stateWithHistory.fields.find((f) => f.id === fieldId);
+        if (!fieldToDuplicate) return;
+
+        const duplicatedField: FormField = {
+          ...fieldToDuplicate,
+          id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          label: incrementLabel(fieldToDuplicate.label),
+          validations: fieldToDuplicate.validations.map((v) => ({ ...v })),
+          options: fieldToDuplicate.options?.map((o) => ({ ...o })),
+        };
+
+        const originalIndex = newFields.findIndex((f) => f.id === fieldId);
+        newFields.splice(originalIndex + 1, 0, duplicatedField);
+        duplicatedIds.push(duplicatedField.id);
+      });
+
+      return {
+        ...stateWithHistory,
+        fields: newFields,
+        selectedFieldIds: duplicatedIds,
+      };
+    }
+
+    case 'COPY_FIELDS': {
+      const fieldIdsToCopy = action.payload;
+      const fieldsToCopy = state.fields.filter((f) => fieldIdsToCopy.includes(f.id));
+
+      return {
+        ...state,
+        clipboard: fieldsToCopy.map((field) => ({
+          ...field,
+          validations: field.validations.map((v) => ({ ...v })),
+          options: field.options?.map((o) => ({ ...o })),
+        })),
+      };
+    }
+
+    case 'PASTE_FIELDS': {
+      if (state.clipboard.length === 0) return state;
+
+      const stateWithHistory = saveToHistory(state);
+      const { sectionId } = action.payload;
+      const newFields = [...stateWithHistory.fields];
+      const pastedIds: string[] = [];
+
+      state.clipboard.forEach((field) => {
+        const pastedField: FormField = {
+          ...field,
+          id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          validations: field.validations.map((v) => ({ ...v })),
+          options: field.options?.map((o) => ({ ...o })),
+        };
+
+        newFields.push(pastedField);
+        pastedIds.push(pastedField.id);
+      });
+
+      let newSections = [...stateWithHistory.sections];
+      if (sectionId) {
+        newSections = newSections.map((section) =>
+          section.id === sectionId
+            ? { ...section, fieldIds: [...section.fieldIds, ...pastedIds] }
+            : section
+        );
+      }
+
+      return {
+        ...stateWithHistory,
+        fields: newFields,
+        sections: newSections,
+        selectedFieldIds: pastedIds,
+      };
+    }
+
+    case 'SELECT_SECTION':
+      return { ...state, selectedSectionId: action.payload, selectedFieldIds: [] };
+
+    case 'TOGGLE_SECTION': {
+      const sectionId = action.payload;
+      return {
+        ...state,
+        sections: state.sections.map((section) =>
+          section.id === sectionId
+            ? { ...section, collapsed: !section.collapsed }
+            : section
+        ),
+      };
+    }
 
     case 'SET_MODE':
       return { ...state, mode: action.payload };
@@ -175,6 +509,87 @@ function formBuilderReducer(
 
     case 'LOAD_FORM':
       return action.payload;
+
+    case 'IMPORT_FORM': {
+      const importData = action.payload;
+      const stateWithHistory = saveToHistory(state);
+
+      // Import custom templates if any
+      const customTemplates = importData.customTemplates || [];
+      const newTemplates = [
+        ...BUILT_IN_TEMPLATES,
+        ...customTemplates.filter((t) => !t.isBuiltIn),
+      ];
+
+      return {
+        ...stateWithHistory,
+        formTitle: importData.formTitle,
+        formDescription: importData.formDescription,
+        fields: importData.fields,
+        sections: importData.sections,
+        templates: newTemplates,
+        selectedFieldIds: [],
+        selectedSectionId: null,
+      };
+    }
+
+    case 'ADD_TEMPLATE': {
+      return {
+        ...state,
+        templates: [...state.templates, action.payload],
+      };
+    }
+
+    case 'DELETE_TEMPLATE': {
+      return {
+        ...state,
+        templates: state.templates.filter((t) => t.id !== action.payload),
+      };
+    }
+
+    case 'UPDATE_TEMPLATE': {
+      const { id, updates } = action.payload;
+      return {
+        ...state,
+        templates: state.templates.map((template) =>
+          template.id === id ? { ...template, ...updates } : template
+        ),
+      };
+    }
+
+    case 'ADD_FIELD_FROM_TEMPLATE': {
+      const { templateId, sectionId } = action.payload;
+      const template = state.templates.find((t) => t.id === templateId);
+
+      if (!template) return state;
+
+      const stateWithHistory = saveToHistory(state);
+
+      // Create a new field from the template
+      const newField: FormField = {
+        ...template.field,
+        id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      };
+
+      const newFields = [...stateWithHistory.fields, newField];
+      let newSections = [...stateWithHistory.sections];
+
+      // If a section is specified, add the field to that section
+      if (sectionId) {
+        newSections = newSections.map((section) =>
+          section.id === sectionId
+            ? { ...section, fieldIds: [...section.fieldIds, newField.id] }
+            : section
+        );
+      }
+
+      return {
+        ...stateWithHistory,
+        fields: newFields,
+        sections: newSections,
+        selectedFieldIds: [newField.id],
+      };
+    }
 
     case 'UNDO': {
       if (state.historyIndex > 0) {
@@ -208,13 +623,40 @@ function formBuilderReducer(
 interface FormBuilderContextType {
   state: FormBuilderState;
   dispatch: React.Dispatch<FormBuilderAction>;
-  // Helper functions
-  addField: (field: FormField, index?: number) => void;
+  // Field helper functions
+  addField: (field: FormField, sectionId?: string, index?: number) => void;
   updateField: (id: string, updates: Partial<FormField>) => void;
   deleteField: (id: string) => void;
   duplicateField: (id: string) => void;
-  reorderFields: (fromIndex: number, toIndex: number) => void;
-  selectField: (id: string | null) => void;
+  reorderFields: (fromIndex: number, toIndex: number, fromSectionId?: string, toSectionId?: string) => void;
+  selectField: (id: string, multi?: boolean, range?: boolean) => void;
+  selectAllFields: () => void;
+  clearSelection: () => void;
+  // Bulk operations
+  bulkDeleteFields: (ids: string[]) => void;
+  bulkDuplicateFields: (ids: string[]) => void;
+  copyFields: (ids: string[]) => void;
+  pasteFields: (sectionId?: string) => void;
+  // Template helper functions
+  addTemplate: (template: FieldTemplate) => void;
+  deleteTemplate: (id: string) => void;
+  updateTemplate: (id: string, updates: Partial<FieldTemplate>) => void;
+  addFieldFromTemplate: (templateId: string, sectionId?: string) => void;
+  saveFieldAsTemplate: (fieldId: string, name: string, description?: string) => void;
+  // Import/Export functions
+  exportForm: () => FormExport;
+  exportFormAsJSON: () => string;
+  downloadFormJSON: () => void;
+  importForm: (json: string) => { success: boolean; error?: string };
+  // Section helper functions
+  addSection: (section: FormSection, index?: number) => void;
+  updateSection: (id: string, updates: Partial<FormSection>) => void;
+  deleteSection: (id: string) => void;
+  duplicateSection: (id: string) => void;
+  reorderSections: (fromIndex: number, toIndex: number) => void;
+  selectSection: (id: string | null) => void;
+  toggleSection: (id: string) => void;
+  // General functions
   setMode: (mode: 'builder' | 'preview') => void;
   clearForm: () => void;
   undo: () => void;
@@ -230,8 +672,9 @@ const FormBuilderContext = createContext<FormBuilderContextType | undefined>(
 export function FormBuilderProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(formBuilderReducer, initialState);
 
-  const addField = (field: FormField, index?: number) => {
-    dispatch({ type: 'ADD_FIELD', payload: { field, index } });
+  // Field helper functions
+  const addField = (field: FormField, sectionId?: string, index?: number) => {
+    dispatch({ type: 'ADD_FIELD', payload: { field, sectionId, index } });
   };
 
   const updateField = (id: string, updates: Partial<FormField>) => {
@@ -246,14 +689,197 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'DUPLICATE_FIELD', payload: id });
   };
 
-  const reorderFields = (fromIndex: number, toIndex: number) => {
-    dispatch({ type: 'REORDER_FIELDS', payload: { fromIndex, toIndex } });
+  const reorderFields = (fromIndex: number, toIndex: number, fromSectionId?: string, toSectionId?: string) => {
+    dispatch({ type: 'REORDER_FIELDS', payload: { fromIndex, toIndex, fromSectionId, toSectionId } });
   };
 
-  const selectField = (id: string | null) => {
-    dispatch({ type: 'SELECT_FIELD', payload: id });
+  const selectField = (id: string, multi: boolean = false, range: boolean = false) => {
+    dispatch({ type: 'SELECT_FIELD', payload: { id, multi, range } });
   };
 
+  const selectAllFields = () => {
+    dispatch({ type: 'SELECT_ALL_FIELDS' });
+  };
+
+  const clearSelection = () => {
+    dispatch({ type: 'CLEAR_SELECTION' });
+  };
+
+  // Bulk operations
+  const bulkDeleteFields = (ids: string[]) => {
+    dispatch({ type: 'BULK_DELETE_FIELDS', payload: ids });
+  };
+
+  const bulkDuplicateFields = (ids: string[]) => {
+    dispatch({ type: 'BULK_DUPLICATE_FIELDS', payload: ids });
+  };
+
+  const copyFields = (ids: string[]) => {
+    dispatch({ type: 'COPY_FIELDS', payload: ids });
+  };
+
+  const pasteFields = (sectionId?: string) => {
+    dispatch({ type: 'PASTE_FIELDS', payload: { sectionId } });
+  };
+
+  // Template helper functions
+  const addTemplate = (template: FieldTemplate) => {
+    dispatch({ type: 'ADD_TEMPLATE', payload: template });
+  };
+
+  const deleteTemplate = (id: string) => {
+    dispatch({ type: 'DELETE_TEMPLATE', payload: id });
+  };
+
+  const updateTemplate = (id: string, updates: Partial<FieldTemplate>) => {
+    dispatch({ type: 'UPDATE_TEMPLATE', payload: { id, updates } });
+  };
+
+  const addFieldFromTemplate = (templateId: string, sectionId?: string) => {
+    dispatch({ type: 'ADD_FIELD_FROM_TEMPLATE', payload: { templateId, sectionId } });
+  };
+
+  const saveFieldAsTemplate = (fieldId: string, name: string, description?: string) => {
+    const field = state.fields.find((f) => f.id === fieldId);
+    if (!field) return;
+
+    const template: FieldTemplate = {
+      id: `template-custom-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      name,
+      description,
+      category: 'custom',
+      field: {
+        type: field.type,
+        label: field.label,
+        placeholder: field.placeholder,
+        helpText: field.helpText,
+        defaultValue: field.defaultValue,
+        validations: JSON.parse(JSON.stringify(field.validations)),
+        options: field.options ? JSON.parse(JSON.stringify(field.options)) : undefined,
+        multiple: field.multiple,
+        accept: field.accept,
+        min: field.min,
+        max: field.max,
+        step: field.step,
+        rows: field.rows,
+        width: field.width,
+        required: field.required,
+      },
+      isBuiltIn: false,
+      createdAt: Date.now(),
+    };
+
+    addTemplate(template);
+  };
+
+  // Section helper functions
+  const addSection = (section: FormSection, index?: number) => {
+    dispatch({ type: 'ADD_SECTION', payload: { section, index } });
+  };
+
+  const updateSection = (id: string, updates: Partial<FormSection>) => {
+    dispatch({ type: 'UPDATE_SECTION', payload: { id, updates } });
+  };
+
+  const deleteSection = (id: string) => {
+    dispatch({ type: 'DELETE_SECTION', payload: id });
+  };
+
+  const duplicateSection = (id: string) => {
+    dispatch({ type: 'DUPLICATE_SECTION', payload: id });
+  };
+
+  const reorderSections = (fromIndex: number, toIndex: number) => {
+    dispatch({ type: 'REORDER_SECTIONS', payload: { fromIndex, toIndex } });
+  };
+
+  const selectSection = (id: string | null) => {
+    dispatch({ type: 'SELECT_SECTION', payload: id });
+  };
+
+  const toggleSection = (id: string) => {
+    dispatch({ type: 'TOGGLE_SECTION', payload: id });
+  };
+
+  // Import/Export functions
+  const exportForm = (): FormExport => {
+    const customTemplates = state.templates.filter((t) => !t.isBuiltIn);
+
+    return {
+      version: '1.0',
+      exportedAt: Date.now(),
+      formTitle: state.formTitle,
+      formDescription: state.formDescription,
+      fields: state.fields,
+      sections: state.sections,
+      customTemplates: customTemplates.length > 0 ? customTemplates : undefined,
+    };
+  };
+
+  const exportFormAsJSON = (): string => {
+    return JSON.stringify(exportForm(), null, 2);
+  };
+
+  const downloadFormJSON = () => {
+    const json = exportFormAsJSON();
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${state.formTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const importForm = (json: string): { success: boolean; error?: string } => {
+    try {
+      const parsed = JSON.parse(json);
+
+      // Validate the structure
+      if (!parsed.version || !parsed.formTitle || !Array.isArray(parsed.fields)) {
+        return {
+          success: false,
+          error: 'Invalid form format: missing required fields',
+        };
+      }
+
+      // Check version compatibility
+      if (parsed.version !== '1.0') {
+        return {
+          success: false,
+          error: `Unsupported version: ${parsed.version}. Expected 1.0`,
+        };
+      }
+
+      // Validate fields
+      if (!parsed.fields.every((f: any) => f.id && f.type && f.label)) {
+        return {
+          success: false,
+          error: 'Invalid field format in imported data',
+        };
+      }
+
+      // Validate sections
+      if (parsed.sections && !Array.isArray(parsed.sections)) {
+        return {
+          success: false,
+          error: 'Invalid sections format',
+        };
+      }
+
+      dispatch({ type: 'IMPORT_FORM', payload: parsed as FormExport });
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to parse JSON',
+      };
+    }
+  };
+
+  // General functions
   const setMode = (mode: 'builder' | 'preview') => {
     dispatch({ type: 'SET_MODE', payload: mode });
   };
@@ -284,6 +910,28 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
         duplicateField,
         reorderFields,
         selectField,
+        selectAllFields,
+        clearSelection,
+        bulkDeleteFields,
+        bulkDuplicateFields,
+        copyFields,
+        pasteFields,
+        addTemplate,
+        deleteTemplate,
+        updateTemplate,
+        addFieldFromTemplate,
+        saveFieldAsTemplate,
+        exportForm,
+        exportFormAsJSON,
+        downloadFormJSON,
+        importForm,
+        addSection,
+        updateSection,
+        deleteSection,
+        duplicateSection,
+        reorderSections,
+        selectSection,
+        toggleSection,
         setMode,
         clearForm,
         undo,

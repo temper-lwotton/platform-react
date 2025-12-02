@@ -24,6 +24,52 @@
   }
 }
 
+.tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.tabsList {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-background-elevated);
+}
+
+.tabsTrigger {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+
+  &:hover {
+    color: var(--color-text);
+    background: var(--color-background-hover);
+  }
+
+  &[data-state='active'] {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    background: var(--color-background);
+  }
+}
+
+.tabContent {
+  flex: 1;
+  overflow-y: auto;
+
+  &[data-state='inactive'] {
+    display: none;
+  }
+}
+
 .sections {
   flex: 1;
   overflow-y: auto;
@@ -39,6 +85,9 @@
 }
 
 .sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -57,4 +106,44 @@
   height: 1px;
   background: var(--color-border);
   margin: 1rem 0;
+}
+
+.targetIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary-bg);
+  border-bottom: 1px solid var(--color-primary-light);
+  color: var(--color-primary);
+
+  &.unsectioned {
+    background: var(--color-background-elevated);
+    border-bottom-color: var(--color-border);
+    color: var(--color-text-secondary);
+  }
+}
+
+.targetText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.targetLabel {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.targetValue {
+  font-size: 0.875rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

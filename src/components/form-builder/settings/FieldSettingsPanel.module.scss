@@ -56,6 +56,34 @@
   }
 }
 
+.multiSelectInfo {
+  padding: 1.5rem;
+
+  .count {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin: 0 0 1rem 0;
+  }
+
+  .hint {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0.5rem 0;
+  }
+
+  ul {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+
+    li {
+      font-size: 0.875rem;
+      color: var(--color-text);
+      margin: 0.25rem 0;
+    }
+  }
+}
+
 .tabs {
   display: flex;
   flex-direction: column;
