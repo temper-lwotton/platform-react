@@ -1,0 +1,51 @@
+.fieldWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.halfWidth {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: calc(50% - 0.5rem);
+  }
+}
+
+.thirdWidth {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: calc(33.333% - 0.67rem);
+  }
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: 0.25rem;
+}
+
+.helpText {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.checkboxWrapper,
+.switchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

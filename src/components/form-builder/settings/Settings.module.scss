@@ -1,0 +1,202 @@
+.settingsSection {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fieldHint {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.switchField {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--color-background-elevated);
+  border-radius: 0.5rem;
+
+  > div:first-child {
+    flex: 1;
+  }
+}
+
+.switchLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.radioButton {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-background);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  &[data-state='checked'] {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+  }
+}
+
+.radioIndicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: white;
+  border-radius: 50%;
+}
+
+.radioLabel {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  cursor: pointer;
+  margin: 0;
+}
+
+// Options settings
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--color-background-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary-light);
+  }
+}
+
+.optionDragHandle {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-tertiary);
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.optionInputs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.optionDeleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+  }
+}
+
+// Advanced settings
+.infoBox {
+  padding: 1rem;
+  background: var(--color-background-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+
+  h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 0.75rem 0;
+  }
+}
+
+.configList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.configItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+
+  dt {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  dd {
+    color: var(--color-text);
+    margin: 0;
+  }
+}
+
+.featureList {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+
+  li {
+    margin-bottom: 0.25rem;
+  }
+}

@@ -1,0 +1,30 @@
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.star {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover,
+  &.filled {
+    color: #facc15; // Yellow color for stars
+  }
+
+  svg {
+    display: block;
+  }
+}
+
+.ratingText {
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}

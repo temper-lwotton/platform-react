@@ -1,0 +1,155 @@
+.fieldItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--color-background);
+  border: 2px solid var(--color-border);
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    .actions {
+      opacity: 1;
+    }
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary-bg);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+  }
+
+  &.dragging {
+    opacity: 0.3;
+  }
+
+  &.overlay {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  color: var(--color-text-tertiary);
+  cursor: grab;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--color-text-secondary);
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.fieldInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: 0.25rem;
+  flex-shrink: 0;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.required {
+  color: var(--color-error);
+  margin-left: 0.125rem;
+}
+
+.type {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  background: var(--color-background-elevated);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+}
+
+.helpText {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+.validations {
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  margin-top: 0.25rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  .fieldItem.selected & {
+    opacity: 1;
+  }
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: var(--color-background-hover);
+    color: var(--color-text);
+  }
+
+  &:last-child:hover {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+  }
+}

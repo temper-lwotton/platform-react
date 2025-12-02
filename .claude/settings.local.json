@@ -24,7 +24,10 @@
       "Bash(do 'basename=$(basename $file .tsx)')",
       "Bash(tree:*)",
       "Bash(ls:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(xargs cat:*)",
+      "Bash(xargs:*)",
+      "Bash(/Users/lukewotton/Projects/spaces-frontend/src/components/form-builder/settings/ValidationSettings.tsx)"
     ],
     "deny": [],
     "ask": []
