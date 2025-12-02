@@ -7,7 +7,7 @@ import FieldTemplateItem from './FieldTemplateItem';
 import { useFormBuilder } from '../FormBuilderProvider';
 import * as Separator from '@radix-ui/react-separator';
 import * as Tabs from '@radix-ui/react-tabs';
-import { FolderOpen, LayoutList, Star, Mail, MapPin, CreditCard, Calendar, User, Search, X } from 'lucide-react';
+import { FolderOpen, LayoutList, Star, Mail, MapPin, CreditCard, Calendar, User, Search, X, Clock } from 'lucide-react';
 import styles from './FieldPalette.module.scss';
 
 export default function FieldPalette() {
@@ -61,6 +61,16 @@ export default function FieldPalette() {
     ['file', 'file-multiple', 'switch', 'rating', 'slider', 'signature', 'color'].includes(item.type) &&
     (matchesSearch(item.label) || matchesSearch(item.description))
   );
+
+  // Get favorited and recent field items
+  const favoriteFields = FIELD_PALETTE_ITEMS.filter((item) =>
+    state.favoriteFieldTypes.includes(item.type) &&
+    (matchesSearch(item.label) || matchesSearch(item.description))
+  );
+
+  const recentFields = state.recentFieldTypes
+    .map((type) => FIELD_PALETTE_ITEMS.find((item) => item.type === type))
+    .filter((item) => item && (matchesSearch(item.label) || matchesSearch(item.description))) as typeof FIELD_PALETTE_ITEMS;
 
   // Group templates by category with search filter
   const contactTemplates = state.templates.filter((t) =>
@@ -170,6 +180,42 @@ export default function FieldPalette() {
 
         <Tabs.Content value="fields" className={styles.tabContent}>
           <div className={styles.sections}>
+            {/* Favorites Section */}
+            {favoriteFields.length > 0 && (
+              <>
+                <section className={styles.section}>
+                  <h4 className={styles.sectionTitle}>
+                    <Star size={14} />
+                    Favorites
+                  </h4>
+                  <div className={styles.items}>
+                    {favoriteFields.map((item) => (
+                      <FieldPaletteItem key={item.type} item={item} />
+                    ))}
+                  </div>
+                </section>
+                <Separator.Root className={styles.separator} />
+              </>
+            )}
+
+            {/* Recent Section */}
+            {recentFields.length > 0 && (
+              <>
+                <section className={styles.section}>
+                  <h4 className={styles.sectionTitle}>
+                    <Clock size={14} />
+                    Recently Used
+                  </h4>
+                  <div className={styles.items}>
+                    {recentFields.map((item) => (
+                      <FieldPaletteItem key={item.type} item={item} />
+                    ))}
+                  </div>
+                </section>
+                <Separator.Root className={styles.separator} />
+              </>
+            )}
+
         <section className={styles.section}>
           <h4 className={styles.sectionTitle}>Basic Inputs</h4>
           <div className={styles.items}>

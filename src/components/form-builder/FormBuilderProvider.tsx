@@ -9,10 +9,32 @@ import {
   FormSnapshot,
   FieldTemplate,
   FormExport,
+  FieldType,
 } from '@/types/form-builder';
 import { BUILT_IN_TEMPLATES } from './built-in-templates';
 
 const MAX_HISTORY = 50;
+const MAX_RECENT_FIELDS = 10;
+
+// Load favorites and recent from localStorage
+const loadFromLocalStorage = <T,>(key: string, defaultValue: T): T => {
+  if (typeof window === 'undefined') return defaultValue;
+  try {
+    const item = window.localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch {
+    return defaultValue;
+  }
+};
+
+const saveToLocalStorage = <T,>(key: string, value: T) => {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Ignore errors
+  }
+};
 
 const initialState: FormBuilderState = {
   formTitle: 'Untitled Form',
@@ -23,6 +45,8 @@ const initialState: FormBuilderState = {
   selectedSectionId: null,
   clipboard: [],
   templates: BUILT_IN_TEMPLATES,
+  recentFieldTypes: loadFromLocalStorage<FieldType[]>('formBuilder.recentFieldTypes', []),
+  favoriteFieldTypes: loadFromLocalStorage<FieldType[]>('formBuilder.favoriteFieldTypes', []),
   mode: 'builder',
   history: [],
   historyIndex: -1,
@@ -119,12 +143,21 @@ function formBuilderReducer(
         );
       }
 
+      // Track recently used field types
+      const newRecentFieldTypes = [
+        field.type,
+        ...stateWithHistory.recentFieldTypes.filter((t) => t !== field.type),
+      ].slice(0, MAX_RECENT_FIELDS);
+
+      saveToLocalStorage('formBuilder.recentFieldTypes', newRecentFieldTypes);
+
       return {
         ...stateWithHistory,
         fields: newFields,
         sections: newSections,
         selectedFieldIds: [field.id],
         selectedSectionId: null,
+        recentFieldTypes: newRecentFieldTypes,
       };
     }
 
@@ -510,6 +543,22 @@ function formBuilderReducer(
     case 'LOAD_FORM':
       return action.payload;
 
+    case 'TOGGLE_FAVORITE_FIELD_TYPE': {
+      const fieldType = action.payload;
+      const isFavorite = state.favoriteFieldTypes.includes(fieldType);
+
+      const newFavoriteFieldTypes = isFavorite
+        ? state.favoriteFieldTypes.filter((t) => t !== fieldType)
+        : [...state.favoriteFieldTypes, fieldType];
+
+      saveToLocalStorage('formBuilder.favoriteFieldTypes', newFavoriteFieldTypes);
+
+      return {
+        ...state,
+        favoriteFieldTypes: newFavoriteFieldTypes,
+      };
+    }
+
     case 'IMPORT_FORM': {
       const importData = action.payload;
       const stateWithHistory = saveToHistory(state);
@@ -648,6 +697,8 @@ interface FormBuilderContextType {
   exportFormAsJSON: () => string;
   downloadFormJSON: () => void;
   importForm: (json: string) => { success: boolean; error?: string };
+  // Favorites helper function
+  toggleFavoriteFieldType: (fieldType: FieldType) => void;
   // Section helper functions
   addSection: (section: FormSection, index?: number) => void;
   updateSection: (id: string, updates: Partial<FormSection>) => void;
@@ -879,6 +930,11 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Favorites helper function
+  const toggleFavoriteFieldType = (fieldType: FieldType) => {
+    dispatch({ type: 'TOGGLE_FAVORITE_FIELD_TYPE', payload: fieldType });
+  };
+
   // General functions
   const setMode = (mode: 'builder' | 'preview') => {
     dispatch({ type: 'SET_MODE', payload: mode });
@@ -925,6 +981,7 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
         exportFormAsJSON,
         downloadFormJSON,
         importForm,
+        toggleFavoriteFieldType,
         addSection,
         updateSection,
         deleteSection,

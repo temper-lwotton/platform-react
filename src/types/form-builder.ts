@@ -106,6 +106,8 @@ export interface FormBuilderState {
   selectedSectionId?: string | null;
   clipboard: FormField[];
   templates: FieldTemplate[];
+  recentFieldTypes: FieldType[]; // Track recently used field types
+  favoriteFieldTypes: FieldType[]; // Track favorited field types
   mode: 'builder' | 'preview';
   history: FormSnapshot[];
   historyIndex: number;
@@ -137,6 +139,7 @@ export type FormBuilderAction =
   | { type: 'DELETE_TEMPLATE'; payload: string }
   | { type: 'UPDATE_TEMPLATE'; payload: { id: string; updates: Partial<FieldTemplate> } }
   | { type: 'ADD_FIELD_FROM_TEMPLATE'; payload: { templateId: string; sectionId?: string } }
+  | { type: 'TOGGLE_FAVORITE_FIELD_TYPE'; payload: FieldType }
   | { type: 'IMPORT_FORM'; payload: FormExport }
   | { type: 'SET_MODE'; payload: 'builder' | 'preview' }
   | { type: 'CLEAR_FORM' }

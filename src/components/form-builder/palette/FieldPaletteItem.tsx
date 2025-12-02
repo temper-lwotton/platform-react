@@ -6,6 +6,7 @@ import { useFormBuilder } from '../FormBuilderProvider';
 import { FormField } from '@/types/form-builder';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import * as LucideIcons from 'lucide-react';
+import { Star } from 'lucide-react';
 import styles from './FieldPaletteItem.module.scss';
 
 interface FieldPaletteItemProps {
@@ -13,13 +14,20 @@ interface FieldPaletteItemProps {
 }
 
 export default function FieldPaletteItem({ item }: FieldPaletteItemProps) {
-  const { state, addField } = useFormBuilder();
+  const { state, addField, toggleFavoriteFieldType } = useFormBuilder();
   const [isAdding, setIsAdding] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
+  const isFavorite = state.favoriteFieldTypes.includes(item.type);
 
   // Dynamically get the icon component
   const IconComponent = (LucideIcons as any)[item.icon];
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    // Don't add field if clicking on star button
+    if ((e.target as HTMLElement).closest(`.${styles.starButton}`)) {
+      return;
+    }
+
     setIsAdding(true);
 
     const newField: FormField = {
@@ -38,16 +46,23 @@ export default function FieldPaletteItem({ item }: FieldPaletteItemProps) {
     setTimeout(() => setIsAdding(false), 300);
   };
 
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleFavoriteFieldType(item.type);
+  };
+
   return (
     <Tooltip.Provider delayDuration={300}>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
-          <button
+          <div
             onClick={handleClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             className={`${styles.item} ${isAdding ? styles.adding : ''}`}
-            type="button"
+            role="button"
             aria-label={`Add ${item.label} field`}
-            disabled={isAdding}
+            tabIndex={0}
           >
             <div className={styles.icon}>
               {IconComponent && <IconComponent size={18} />}
@@ -55,7 +70,16 @@ export default function FieldPaletteItem({ item }: FieldPaletteItemProps) {
             <div className={styles.content}>
               <span className={styles.label}>{item.label}</span>
             </div>
-          </button>
+            {(isFavorite || isHovered) && (
+              <button
+                className={`${styles.starButton} ${isFavorite ? styles.favorited : ''}`}
+                onClick={handleToggleFavorite}
+                aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Star size={14} fill={isFavorite ? 'currentColor' : 'none'} />
+              </button>
+            )}
+          </div>
         </Tooltip.Trigger>
         <Tooltip.Portal>
           <Tooltip.Content className={styles.tooltipContent} sideOffset={5}>
