@@ -200,3 +200,32 @@
     margin-bottom: 0.25rem;
   }
 }
+
+// Conditional logic
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-background-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.conditionalSettings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  margin-top: 0.5rem;
+}

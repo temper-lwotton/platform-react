@@ -15,7 +15,12 @@ export type FieldType =
   | 'file'
   | 'switch'
   | 'rating'
-  | 'slider';
+  | 'slider'
+  | 'signature'
+  | 'color'
+  | 'url'
+  | 'currency'
+  | 'file-multiple';
 
 export type ValidationType =
   | 'required'
@@ -80,6 +85,14 @@ export interface FormSection {
   fields: FormField[];
 }
 
+export interface FormSnapshot {
+  formId?: string;
+  formTitle: string;
+  formDescription?: string;
+  fields: FormField[];
+  selectedFieldId?: string | null;
+}
+
 export interface FormBuilderState {
   formId?: string;
   formTitle: string;
@@ -87,6 +100,8 @@ export interface FormBuilderState {
   fields: FormField[];
   selectedFieldId?: string | null;
   mode: 'builder' | 'preview';
+  history: FormSnapshot[];
+  historyIndex: number;
 }
 
 export type FormBuilderAction =
@@ -95,11 +110,14 @@ export type FormBuilderAction =
   | { type: 'ADD_FIELD'; payload: { field: FormField; index?: number } }
   | { type: 'UPDATE_FIELD'; payload: { id: string; updates: Partial<FormField> } }
   | { type: 'DELETE_FIELD'; payload: string }
+  | { type: 'DUPLICATE_FIELD'; payload: string }
   | { type: 'REORDER_FIELDS'; payload: { fromIndex: number; toIndex: number } }
   | { type: 'SELECT_FIELD'; payload: string | null }
   | { type: 'SET_MODE'; payload: 'builder' | 'preview' }
   | { type: 'CLEAR_FORM' }
-  | { type: 'LOAD_FORM'; payload: FormBuilderState };
+  | { type: 'LOAD_FORM'; payload: FormBuilderState }
+  | { type: 'UNDO' }
+  | { type: 'REDO' };
 
 // Field palette item definition
 export interface FieldPaletteItem {

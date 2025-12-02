@@ -22,7 +22,7 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import styles from './FormBuilder.module.scss';
 
 function FormBuilderContent() {
-  const { state, reorderFields } = useFormBuilder();
+  const { state, reorderFields, undo, redo, canUndo, canRedo } = useFormBuilder();
   const [activeId, setActiveId] = React.useState<string | null>(null);
 
   const sensors = useSensors(
@@ -33,6 +33,29 @@ function FormBuilderContent() {
     }),
     useSensor(KeyboardSensor)
   );
+
+  // Keyboard shortcuts for undo/redo
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Cmd/Ctrl + Z for undo
+      if ((event.metaKey || event.ctrlKey) && event.key === 'z' && !event.shiftKey) {
+        if (canUndo) {
+          event.preventDefault();
+          undo();
+        }
+      }
+      // Cmd/Ctrl + Shift + Z for redo
+      else if ((event.metaKey || event.ctrlKey) && event.key === 'z' && event.shiftKey) {
+        if (canRedo) {
+          event.preventDefault();
+          redo();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [undo, redo, canUndo, canRedo]);
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);

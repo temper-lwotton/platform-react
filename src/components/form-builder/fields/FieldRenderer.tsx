@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/primitives/Switch';
 import RatingField from './RatingField';
 import SliderField from './SliderField';
 import CheckboxGroupField from './CheckboxGroupField';
+import SignatureField from './SignatureField';
 import styles from './FieldRenderer.module.scss';
 
 interface FieldRendererProps {
@@ -168,6 +169,62 @@ export default function FieldRenderer({
             min={field.min || 0}
             max={field.max || 100}
             step={field.step || 1}
+          />
+        );
+
+      case 'signature':
+        return (
+          <SignatureField
+            value={value || ''}
+            onChange={onChange}
+          />
+        );
+
+      case 'color':
+        return (
+          <Input
+            type="color"
+            value={value || field.defaultValue || '#3b82f6'}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
+            error={error}
+          />
+        );
+
+      case 'url':
+        return (
+          <Input
+            type="url"
+            placeholder={field.placeholder}
+            value={value || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
+            error={error}
+          />
+        );
+
+      case 'currency':
+        return (
+          <div className={styles.currencyWrapper}>
+            <span className={styles.currencySymbol}>$</span>
+            <Input
+              type="number"
+              placeholder={field.placeholder}
+              value={value || ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.value)}
+              min={0}
+              step={0.01}
+              error={error}
+            />
+          </div>
+        );
+
+      case 'file-multiple':
+        return (
+          <Input
+            type="file"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.files)}
+            accept={field.accept}
+            multiple={true}
+            error={error}
           />
         );
 

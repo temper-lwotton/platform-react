@@ -49,3 +49,22 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.currencyWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .currencySymbol {
+    position: absolute;
+    left: 0.75rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  input {
+    padding-left: 2rem;
+  }
+}

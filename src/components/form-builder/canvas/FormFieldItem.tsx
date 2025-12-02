@@ -5,7 +5,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FormField } from '@/types/form-builder';
 import { useFormBuilder } from '../FormBuilderProvider';
-import { GripVertical, Trash2, Settings } from 'lucide-react';
+import { GripVertical, Trash2, Settings, Copy, GitBranch } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { getFieldPaletteItem } from '../field-palette-config';
 import styles from './FormFieldItem.module.scss';
@@ -19,7 +19,7 @@ export default function FormFieldItem({
   field,
   isDragOverlay = false,
 }: FormFieldItemProps) {
-  const { state, deleteField, selectField } = useFormBuilder();
+  const { state, deleteField, duplicateField, selectField } = useFormBuilder();
   const isSelected = state.selectedFieldId === field.id;
 
   const {
@@ -49,6 +49,11 @@ export default function FormFieldItem({
     if (confirm('Are you sure you want to delete this field?')) {
       deleteField(field.id);
     }
+  };
+
+  const handleDuplicate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    duplicateField(field.id);
   };
 
   const handleSelect = () => {
@@ -95,12 +100,20 @@ export default function FormFieldItem({
           <div className={styles.helpText}>{field.helpText}</div>
         )}
 
-        {field.validations.length > 0 && (
-          <div className={styles.validations}>
-            {field.validations.length} validation
-            {field.validations.length !== 1 ? 's' : ''}
-          </div>
-        )}
+        <div className={styles.badges}>
+          {field.validations.length > 0 && (
+            <div className={styles.validations}>
+              {field.validations.length} validation
+              {field.validations.length !== 1 ? 's' : ''}
+            </div>
+          )}
+          {field.conditionalLogic && (
+            <div className={styles.conditionalBadge} title="Conditional field">
+              <GitBranch size={12} />
+              Conditional
+            </div>
+          )}
+        </div>
       </div>
 
       <div className={styles.actions}>
@@ -110,6 +123,13 @@ export default function FormFieldItem({
           aria-label="Configure field"
         >
           <Settings size={16} />
+        </button>
+        <button
+          className={styles.actionButton}
+          onClick={handleDuplicate}
+          aria-label="Duplicate field"
+        >
+          <Copy size={16} />
         </button>
         <button
           className={styles.actionButton}

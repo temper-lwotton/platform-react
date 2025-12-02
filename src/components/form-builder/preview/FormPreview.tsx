@@ -19,12 +19,16 @@ export default function FormPreview() {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm({
     defaultValues: state.fields.reduce((acc, field) => {
       acc[field.id] = field.defaultValue || '';
       return acc;
     }, {} as FormSubmissionData),
   });
+
+  // Watch all form values for conditional logic
+  const formValues = watch();
 
   const onSubmit = (data: FormSubmissionData) => {
     console.log('Form submitted:', data);
@@ -71,6 +75,27 @@ export default function FormPreview() {
     );
   }
 
+  // Evaluate if a field should be visible based on conditional logic
+  const isFieldVisible = (field: any): boolean => {
+    if (!field.conditionalLogic) return true;
+
+    const { show, when, is } = field.conditionalLogic;
+    const targetValue = formValues[when];
+
+    // Compare values
+    let conditionMet = false;
+    if (typeof is === 'boolean') {
+      conditionMet = targetValue === is;
+    } else if (typeof targetValue === 'boolean') {
+      conditionMet = targetValue.toString() === is.toString();
+    } else {
+      conditionMet = String(targetValue) === String(is);
+    }
+
+    // Return visibility based on show flag
+    return show ? conditionMet : !conditionMet;
+  };
+
   // Build validation rules for React Hook Form
   const getValidationRules = (field: any) => {
     const rules: any = {};
@@ -116,6 +141,12 @@ export default function FormPreview() {
             message: validation.message,
           };
           break;
+        case 'url':
+          rules.pattern = {
+            value: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+            message: validation.message,
+          };
+          break;
       }
     });
 
@@ -132,22 +163,28 @@ export default function FormPreview() {
 
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <div className={styles.fieldsGrid}>
-            {state.fields.map((field) => (
-              <Controller
-                key={field.id}
-                name={field.id}
-                control={control}
-                rules={getValidationRules(field)}
-                render={({ field: { value, onChange } }) => (
-                  <FieldRenderer
-                    field={field}
-                    value={value}
-                    onChange={onChange}
-                    error={errors[field.id]?.message as string}
-                  />
-                )}
-              />
-            ))}
+            {state.fields.map((field) => {
+              const visible = isFieldVisible(field);
+
+              if (!visible) return null;
+
+              return (
+                <Controller
+                  key={field.id}
+                  name={field.id}
+                  control={control}
+                  rules={getValidationRules(field)}
+                  render={({ field: { value, onChange } }) => (
+                    <FieldRenderer
+                      field={field}
+                      value={value}
+                      onChange={onChange}
+                      error={errors[field.id]?.message as string}
+                    />
+                  )}
+                />
+              );
+            })}
           </div>
 
           <div className={styles.formActions}>

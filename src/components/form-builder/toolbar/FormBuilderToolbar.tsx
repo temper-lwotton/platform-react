@@ -4,11 +4,11 @@ import React from 'react';
 import { useFormBuilder } from '../FormBuilderProvider';
 import { Button } from '@/components/ui/primitives/Button';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Save, Trash2, Eye, Edit3 } from 'lucide-react';
+import { Save, Trash2, Eye, Edit3, Undo, Redo } from 'lucide-react';
 import styles from './FormBuilderToolbar.module.scss';
 
 export default function FormBuilderToolbar() {
-  const { state, dispatch, setMode, clearForm } = useFormBuilder();
+  const { state, dispatch, setMode, clearForm, undo, redo, canUndo, canRedo } = useFormBuilder();
 
   const handleClearForm = () => {
     if (
@@ -65,6 +65,27 @@ export default function FormBuilderToolbar() {
             </Tabs.Trigger>
           </Tabs.List>
         </Tabs.Root>
+
+        <div className={styles.buttonGroup}>
+          <Button
+            onClick={undo}
+            variant="ghost"
+            size="sm"
+            disabled={!canUndo}
+            title="Undo (Cmd+Z)"
+          >
+            <Undo size={16} />
+          </Button>
+          <Button
+            onClick={redo}
+            variant="ghost"
+            size="sm"
+            disabled={!canRedo}
+            title="Redo (Cmd+Shift+Z)"
+          >
+            <Redo size={16} />
+          </Button>
+        </div>
 
         <div className={styles.buttonGroup}>
           <Button

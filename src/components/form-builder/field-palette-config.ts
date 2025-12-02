@@ -199,6 +199,74 @@ export const FIELD_PALETTE_ITEMS: FieldPaletteItem[] = [
       width: 'full',
     },
   },
+  {
+    type: 'signature',
+    icon: 'PenTool',
+    label: 'Signature',
+    description: 'Signature pad for drawing',
+    defaultConfig: {
+      label: 'Your Signature',
+      helpText: 'Draw your signature in the box below',
+      validations: [],
+      width: 'full',
+    },
+  },
+  {
+    type: 'color',
+    icon: 'Palette',
+    label: 'Color Picker',
+    description: 'Color selection input',
+    defaultConfig: {
+      label: 'Choose a color',
+      defaultValue: '#3b82f6',
+      validations: [],
+      width: 'half',
+    },
+  },
+  {
+    type: 'url',
+    icon: 'Link',
+    label: 'URL',
+    description: 'Website URL input',
+    defaultConfig: {
+      label: 'Website URL',
+      placeholder: 'https://example.com',
+      validations: [
+        {
+          id: 'url-pattern',
+          type: 'url',
+          message: 'Please enter a valid URL',
+        },
+      ],
+      width: 'full',
+    },
+  },
+  {
+    type: 'currency',
+    icon: 'DollarSign',
+    label: 'Currency',
+    description: 'Monetary value input',
+    defaultConfig: {
+      label: 'Amount',
+      placeholder: '0.00',
+      helpText: 'Enter amount in USD',
+      validations: [],
+      width: 'half',
+    },
+  },
+  {
+    type: 'file-multiple',
+    icon: 'Files',
+    label: 'Multi-File Upload',
+    description: 'Multiple file upload',
+    defaultConfig: {
+      label: 'Upload files',
+      helpText: 'You can upload multiple files (max 10MB each)',
+      multiple: true,
+      validations: [],
+      width: 'full',
+    },
+  },
 ];
 
 export function getFieldPaletteItem(type: FieldType): FieldPaletteItem | undefined {
