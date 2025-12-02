@@ -10,6 +10,7 @@ import {
   FieldTemplate,
   FormExport,
   FieldType,
+  FormTemplate,
 } from '@/types/form-builder';
 import { BUILT_IN_TEMPLATES } from './built-in-templates';
 
@@ -45,6 +46,7 @@ const initialState: FormBuilderState = {
   selectedSectionId: null,
   clipboard: [],
   templates: BUILT_IN_TEMPLATES,
+  formTemplates: loadFromLocalStorage<FormTemplate[]>('formBuilder.formTemplates', []),
   recentFieldTypes: loadFromLocalStorage<FieldType[]>('formBuilder.recentFieldTypes', []),
   favoriteFieldTypes: loadFromLocalStorage<FieldType[]>('formBuilder.favoriteFieldTypes', []),
   mode: 'builder',
@@ -640,6 +642,108 @@ function formBuilderReducer(
       };
     }
 
+    case 'SAVE_FORM_TEMPLATE': {
+      const { name, description } = action.payload;
+
+      // Create field mapping for sections
+      const sectionFieldMapping = state.sections.map((section, sectionIndex) => ({
+        sectionIndex,
+        fieldIndices: section.fieldIds.map((fieldId) =>
+          state.fields.findIndex((f) => f.id === fieldId)
+        ).filter((index) => index !== -1),
+      }));
+
+      // Remove IDs from fields
+      const fieldsWithoutIds = state.fields.map(({ id, ...field }) => field);
+
+      // Remove IDs and fieldIds from sections
+      const sectionsWithoutIds = state.sections.map(({ id, fieldIds, ...section }) => section);
+
+      const newTemplate: FormTemplate = {
+        id: `form-template-${Date.now()}`,
+        name,
+        description,
+        formTitle: state.formTitle,
+        formDescription: state.formDescription,
+        fields: fieldsWithoutIds,
+        sections: sectionsWithoutIds,
+        sectionFieldMapping,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      const newFormTemplates = [...state.formTemplates, newTemplate];
+      saveToLocalStorage('formBuilder.formTemplates', newFormTemplates);
+
+      return {
+        ...state,
+        formTemplates: newFormTemplates,
+      };
+    }
+
+    case 'LOAD_FORM_TEMPLATE': {
+      const templateId = action.payload;
+      const template = state.formTemplates.find((t) => t.id === templateId);
+
+      if (!template) return state;
+
+      const stateWithHistory = saveToHistory(state);
+
+      // Generate new IDs for all fields
+      const newFields: FormField[] = template.fields.map((field, index) => ({
+        ...field,
+        id: `field-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+      }));
+
+      // Generate new IDs for sections and map field IDs
+      const newSections: FormSection[] = template.sections.map((section, sectionIndex) => {
+        // Find the mapping for this section
+        const mapping = template.sectionFieldMapping.find((m) => m.sectionIndex === sectionIndex);
+        const fieldIds = mapping
+          ? mapping.fieldIndices.map((fieldIndex) => newFields[fieldIndex]?.id).filter(Boolean)
+          : [];
+
+        return {
+          ...section,
+          id: `section-${Date.now()}-${sectionIndex}`,
+          fieldIds,
+        };
+      });
+
+      return {
+        ...stateWithHistory,
+        formTitle: template.formTitle,
+        formDescription: template.formDescription,
+        fields: newFields,
+        sections: newSections,
+        selectedFieldIds: [],
+        selectedSectionId: null,
+      };
+    }
+
+    case 'DELETE_FORM_TEMPLATE': {
+      const newFormTemplates = state.formTemplates.filter((t) => t.id !== action.payload);
+      saveToLocalStorage('formBuilder.formTemplates', newFormTemplates);
+
+      return {
+        ...state,
+        formTemplates: newFormTemplates,
+      };
+    }
+
+    case 'UPDATE_FORM_TEMPLATE': {
+      const { id, updates } = action.payload;
+      const newFormTemplates = state.formTemplates.map((template) =>
+        template.id === id ? { ...template, ...updates, updatedAt: Date.now() } : template
+      );
+      saveToLocalStorage('formBuilder.formTemplates', newFormTemplates);
+
+      return {
+        ...state,
+        formTemplates: newFormTemplates,
+      };
+    }
+
     case 'UNDO': {
       if (state.historyIndex > 0) {
         const previousSnapshot = state.history[state.historyIndex - 1];
@@ -692,6 +796,11 @@ interface FormBuilderContextType {
   updateTemplate: (id: string, updates: Partial<FieldTemplate>) => void;
   addFieldFromTemplate: (templateId: string, sectionId?: string) => void;
   saveFieldAsTemplate: (fieldId: string, name: string, description?: string) => void;
+  // Form Template helper functions
+  saveFormAsTemplate: (name: string, description?: string) => void;
+  loadFormTemplate: (id: string) => void;
+  deleteFormTemplate: (id: string) => void;
+  updateFormTemplate: (id: string, updates: Partial<FormTemplate>) => void;
   // Import/Export functions
   exportForm: () => FormExport;
   exportFormAsJSON: () => string;
@@ -930,6 +1039,23 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Form Template helper functions
+  const saveFormAsTemplate = (name: string, description?: string) => {
+    dispatch({ type: 'SAVE_FORM_TEMPLATE', payload: { name, description } });
+  };
+
+  const loadFormTemplate = (id: string) => {
+    dispatch({ type: 'LOAD_FORM_TEMPLATE', payload: id });
+  };
+
+  const deleteFormTemplate = (id: string) => {
+    dispatch({ type: 'DELETE_FORM_TEMPLATE', payload: id });
+  };
+
+  const updateFormTemplate = (id: string, updates: Partial<FormTemplate>) => {
+    dispatch({ type: 'UPDATE_FORM_TEMPLATE', payload: { id, updates } });
+  };
+
   // Favorites helper function
   const toggleFavoriteFieldType = (fieldType: FieldType) => {
     dispatch({ type: 'TOGGLE_FAVORITE_FIELD_TYPE', payload: fieldType });
@@ -977,6 +1103,10 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
         updateTemplate,
         addFieldFromTemplate,
         saveFieldAsTemplate,
+        saveFormAsTemplate,
+        loadFormTemplate,
+        deleteFormTemplate,
+        updateFormTemplate,
         exportForm,
         exportFormAsJSON,
         downloadFormJSON,

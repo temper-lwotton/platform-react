@@ -4,13 +4,17 @@ import React, { useState } from 'react';
 import { useFormBuilder } from '../FormBuilderProvider';
 import { Button } from '@/components/ui/primitives/Button';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Save, Trash2, Eye, Edit3, Undo, Redo, Download, Upload } from 'lucide-react';
+import { Save, Trash2, Eye, Edit3, Undo, Redo, Download, Upload, FileText, FolderOpen } from 'lucide-react';
 import ImportFormDialog from '../dialogs/ImportFormDialog';
+import SaveFormTemplateDialog from '../dialogs/SaveFormTemplateDialog';
+import LoadFormTemplateDialog from '../dialogs/LoadFormTemplateDialog';
 import styles from './FormBuilderToolbar.module.scss';
 
 export default function FormBuilderToolbar() {
   const { state, dispatch, setMode, clearForm, undo, redo, canUndo, canRedo, downloadFormJSON } = useFormBuilder();
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [saveTemplateDialogOpen, setSaveTemplateDialogOpen] = useState(false);
+  const [loadTemplateDialogOpen, setLoadTemplateDialogOpen] = useState(false);
 
   const handleClearForm = () => {
     if (
@@ -113,6 +117,28 @@ export default function FormBuilderToolbar() {
 
         <div className={styles.buttonGroup}>
           <Button
+            onClick={() => setLoadTemplateDialogOpen(true)}
+            variant="ghost"
+            size="sm"
+            title="Load a saved form template"
+          >
+            <FolderOpen size={16} />
+            Load Template
+          </Button>
+          <Button
+            onClick={() => setSaveTemplateDialogOpen(true)}
+            variant="ghost"
+            size="sm"
+            disabled={state.fields.length === 0}
+            title="Save current form as template"
+          >
+            <FileText size={16} />
+            Save Template
+          </Button>
+        </div>
+
+        <div className={styles.buttonGroup}>
+          <Button
             onClick={handleClearForm}
             variant="outline"
             size="sm"
@@ -131,6 +157,14 @@ export default function FormBuilderToolbar() {
       <ImportFormDialog
         open={importDialogOpen}
         onOpenChange={setImportDialogOpen}
+      />
+      <SaveFormTemplateDialog
+        open={saveTemplateDialogOpen}
+        onOpenChange={setSaveTemplateDialogOpen}
+      />
+      <LoadFormTemplateDialog
+        open={loadTemplateDialogOpen}
+        onOpenChange={setLoadTemplateDialogOpen}
       />
     </div>
   );

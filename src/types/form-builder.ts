@@ -133,6 +133,7 @@ export interface FormBuilderState {
   selectedSectionId?: string | null;
   clipboard: FormField[];
   templates: FieldTemplate[];
+  formTemplates: FormTemplate[]; // User-saved form templates
   recentFieldTypes: FieldType[]; // Track recently used field types
   favoriteFieldTypes: FieldType[]; // Track favorited field types
   mode: 'builder' | 'preview';
@@ -166,6 +167,10 @@ export type FormBuilderAction =
   | { type: 'DELETE_TEMPLATE'; payload: string }
   | { type: 'UPDATE_TEMPLATE'; payload: { id: string; updates: Partial<FieldTemplate> } }
   | { type: 'ADD_FIELD_FROM_TEMPLATE'; payload: { templateId: string; sectionId?: string } }
+  | { type: 'SAVE_FORM_TEMPLATE'; payload: { name: string; description?: string } }
+  | { type: 'LOAD_FORM_TEMPLATE'; payload: string } // template ID
+  | { type: 'DELETE_FORM_TEMPLATE'; payload: string }
+  | { type: 'UPDATE_FORM_TEMPLATE'; payload: { id: string; updates: Partial<FormTemplate> } }
   | { type: 'TOGGLE_FAVORITE_FIELD_TYPE'; payload: FieldType }
   | { type: 'IMPORT_FORM'; payload: FormExport }
   | { type: 'SET_MODE'; payload: 'builder' | 'preview' }
@@ -203,6 +208,20 @@ export interface FieldTemplate {
   field: Omit<FormField, 'id'>; // Field without ID (will be generated on use)
   isBuiltIn?: boolean; // Built-in templates can't be deleted
   createdAt?: number;
+}
+
+// Form template definition (entire form configuration)
+export interface FormTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  formTitle: string;
+  formDescription?: string;
+  fields: Omit<FormField, 'id'>[]; // Fields without IDs (will be generated on use)
+  sections: Omit<FormSection, 'id' | 'fieldIds'>[]; // Sections without IDs, fieldIds will be mapped
+  sectionFieldMapping: { sectionIndex: number; fieldIndices: number[] }[]; // Maps section to field indices
+  createdAt: number;
+  updatedAt: number;
 }
 
 // Form submission types (for runtime validation)
