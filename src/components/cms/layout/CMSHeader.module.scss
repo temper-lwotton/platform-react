@@ -1,0 +1,196 @@
+@use '../../../styles/abstracts' as *;
+
+.header {
+  height: 4rem;
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menuButton {
+  @include button-base;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+
+  &:hover {
+    background: var(--color-bg-hover);
+  }
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  transition: background 0.2s;
+
+  &:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-text-primary);
+  }
+}
+
+.backIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.backText {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.notificationButton {
+  @include button-base;
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+
+  &:hover {
+    background: var(--color-bg-hover);
+  }
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--color-error);
+  border-radius: 50%;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--color-border-primary);
+}
+
+.userInfo {
+  text-align: right;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.userName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  display: block;
+}
+
+.userRole {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  display: block;
+}
+
+.userMenuWrapper {
+  position: relative;
+
+  &:hover .userMenu {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.userButton {
+  @include button-base;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+
+  &:hover {
+    background: var(--color-bg-hover);
+  }
+}
+
+.userMenu {
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 12rem;
+  background: var(--color-bg-primary);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border-primary);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+  z-index: 50;
+}
+
+.menuContent {
+  padding: 0.5rem 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-bg-hover);
+  }
+
+  &.danger {
+    color: var(--color-error);
+
+    &:hover {
+      background: var(--color-error-bg);
+    }
+  }
+}
+
+.menuIcon {
+  width: 1rem;
+  height: 1rem;
+}

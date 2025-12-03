@@ -1,0 +1,248 @@
+@use '../../styles/abstracts' as *;
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.headerSection {
+  h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statCard {
+  @include card-base;
+  padding: 1.5rem;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    @include card-hover;
+  }
+}
+
+.statCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.statIcon {
+  padding: 0.75rem;
+  background: var(--color-primary-bg);
+  border-radius: 0.5rem;
+}
+
+.statIconSvg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-primary);
+}
+
+.statTrend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+
+  &.positive {
+    color: var(--color-success);
+  }
+
+  &.negative {
+    color: var(--color-error);
+  }
+}
+
+.trendIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.statTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.25rem 0;
+}
+
+.statValue {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.section {
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 1rem 0;
+  }
+}
+
+.quickActionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.quickAction {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-bg-primary);
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border-primary);
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.actionIcon {
+  padding: 0.5rem;
+  background: var(--color-primary-bg);
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.actionIconSvg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-primary);
+}
+
+.actionContent {
+  flex: 1;
+}
+
+.actionTitle {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.actionDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.actionPlus {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.activityCard {
+  @include card-base;
+}
+
+.activityContent {
+  padding: 1.5rem;
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-secondary);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.activityInfo {
+  flex: 1;
+}
+
+.activityText {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+
+  .user {
+    font-weight: 500;
+  }
+
+  .action {
+    color: var(--color-text-secondary);
+  }
+
+  .item {
+    font-weight: 500;
+  }
+}
+
+.activityTime {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.activityBadge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+
+  &.created {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+  }
+
+  &.updated {
+    background: var(--color-primary-bg);
+    color: var(--color-primary);
+  }
+
+  &.published {
+    background: var(--color-info-bg);
+    color: var(--color-info);
+  }
+}
