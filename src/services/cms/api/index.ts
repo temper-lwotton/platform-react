@@ -10,3 +10,4 @@ export { taxonomiesAPI, termsAPI } from './taxonomies';
 export { blockTemplatesAPI } from './blocks';
 export * as mediaAPI from './media';
 export * as settingsAPI from './settings';
+export * as permissionsAPI from './permissions';

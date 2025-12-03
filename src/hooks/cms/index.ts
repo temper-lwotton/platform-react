@@ -9,3 +9,4 @@ export * from './useTaxonomies';
 export * from './useBlockTemplates';
 export * from './useMedia';
 export * from './useSettings';
+export * from './usePermissions';

@@ -9,6 +9,7 @@ import {
   Tags,
   Blocks,
   Image,
+  Shield,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -57,6 +58,11 @@ const navItems: NavItem[] = [
     label: 'Media',
     href: '/admin/media',
     icon: Image,
+  },
+  {
+    label: 'User Roles',
+    href: '/admin/users/roles',
+    icon: Shield,
   },
   {
     label: 'Settings',

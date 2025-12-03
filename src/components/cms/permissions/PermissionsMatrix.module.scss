@@ -1,0 +1,149 @@
+@use '../../../styles/abstracts' as *;
+
+.container {
+  margin-top: 3rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.headerIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--color-primary);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.group {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.groupHeader {
+  padding: 1.25rem 1.5rem;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.groupTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 0.375rem 0;
+}
+
+.groupDescription {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.matrixTable {
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background: var(--color-bg-secondary);
+
+      th {
+        padding: 1rem 1.25rem;
+        text-align: center;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        white-space: nowrap;
+
+        &.capabilityHeader {
+          text-align: left;
+          width: 30%;
+        }
+
+        &.roleHeader {
+          width: 14%;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border-top: 1px solid var(--color-border-primary);
+
+        &:hover {
+          background: var(--color-bg-hover);
+        }
+      }
+
+      td {
+        padding: 0.875rem 1.25rem;
+      }
+    }
+  }
+}
+
+.roleHeaderBadge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.capabilityCell {
+  text-align: left;
+}
+
+.capabilityCode {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  font-size: 0.8125rem;
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.checkCell {
+  text-align: center;
+}
+
+.checkIcon,
+.xIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.checkIcon {
+  color: var(--color-success, #22c55e);
+}
+
+.xIcon {
+  color: var(--color-text-tertiary);
+  opacity: 0.3;
+}
