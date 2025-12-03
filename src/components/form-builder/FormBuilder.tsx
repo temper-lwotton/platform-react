@@ -342,10 +342,10 @@ function FormBuilderContent() {
   );
 }
 
-export default function FormBuilder() {
+export default function FormBuilder({ formId }: { formId: number | null }) {
   return (
     <Tooltip.Provider>
-      <FormBuilderProvider>
+      <FormBuilderProvider formId={formId}>
         <FormBuilderContent />
       </FormBuilderProvider>
     </Tooltip.Provider>

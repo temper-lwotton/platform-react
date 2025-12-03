@@ -110,11 +110,13 @@ export interface FormSection {
   title: string;
   description?: string;
   collapsed?: boolean;
+  isCollapsible?: boolean;
+  isCollapsedByDefault?: boolean;
   fieldIds: string[]; // References to field IDs
 }
 
 export interface FormSnapshot {
-  formId?: string;
+  formId?: string | number;
   formTitle: string;
   formDescription?: string;
   fields: FormField[];
@@ -124,7 +126,7 @@ export interface FormSnapshot {
 }
 
 export interface FormBuilderState {
-  formId?: string;
+  formId?: string | number;
   formTitle: string;
   formDescription?: string;
   fields: FormField[];

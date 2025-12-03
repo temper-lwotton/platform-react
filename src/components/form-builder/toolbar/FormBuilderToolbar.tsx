@@ -11,7 +11,7 @@ import LoadFormTemplateDialog from '../dialogs/LoadFormTemplateDialog';
 import styles from './FormBuilderToolbar.module.scss';
 
 export default function FormBuilderToolbar() {
-  const { state, dispatch, setMode, clearForm, undo, redo, canUndo, canRedo, downloadFormJSON } = useFormBuilder();
+  const { state, dispatch, setMode, clearForm, undo, redo, canUndo, canRedo, downloadFormJSON, saveForm, isSaving } = useFormBuilder();
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [saveTemplateDialogOpen, setSaveTemplateDialogOpen] = useState(false);
   const [loadTemplateDialogOpen, setLoadTemplateDialogOpen] = useState(false);
@@ -25,10 +25,13 @@ export default function FormBuilderToolbar() {
     }
   };
 
-  const handleSave = () => {
-    // TODO: Implement save functionality (API integration)
-    console.log('Saving form:', state);
-    alert('Save functionality will be implemented with API integration');
+  const handleSave = async () => {
+    try {
+      await saveForm();
+    } catch (error) {
+      console.error('Failed to save form:', error);
+      alert('Failed to save form. Please try again.');
+    }
   };
 
   return (
@@ -147,9 +150,9 @@ export default function FormBuilderToolbar() {
             <Trash2 size={16} />
             Clear
           </Button>
-          <Button onClick={handleSave} variant="primary" size="sm">
+          <Button onClick={handleSave} variant="primary" size="sm" disabled={isSaving}>
             <Save size={16} />
-            Save
+            {isSaving ? 'Saving...' : 'Save'}
           </Button>
         </div>
       </div>

@@ -156,7 +156,8 @@ export function isFieldRequired(
   formData: Record<string, any>
 ): boolean {
   // Check base required validation
-  const hasRequiredValidation = field.validations.some((v) => v.type === 'required');
+  const validations = field.validations || [];
+  const hasRequiredValidation = validations.some((v) => v.type === 'required');
 
   if (!field.conditionalLogic) {
     return hasRequiredValidation;
@@ -187,7 +188,8 @@ export function validateField(
     return { valid: true, errors: [] };
   }
 
-  for (const validation of field.validations) {
+  const validations = field.validations || [];
+  for (const validation of validations) {
     let isValid = true;
 
     switch (validation.type) {

@@ -17,17 +17,19 @@ interface ValidationSettingsProps {
 export default function ValidationSettings({ field }: ValidationSettingsProps) {
   const { state, updateField } = useFormBuilder();
 
+  const validations = field.validations || [];
+
   const hasValidation = (type: string) =>
-    field.validations.some((v) => v.type === type);
+    validations.some((v) => v.type === type);
 
   const getValidation = (type: string) =>
-    field.validations.find((v) => v.type === type);
+    validations.find((v) => v.type === type);
 
   const toggleValidation = (type: string, defaultMessage: string) => {
     if (hasValidation(type)) {
       // Remove validation
       updateField(field.id, {
-        validations: field.validations.filter((v) => v.type !== type),
+        validations: validations.filter((v) => v.type !== type),
       });
     } else {
       // Add validation
@@ -37,7 +39,7 @@ export default function ValidationSettings({ field }: ValidationSettingsProps) {
         message: defaultMessage,
       };
       updateField(field.id, {
-        validations: [...field.validations, newValidation],
+        validations: [...validations, newValidation],
       });
     }
   };
@@ -47,7 +49,7 @@ export default function ValidationSettings({ field }: ValidationSettingsProps) {
     updates: Partial<ValidationRule>
   ) => {
     updateField(field.id, {
-      validations: field.validations.map((v) =>
+      validations: validations.map((v) =>
         v.type === type ? { ...v, ...updates } : v
       ),
     });

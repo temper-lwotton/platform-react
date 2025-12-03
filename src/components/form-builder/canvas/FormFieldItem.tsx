@@ -112,7 +112,7 @@ export default function FormFieldItem({
         )}
 
         <div className={styles.badges}>
-          {field.validations.length > 0 && (
+          {field.validations && field.validations.length > 0 && (
             <div className={styles.validations}>
               {field.validations.length} validation
               {field.validations.length !== 1 ? 's' : ''}

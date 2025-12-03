@@ -1,10 +1,15 @@
-import FormBuilder from '@/components/form-builder/FormBuilder';
+'use client';
 
-export const metadata = {
-  title: 'Form Builder',
-  description: 'Create and customize forms with drag-and-drop interface',
-};
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function FormBuilderPage() {
-  return <FormBuilder />;
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to forms listing page
+    router.replace('/forms');
+  }, [router]);
+
+  return null;
 }

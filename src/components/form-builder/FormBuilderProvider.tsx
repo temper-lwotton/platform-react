@@ -1,6 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import {
   FormBuilderState,
   FormBuilderAction,
@@ -13,6 +15,7 @@ import {
   FormTemplate,
 } from '@/types/form-builder';
 import { BUILT_IN_TEMPLATES } from './built-in-templates';
+import { getForm, createForm, updateForm as updateFormApi, type CreateFormData } from '@/lib/forms';
 
 const MAX_HISTORY = 50;
 const MAX_RECENT_FIELDS = 10;
@@ -37,7 +40,8 @@ const saveToLocalStorage = <T,>(key: string, value: T) => {
   }
 };
 
-const initialState: FormBuilderState = {
+const getInitialState = (formId?: number | null): FormBuilderState => ({
+  formId: formId || undefined,
   formTitle: 'Untitled Form',
   formDescription: '',
   fields: [],
@@ -52,7 +56,7 @@ const initialState: FormBuilderState = {
   mode: 'builder',
   history: [],
   historyIndex: -1,
-};
+});
 
 // Helper function to increment label if it ends with a number
 function incrementLabel(label: string): string {
@@ -202,7 +206,7 @@ function formBuilderReducer(
         ...fieldToDuplicate,
         id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         label: incrementLabel(fieldToDuplicate.label),
-        validations: fieldToDuplicate.validations.map((v) => ({ ...v })),
+        validations: fieldToDuplicate.validations ? fieldToDuplicate.validations.map((v) => ({ ...v })) : [],
         options: fieldToDuplicate.options?.map((o) => ({ ...o })),
       };
 
@@ -451,7 +455,7 @@ function formBuilderReducer(
           ...fieldToDuplicate,
           id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           label: incrementLabel(fieldToDuplicate.label),
-          validations: fieldToDuplicate.validations.map((v) => ({ ...v })),
+          validations: fieldToDuplicate.validations ? fieldToDuplicate.validations.map((v) => ({ ...v })) : [],
           options: fieldToDuplicate.options?.map((o) => ({ ...o })),
         };
 
@@ -475,7 +479,7 @@ function formBuilderReducer(
         ...state,
         clipboard: fieldsToCopy.map((field) => ({
           ...field,
-          validations: field.validations.map((v) => ({ ...v })),
+          validations: field.validations ? field.validations.map((v) => ({ ...v })) : [],
           options: field.options?.map((o) => ({ ...o })),
         })),
       };
@@ -493,7 +497,7 @@ function formBuilderReducer(
         const pastedField: FormField = {
           ...field,
           id: `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          validations: field.validations.map((v) => ({ ...v })),
+          validations: field.validations ? field.validations.map((v) => ({ ...v })) : [],
           options: field.options?.map((o) => ({ ...o })),
         };
 
@@ -538,7 +542,7 @@ function formBuilderReducer(
 
     case 'CLEAR_FORM':
       return {
-        ...initialState,
+        ...getInitialState(),
         formTitle: 'Untitled Form',
       };
 
@@ -823,14 +827,125 @@ interface FormBuilderContextType {
   redo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  // API functions
+  saveForm: () => Promise<void>;
+  isSaving: boolean;
+  isLoading: boolean;
+  loadError: Error | null;
 }
 
 const FormBuilderContext = createContext<FormBuilderContextType | undefined>(
   undefined
 );
 
-export function FormBuilderProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(formBuilderReducer, initialState);
+export function FormBuilderProvider({ children, formId }: { children: ReactNode; formId?: number | null }) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [state, dispatch] = useReducer(formBuilderReducer, getInitialState(formId));
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load form from API if formId is provided
+  const { data: loadedForm, isLoading, error: loadError } = useQuery({
+    queryKey: ['form', formId],
+    queryFn: () => getForm(formId!),
+    enabled: !!formId && formId > 0,
+  });
+
+  // Initialize form data when loaded
+  useEffect(() => {
+    if (loadedForm && !isInitialized) {
+      // Load the form data into state
+      dispatch({ type: 'SET_FORM_TITLE', payload: loadedForm.title });
+      dispatch({ type: 'SET_FORM_DESCRIPTION', payload: loadedForm.description || '' });
+
+      // Load sections first
+      loadedForm.sections.forEach((section, index) => {
+        dispatch({ type: 'ADD_SECTION', payload: { section, index } });
+      });
+
+      // Load fields with proper transformation
+      loadedForm.fields.forEach((apiField, index) => {
+        const sectionId = loadedForm.sections.find(s =>
+          s.fieldIds.includes(apiField.id)
+        )?.id;
+
+        // Transform API field to FormField format
+        const field: FormField = {
+          id: apiField.id,
+          type: apiField.type,
+          label: apiField.label || '',
+          placeholder: apiField.placeholder,
+          helpText: apiField.helpText,
+          required: apiField.required || false,
+          validations: [], // Initialize empty validations array
+          // Copy other properties
+          ...(apiField as any),
+        };
+
+        dispatch({ type: 'ADD_FIELD', payload: { field, sectionId, index } });
+      });
+
+      setIsInitialized(true);
+    }
+  }, [loadedForm, isInitialized]);
+
+  // Save form mutation
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const formData: CreateFormData = {
+        title: state.formTitle,
+        description: state.formDescription || undefined,
+        settings: {
+          submitButtonText: 'Submit',
+          successMessage: 'Form submitted successfully!',
+          allowMultipleSubmissions: true,
+        },
+        fields: state.fields.map((field, index) => {
+          const sectionIndex = state.sections.findIndex(s => s.fieldIds.includes(field.id));
+          return {
+            type: field.type,
+            label: field.label || '',
+            placeholder: (field as any).placeholder,
+            helpText: (field as any).helpText,
+            isRequired: field.required || false,
+            displayOrder: index,
+            sectionIndex: sectionIndex >= 0 ? sectionIndex : undefined,
+            config: (field as any).config || {},
+            validationRules: field.validations && field.validations.length > 0
+              ? field.validations.reduce((acc, v) => ({ ...acc, [v.type]: v.value }), {})
+              : null,
+            conditionalLogic: (field as any).conditionalLogic || null,
+          };
+        }),
+        sections: state.sections.map((section, index) => ({
+          title: section.title,
+          description: section.description,
+          displayOrder: index,
+          isCollapsible: section.isCollapsible || false,
+          isCollapsedByDefault: section.isCollapsedByDefault || false,
+        })),
+      };
+
+      if (formId && formId > 0) {
+        return updateFormApi(formId, formData);
+      } else {
+        return createForm(formData);
+      }
+    },
+    onSuccess: (savedForm) => {
+      queryClient.invalidateQueries({ queryKey: ['forms'] });
+      queryClient.invalidateQueries({ queryKey: ['form', formId] });
+
+      // If this was a new form, redirect to edit page
+      if (!formId || formId <= 0) {
+        router.push(`/form-builder/${savedForm.id}`);
+      }
+    },
+  });
+
+  const saveForm = async () => {
+    await saveMutation.mutateAsync();
+  };
 
   // Field helper functions
   const addField = (field: FormField, sectionId?: string, index?: number) => {
@@ -914,7 +1029,7 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
         placeholder: field.placeholder,
         helpText: field.helpText,
         defaultValue: field.defaultValue,
-        validations: JSON.parse(JSON.stringify(field.validations)),
+        validations: field.validations ? JSON.parse(JSON.stringify(field.validations)) : [],
         options: field.options ? JSON.parse(JSON.stringify(field.options)) : undefined,
         multiple: field.multiple,
         accept: field.accept,
@@ -1081,6 +1196,45 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
   const canUndo = state.historyIndex > 0;
   const canRedo = state.historyIndex < state.history.length - 1;
 
+  // Show loading state while fetching form
+  if (formId && formId > 0 && isLoading) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <div style={{
+          width: '2.5rem',
+          height: '2.5rem',
+          border: '3px solid #e2e8f0',
+          borderTopColor: '#3b82f6',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite',
+          margin: '0 auto 1rem'
+        }} />
+        <p>Loading form...</p>
+      </div>
+    );
+  }
+
+  // Show error state if form failed to load
+  if (formId && formId > 0 && loadError) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center', color: '#ef4444' }}>
+        <h2>Failed to load form</h2>
+        <p>{loadError.message}</p>
+        <button onClick={() => router.push('/forms')} style={{
+          padding: '0.5rem 1rem',
+          background: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '0.5rem',
+          cursor: 'pointer',
+          marginTop: '1rem'
+        }}>
+          Back to Forms
+        </button>
+      </div>
+    );
+  }
+
   return (
     <FormBuilderContext.Provider
       value={{
@@ -1125,6 +1279,10 @@ export function FormBuilderProvider({ children }: { children: ReactNode }) {
         redo,
         canUndo,
         canRedo,
+        saveForm,
+        isSaving: saveMutation.isPending,
+        isLoading,
+        loadError,
       }}
     >
       {children}

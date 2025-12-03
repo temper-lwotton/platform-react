@@ -72,7 +72,7 @@ export default function AdvancedSettings({ field }: AdvancedSettingsProps) {
           </div>
           <div className={styles.configItem}>
             <dt>Validations:</dt>
-            <dd>{field.validations.length}</dd>
+            <dd>{field.validations?.length || 0}</dd>
           </div>
           {field.options && (
             <div className={styles.configItem}>
