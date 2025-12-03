@@ -9,3 +9,4 @@ export { postTypesAPI } from './postTypes';
 export { taxonomiesAPI, termsAPI } from './taxonomies';
 export { blockTemplatesAPI } from './blocks';
 export * as mediaAPI from './media';
+export * as settingsAPI from './settings';

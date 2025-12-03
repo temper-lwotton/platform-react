@@ -8,3 +8,4 @@ export * from './usePostTypes';
 export * from './useTaxonomies';
 export * from './useBlockTemplates';
 export * from './useMedia';
+export * from './useSettings';
