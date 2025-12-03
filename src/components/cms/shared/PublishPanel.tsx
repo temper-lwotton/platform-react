@@ -1,8 +1,9 @@
 'use client';
 
-import { Save, Eye, Globe, Clock, CheckCircle } from 'lucide-react';
+import { Save, Eye, Globe, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Post } from '@/types/cms';
 import { format } from 'date-fns';
+import { useUnpublishPost } from '@/hooks/cms';
 import styles from './PublishPanel.module.scss';
 
 interface PublishPanelProps {
@@ -22,6 +23,17 @@ export function PublishPanel({
   isSaving,
   lastSaved,
 }: PublishPanelProps) {
+  const unpublishPost = useUnpublishPost();
+
+  const handleUnpublish = async () => {
+    if (post && confirm('Are you sure you want to unpublish this post? It will no longer be visible to the public.')) {
+      try {
+        await unpublishPost.mutateAsync(post.id);
+      } catch (error) {
+        alert('Failed to unpublish post');
+      }
+    }
+  };
   return (
     <div className={styles.panel}>
       <h3 className={styles.title}>Publish</h3>
@@ -88,8 +100,19 @@ export function PublishPanel({
           className={styles.publishButton}
         >
           <Globe className={styles.buttonIcon} />
-          {post?.isPublished ? 'Update' : 'Publish'}
+          {post?.isPublished ? 'Publish Changes' : 'Publish'}
         </button>
+
+        {post?.isPublished && (
+          <button
+            onClick={handleUnpublish}
+            disabled={unpublishPost.isPending}
+            className={styles.unpublishButton}
+          >
+            <XCircle className={styles.buttonIcon} />
+            {unpublishPost.isPending ? 'Unpublishing...' : 'Unpublish'}
+          </button>
+        )}
       </div>
     </div>
   );

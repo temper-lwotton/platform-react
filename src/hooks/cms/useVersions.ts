@@ -128,3 +128,47 @@ export function useDeleteVersion() {
     },
   });
 }
+
+/**
+ * Hook to restore a version (makes it the latest version)
+ */
+export function useRestoreVersion() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, versionId }: { postId: number; versionId: number }) =>
+      versionsAPI.restore(postId, versionId),
+    onSuccess: (response, variables) => {
+      // Invalidate post details and versions list
+      queryClient.invalidateQueries({ queryKey: postKeys.detail(variables.postId) });
+      queryClient.invalidateQueries({ queryKey: versionKeys.list(variables.postId) });
+    },
+  });
+}
+
+/**
+ * Hook to compare two versions
+ */
+export function useCompareVersions(postId: number, v1: number, v2: number) {
+  return useQuery({
+    queryKey: [...versionKeys.all, 'compare', postId, v1, v2] as const,
+    queryFn: () => versionsAPI.compare(postId, v1, v2),
+    enabled: !!postId && !!v1 && !!v2,
+  });
+}
+
+/**
+ * Hook to duplicate a version
+ */
+export function useDuplicateVersion() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ postId, versionId }: { postId: number; versionId: number }) =>
+      versionsAPI.duplicate(postId, versionId),
+    onSuccess: (response, variables) => {
+      queryClient.invalidateQueries({ queryKey: versionKeys.list(variables.postId) });
+      queryClient.invalidateQueries({ queryKey: postKeys.detail(variables.postId) });
+    },
+  });
+}

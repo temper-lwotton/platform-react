@@ -99,4 +99,12 @@ export const versionsAPI = {
     const response = await cmsApiClient.post(`/posts/${postId}/versions/${versionId}/duplicate`);
     return response.data;
   },
+
+  /**
+   * Restore a version (makes it the latest version)
+   */
+  restore: async (postId: number, versionId: number): Promise<ApiResponse<PostVersion>> => {
+    const response = await cmsApiClient.put(`/posts/${postId}/versions/${versionId}/restore`);
+    return response.data;
+  },
 };

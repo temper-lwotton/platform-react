@@ -50,7 +50,7 @@ const navItems: NavItem[] = [
   },
   {
     label: 'Block Templates',
-    href: '/admin/blocks',
+    href: '/admin/block-templates',
     icon: Blocks,
   },
   {
