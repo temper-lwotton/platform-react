@@ -138,6 +138,7 @@ export interface PostListParams {
 export interface CreatePostInput {
   postType: number;
   title: string;
+  slug?: string;
   space?: number | null;
   parent?: number | null;
   menuOrder?: number;

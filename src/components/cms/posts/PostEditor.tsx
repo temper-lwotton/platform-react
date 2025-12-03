@@ -28,6 +28,7 @@ export function PostEditor({ postId }: PostEditorProps) {
 
   // State
   const [title, setTitle] = useState('');
+  const [slug, setSlug] = useState('');
   const [content, setContent] = useState('');
   const [contentHtml, setContentHtml] = useState('');
   const [selectedPostType, setSelectedPostType] = useState<number | null>(null);
@@ -50,6 +51,7 @@ export function PostEditor({ postId }: PostEditorProps) {
     if (postData?.data) {
       const post = postData.data;
       setTitle(post.title);
+      setSlug(post.slug);
       setSelectedPostType(post.postType.id);
       setFeaturedImage(post.featuredImage || '');
       setSelectedTerms(post.terms.map((t) => t.id));
@@ -69,12 +71,23 @@ export function PostEditor({ postId }: PostEditorProps) {
     }
   }, [postTypesData, isEditMode, selectedPostType]);
 
+  // Auto-generate slug from title
+  useEffect(() => {
+    if (!isEditMode && title) {
+      const generatedSlug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      setSlug(generatedSlug);
+    }
+  }, [title, isEditMode]);
+
   // Mark as dirty when content changes
   useEffect(() => {
     if (isEditMode && postData?.data) {
       setIsDirty(true);
     }
-  }, [title, content, selectedPostType, featuredImage, selectedTerms, metaFields]);
+  }, [title, slug, content, selectedPostType, featuredImage, selectedTerms, metaFields]);
 
   // Autosave every 30 seconds
   useEffect(() => {
@@ -156,6 +169,7 @@ export function PostEditor({ postId }: PostEditorProps) {
         const result = await createPost.mutateAsync({
           postType: selectedPostType,
           title,
+          slug,
           contentJson,
           featuredImage: featuredImage || undefined,
           terms: selectedTerms,
@@ -210,6 +224,28 @@ export function PostEditor({ postId }: PostEditorProps) {
           placeholder="Add title"
           className={styles.titleInput}
         />
+
+        {/* Slug Input */}
+        <div className={styles.slugWrapper}>
+          <label className={styles.slugLabel}>
+            <span className={styles.slugLabelText}>Slug:</span>
+            <input
+              type="text"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              placeholder="post-slug"
+              className={styles.slugInput}
+            />
+          </label>
+          {slug && (
+            <div className={styles.slugPreview}>
+              <span className={styles.slugPreviewLabel}>URL:</span>
+              <span className={styles.slugPreviewUrl}>
+                {window.location.origin}/posts/{slug}
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* Lexical Editor */}
         <div className={styles.editorWrapper}>
