@@ -28,7 +28,7 @@ export default function FormPreview() {
     watch,
   } = useForm({
     defaultValues: state.fields.reduce((acc, field) => {
-      acc[field.id] = field.defaultValue || '';
+      acc[String(field.id)] = field.defaultValue || '';
       return acc;
     }, {} as FormSubmissionData),
   });
@@ -143,23 +143,26 @@ export default function FormPreview() {
                       {section.description && <p>{section.description}</p>}
                     </div>
                     <div className={styles.fieldsGrid}>
-                      {visibleFields.map((field) => (
-                        <Controller
-                          key={field.id}
-                          name={field.id}
-                          control={control}
-                          rules={getValidationRules(field)}
-                          render={({ field: { value, onChange } }) => (
-                            <FieldRenderer
-                              field={field}
-                              value={value}
-                              onChange={onChange}
-                              error={errors[field.id]?.message as string}
-                              disabled={isFieldDisabled(field)}
-                            />
-                          )}
-                        />
-                      ))}
+                      {visibleFields.map((field) => {
+                        const fieldId = String(field.id);
+                        return (
+                          <Controller
+                            key={fieldId}
+                            name={fieldId}
+                            control={control}
+                            rules={getValidationRules(field)}
+                            render={({ field: { value, onChange } }) => (
+                              <FieldRenderer
+                                field={field}
+                                value={value}
+                                onChange={onChange}
+                                error={errors[fieldId]?.message as string}
+                                disabled={isFieldDisabled(field)}
+                              />
+                            )}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
                 );
@@ -179,23 +182,26 @@ export default function FormPreview() {
 
             return (
               <div className={styles.fieldsGrid}>
-                {visibleUnsectionedFields.map((field) => (
-                  <Controller
-                    key={field.id}
-                    name={field.id}
-                    control={control}
-                    rules={getValidationRules(field)}
-                    render={({ field: { value, onChange } }) => (
-                      <FieldRenderer
-                        field={field}
-                        value={value}
-                        onChange={onChange}
-                        error={errors[field.id]?.message as string}
-                        disabled={isFieldDisabled(field)}
-                      />
-                    )}
-                  />
-                ))}
+                {visibleUnsectionedFields.map((field) => {
+                  const fieldId = String(field.id);
+                  return (
+                    <Controller
+                      key={fieldId}
+                      name={fieldId}
+                      control={control}
+                      rules={getValidationRules(field)}
+                      render={({ field: { value, onChange } }) => (
+                        <FieldRenderer
+                          field={field}
+                          value={value}
+                          onChange={onChange}
+                          error={errors[fieldId]?.message as string}
+                          disabled={isFieldDisabled(field)}
+                        />
+                      )}
+                    />
+                  );
+                })}
               </div>
             );
           })()}

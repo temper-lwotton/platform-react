@@ -858,8 +858,13 @@ export function FormBuilderProvider({ children, formId }: { children: ReactNode;
       dispatch({ type: 'SET_FORM_TITLE', payload: loadedForm.title });
       dispatch({ type: 'SET_FORM_DESCRIPTION', payload: loadedForm.description || '' });
 
-      // Load sections first
-      loadedForm.sections.forEach((section, index) => {
+      // Load sections first with proper transformation
+      loadedForm.sections.forEach((apiSection, index) => {
+        const section: FormSection = {
+          ...apiSection,
+          id: String(apiSection.id), // Ensure ID is a string
+          fieldIds: apiSection.fieldIds.map(id => String(id)), // Ensure field IDs are strings
+        };
         dispatch({ type: 'ADD_SECTION', payload: { section, index } });
       });
 
@@ -868,10 +873,11 @@ export function FormBuilderProvider({ children, formId }: { children: ReactNode;
         const sectionId = loadedForm.sections.find(s =>
           s.fieldIds.includes(apiField.id)
         )?.id;
+        const transformedSectionId = sectionId ? String(sectionId) : undefined;
 
         // Transform API field to FormField format
         const field: FormField = {
-          id: apiField.id,
+          id: String(apiField.id), // Ensure ID is a string
           type: apiField.type,
           label: apiField.label || '',
           placeholder: apiField.placeholder,
@@ -882,7 +888,7 @@ export function FormBuilderProvider({ children, formId }: { children: ReactNode;
           ...(apiField as any),
         };
 
-        dispatch({ type: 'ADD_FIELD', payload: { field, sectionId, index } });
+        dispatch({ type: 'ADD_FIELD', payload: { field, sectionId: transformedSectionId, index } });
       });
 
       setIsInitialized(true);

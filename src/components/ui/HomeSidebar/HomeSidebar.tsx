@@ -74,6 +74,14 @@ export function HomeSidebar() {
           <span className={styles.linkText}>Feed</span>
         </Link>
 
+          {/* Suggestions Link */}
+          <Link
+              href="/suggestions"
+              className={`${styles.link} ${isActive('/suggestions') ? styles.linkActive : ''}`}
+          >
+              <Icon icon="sparkles" size={18} className={styles.linkIcon} />
+              <span className={styles.linkText}>Suggestions</span>
+          </Link>
         {/* Tasks Link */}
         <Link
           href="/tasks"
@@ -92,14 +100,7 @@ export function HomeSidebar() {
           <span className={styles.linkText}>Calendar</span>
         </Link>
 
-        {/* Suggestions Link */}
-        <Link
-          href="/suggestions"
-          className={`${styles.link} ${isActive('/suggestions') ? styles.linkActive : ''}`}
-        >
-          <Icon icon="sparkles" size={18} className={styles.linkIcon} />
-          <span className={styles.linkText}>Suggestions</span>
-        </Link>
+
 
 
         <Separator.Root className={styles.separator} />
