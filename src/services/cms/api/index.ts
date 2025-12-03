@@ -8,3 +8,4 @@ export { versionsAPI } from './versions';
 export { postTypesAPI } from './postTypes';
 export { taxonomiesAPI, termsAPI } from './taxonomies';
 export { blockTemplatesAPI } from './blocks';
+export * as mediaAPI from './media';

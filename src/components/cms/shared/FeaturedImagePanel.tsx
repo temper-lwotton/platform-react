@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Image, Upload, X } from 'lucide-react';
+import { Image as ImageIcon, X } from 'lucide-react';
+import { MediaPicker } from '../media/MediaPicker';
+import { MediaItem } from '@/lib/media-api';
 import styles from './FeaturedImagePanel.module.scss';
 
 interface FeaturedImagePanelProps {
@@ -10,23 +12,14 @@ interface FeaturedImagePanelProps {
 }
 
 export function FeaturedImagePanel({ imageUrl, onChange }: FeaturedImagePanelProps) {
-  const [isUploading, setIsUploading] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsUploading(true);
-    try {
-      // TODO: Implement actual file upload
-      // For now, just use a placeholder
-      const fakeUrl = URL.createObjectURL(file);
-      onChange(fakeUrl);
-    } catch (error) {
-      console.error('Upload failed:', error);
-      alert('Failed to upload image');
-    } finally {
-      setIsUploading(false);
+  const handleSelect = (media: MediaItem | MediaItem[]) => {
+    if (Array.isArray(media)) {
+      // Multiple selection - use first item
+      onChange(media[0]?.url || '');
+    } else {
+      onChange(media.url);
     }
   };
 
@@ -46,21 +39,25 @@ export function FeaturedImagePanel({ imageUrl, onChange }: FeaturedImagePanelPro
           </button>
         </div>
       ) : (
-        <label className={styles.uploadArea}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            disabled={isUploading}
-            className={styles.fileInput}
-          />
+        <button
+          onClick={() => setShowPicker(true)}
+          className={styles.uploadArea}
+        >
           <div className={styles.uploadContent}>
-            <Upload className={styles.uploadIcon} />
-            <span className={styles.uploadText}>
-              {isUploading ? 'Uploading...' : 'Upload Image'}
-            </span>
+            <ImageIcon className={styles.uploadIcon} />
+            <span className={styles.uploadText}>Select from Media Library</span>
           </div>
-        </label>
+        </button>
+      )}
+
+      {/* Media Picker Modal */}
+      {showPicker && (
+        <MediaPicker
+          onSelect={handleSelect}
+          onClose={() => setShowPicker(false)}
+          mode="single"
+          allowUpload={true}
+        />
       )}
     </div>
   );

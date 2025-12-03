@@ -7,3 +7,4 @@ export * from './useVersions';
 export * from './usePostTypes';
 export * from './useTaxonomies';
 export * from './useBlockTemplates';
+export * from './useMedia';
