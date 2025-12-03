@@ -84,10 +84,11 @@ import {
   Maximize,
   Layers,
   CheckSquare,
+  Megaphone,
 } from 'lucide-react';
 import { CSSProperties } from 'react';
 
-export type IconName = 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'mapPin' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'arrowUp' | 'arrowDown' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles' | 'lock' | 'rss' | 'globe' | 'plus' | 'search' | 'arrowUpDown' | 'list' | 'info' | 'package' | 'gift' | 'dollarSign' | 'eye' | 'upload' | 'image' | 'wand-2' | 'crop' | 'loader-2' | 'refresh-cw' | 'check-circle-2' | 'image-off' | 'rectangle-horizontal' | 'rectangle-vertical' | 'grid-3x3' | 'maximize' | 'layers' | 'check-square' | 'alert-circle' | 'square';
+export type IconName = 'comment' | 'heart' | 'calendar' | 'mapMarker' | 'mapPin' | 'link' | 'folder' | 'chevronDown' | 'chevronLeft' | 'chevronRight' | 'arrowLeft' | 'arrowUp' | 'arrowDown' | 'home' | 'external' | 'bell' | 'chat' | 'feed' | 'rocket' | 'help' | 'clipboard' | 'lightbulb' | 'zap' | 'pin' | 'pencil' | 'user' | 'settings' | 'fileText' | 'logOut' | 'sun' | 'moon' | 'monitor' | 'bookmark' | 'bookmarkFilled' | 'layoutGrid' | 'download' | 'video' | 'videoOff' | 'microphone' | 'microphoneOff' | 'screenShare' | 'users' | 'circle' | 'handRaised' | 'thumbsUp' | 'send' | 'moreVertical' | 'x' | 'check' | 'alertCircle' | 'clock' | 'play' | 'stop' | 'userPlus' | 'repeat' | 'star' | 'book' | 'checkCircle' | 'briefcase' | 'building' | 'sparkles' | 'lock' | 'rss' | 'globe' | 'plus' | 'search' | 'arrowUpDown' | 'list' | 'info' | 'package' | 'gift' | 'dollarSign' | 'eye' | 'upload' | 'image' | 'wand-2' | 'crop' | 'loader-2' | 'refresh-cw' | 'check-circle-2' | 'image-off' | 'rectangle-horizontal' | 'rectangle-vertical' | 'grid-3x3' | 'maximize' | 'layers' | 'check-square' | 'alert-circle' | 'square' | 'megaphone';
 
 interface IconProps {
   icon: IconName;
@@ -187,6 +188,7 @@ export function Icon({ icon, size = 24, className = '', style }: IconProps) {
     'check-square': CheckSquare,
     'alert-circle': AlertCircle,
     square: Square,
+    megaphone: Megaphone,
   };
 
   const LucideIcon = iconMap[icon];

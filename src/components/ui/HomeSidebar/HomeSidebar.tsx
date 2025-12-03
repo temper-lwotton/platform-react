@@ -100,8 +100,14 @@ export function HomeSidebar() {
           <span className={styles.linkText}>Calendar</span>
         </Link>
 
-
-
+        {/* Open Calls Link */}
+        <Link
+          href="/open-calls"
+          className={`${styles.link} ${pathname?.startsWith('/open-calls') ? styles.linkActive : ''}`}
+        >
+          <Icon icon="megaphone" size={18} className={styles.linkIcon} />
+          <span className={styles.linkText}>Open Calls</span>
+        </Link>
 
         <Separator.Root className={styles.separator} />
 
