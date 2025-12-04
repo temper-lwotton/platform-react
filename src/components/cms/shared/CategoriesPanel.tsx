@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTaxonomies, useTerms } from '@/hooks/cms';
 import styles from './CategoriesPanel.module.scss';
 
@@ -13,17 +13,17 @@ export function CategoriesPanel({ selectedTerms, onChange }: CategoriesPanelProp
   const [selectedTaxonomy, setSelectedTaxonomy] = useState<number | null>(null);
 
   // Fetch taxonomies
-  const { data: taxonomiesData } = useTaxonomies({ active: true });
+  const { data: taxonomiesData, isLoading: taxonomiesLoading } = useTaxonomies({ active: true });
 
   // Fetch terms for selected taxonomy
-  const { data: termsData } = useTerms(selectedTaxonomy || 0);
+  const { data: termsData, isLoading: termsLoading } = useTerms(selectedTaxonomy || 0);
 
   // Auto-select first taxonomy
-  useState(() => {
+  useEffect(() => {
     if (taxonomiesData?.data && taxonomiesData.data.length > 0 && !selectedTaxonomy) {
       setSelectedTaxonomy(taxonomiesData.data[0].id);
     }
-  });
+  }, [taxonomiesData, selectedTaxonomy]);
 
   const handleTermToggle = (termId: number) => {
     if (selectedTerms.includes(termId)) {
@@ -53,7 +53,9 @@ export function CategoriesPanel({ selectedTerms, onChange }: CategoriesPanelProp
       )}
 
       {/* Terms List */}
-      {termsData?.data && termsData.data.length > 0 ? (
+      {termsLoading ? (
+        <p className={styles.emptyText}>Loading terms...</p>
+      ) : termsData?.data && termsData.data.length > 0 ? (
         <div className={styles.termsList}>
           {termsData.data.map((term) => (
             <label key={term.id} className={styles.termItem}>
@@ -68,8 +70,10 @@ export function CategoriesPanel({ selectedTerms, onChange }: CategoriesPanelProp
             </label>
           ))}
         </div>
-      ) : (
+      ) : selectedTaxonomy ? (
         <p className={styles.emptyText}>No terms available</p>
+      ) : (
+        <p className={styles.emptyText}>Select a taxonomy</p>
       )}
     </div>
   );
