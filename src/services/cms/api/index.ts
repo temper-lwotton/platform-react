@@ -11,3 +11,5 @@ export { blockTemplatesAPI } from './blocks';
 export * as mediaAPI from './media';
 export * as settingsAPI from './settings';
 export * as permissionsAPI from './permissions';
+export * as commentsAPI from './comments';
+export * as seoAPI from './seo';

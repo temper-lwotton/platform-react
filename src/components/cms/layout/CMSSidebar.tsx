@@ -9,6 +9,7 @@ import {
   Tags,
   Blocks,
   Image,
+  MessageSquare,
   Shield,
   Settings,
   ChevronLeft,
@@ -58,6 +59,11 @@ const navItems: NavItem[] = [
     label: 'Media',
     href: '/admin/media',
     icon: Image,
+  },
+  {
+    label: 'Comments',
+    href: '/admin/comments',
+    icon: MessageSquare,
   },
   {
     label: 'User Roles',

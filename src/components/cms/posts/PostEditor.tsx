@@ -10,6 +10,7 @@ import { MetaFieldsPanel } from '../shared/MetaFieldsPanel';
 import { VersionHistoryPanel } from '../shared/VersionHistoryPanel';
 import { VersionComparisonModal } from '../shared/VersionComparisonModal';
 import { BlockTemplatePicker } from '../blocks/BlockTemplatePicker';
+import { SEOPanel } from '../shared/SEOPanel';
 import {
   useCreatePost,
   useUpdatePost,
@@ -19,6 +20,7 @@ import {
 } from '@/hooks/cms';
 import { usePostTypes } from '@/hooks/cms';
 import { Post, LexicalEditorState } from '@/types/cms';
+import type { SEOMetadata } from '@/services/cms/types/seo';
 import styles from './PostEditor.module.scss';
 
 interface PostEditorProps {
@@ -38,6 +40,7 @@ export function PostEditor({ postId }: PostEditorProps) {
   const [featuredImage, setFeaturedImage] = useState<string>('');
   const [selectedTerms, setSelectedTerms] = useState<number[]>([]);
   const [metaFields, setMetaFields] = useState<Record<string, any>>({});
+  const [seoData, setSeoData] = useState<SEOMetadata>({});
   const [isDirty, setIsDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [comparisonVersions, setComparisonVersions] = useState<{
@@ -95,7 +98,7 @@ export function PostEditor({ postId }: PostEditorProps) {
     if (isEditMode && postData?.data) {
       setIsDirty(true);
     }
-  }, [title, slug, content, selectedPostType, featuredImage, selectedTerms, metaFields]);
+  }, [title, slug, content, selectedPostType, featuredImage, selectedTerms, metaFields, seoData]);
 
   // Autosave every 30 seconds
   useEffect(() => {
@@ -321,6 +324,13 @@ export function PostEditor({ postId }: PostEditorProps) {
         <MetaFieldsPanel
           fields={metaFields}
           onChange={setMetaFields}
+        />
+
+        <SEOPanel
+          postTitle={title}
+          postContent={contentHtml || content}
+          seoData={seoData}
+          onChange={setSeoData}
         />
       </div>
 
