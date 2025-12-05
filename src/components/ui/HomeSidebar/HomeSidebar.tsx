@@ -9,6 +9,7 @@ import { getSpace } from '@/lib/spaces';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { Icon } from '../Icon';
 import { SpaceSettingsPopover } from '../SpaceSettingsPopover';
+import { useJobForgeStats } from '@/lib/jobforge/hooks';
 import styles from './HomeSidebar.module.scss';
 
 export function HomeSidebar() {
@@ -48,6 +49,9 @@ export function HomeSidebar() {
 
   const mySpaces = spaceQueries.data || [];
   const spacesLoading = userLoading || spaceQueries.isLoading;
+
+  // Get JobForge stats for badges
+  const { stats: jobForgeStats } = useJobForgeStats();
 
   // Mock function to generate activity count - replace with real API call later
   const getSpaceActivityCount = (spaceId: string | number): number => {
@@ -98,6 +102,20 @@ export function HomeSidebar() {
         >
           <Icon icon="calendar" size={18} className={styles.linkIcon} />
           <span className={styles.linkText}>Calendar</span>
+        </Link>
+
+        {/* JobForge Link */}
+        <Link
+          href="/jobforge"
+          className={`${styles.link} ${pathname?.startsWith('/jobforge') ? styles.linkActive : ''}`}
+        >
+          <Icon icon="briefcase" size={18} className={styles.linkIcon} />
+          <span className={styles.linkText}>JobForge</span>
+          {jobForgeStats.draftsCount > 0 && (
+            <span className={styles.activityBadge}>
+              {jobForgeStats.draftsCount}
+            </span>
+          )}
         </Link>
 
         {/* Open Calls Link */}
