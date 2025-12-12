@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import * as Tabs from '@radix-ui/react-tabs';
 import { LexicalEditor } from '@/components/ui/Lexical';
 import { PublishPanel } from '../shared/PublishPanel';
 import { FeaturedImagePanel } from '../shared/FeaturedImagePanel';
@@ -11,6 +12,7 @@ import { VersionHistoryPanel } from '../shared/VersionHistoryPanel';
 import { VersionComparisonModal } from '../shared/VersionComparisonModal';
 import { BlockTemplatePicker } from '../blocks/BlockTemplatePicker';
 import { SEOPanel } from '../shared/SEOPanel';
+import { Icon } from '@/components/ui/Icon';
 import {
   useCreatePost,
   useUpdatePost,
@@ -216,25 +218,6 @@ export function PostEditor({ postId }: PostEditorProps) {
     <div className={styles.editor}>
       {/* Main Editor Area */}
       <div className={styles.mainArea}>
-        {/* Post Type Selector (only for new posts) */}
-        {!isEditMode && (
-          <div className={styles.postTypeSelector}>
-            <label className={styles.label}>Post Type</label>
-            <select
-              value={selectedPostType || ''}
-              onChange={(e) => setSelectedPostType(Number(e.target.value))}
-              className={styles.select}
-            >
-              <option value="">Select a post type</option>
-              {postTypesData?.data.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.singularLabel}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
         {/* Title Input */}
         <input
           type="text"
@@ -243,28 +226,6 @@ export function PostEditor({ postId }: PostEditorProps) {
           placeholder="Add title"
           className={styles.titleInput}
         />
-
-        {/* Slug Input */}
-        <div className={styles.slugWrapper}>
-          <label className={styles.slugLabel}>
-            <span className={styles.slugLabelText}>Slug:</span>
-            <input
-              type="text"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              placeholder="post-slug"
-              className={styles.slugInput}
-            />
-          </label>
-          {slug && (
-            <div className={styles.slugPreview}>
-              <span className={styles.slugPreviewLabel}>URL:</span>
-              <span className={styles.slugPreviewUrl}>
-                {window.location.origin}/posts/{slug}
-              </span>
-            </div>
-          )}
-        </div>
 
         {/* Lexical Editor */}
         <div className={styles.editorWrapper}>
@@ -287,51 +248,98 @@ export function PostEditor({ postId }: PostEditorProps) {
         </div>
       </div>
 
-      {/* Sidebar */}
+      {/* Sidebar with Tabs */}
       <div className={styles.sidebar}>
-        <PublishPanel
-          post={postData?.data}
-          onSaveDraft={handleSaveDraft}
-          onPublish={handlePublish}
-          isDirty={isDirty}
-          isSaving={createPost.isPending || updatePost.isPending || createVersion.isPending}
-          lastSaved={lastSaved}
-        />
+        <Tabs.Root defaultValue="publish" className={styles.tabsRoot}>
+          <Tabs.List className={styles.tabsList}>
+            <Tabs.Trigger value="publish" className={styles.tabsTrigger}>
+              <Icon icon="send" size={16} />
+              <span>Publish</span>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="media" className={styles.tabsTrigger}>
+              <Icon icon="image" size={16} />
+              <span>Media</span>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="content" className={styles.tabsTrigger}>
+              <Icon icon="tag" size={16} />
+              <span>Content</span>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="seo" className={styles.tabsTrigger}>
+              <Icon icon="search" size={16} />
+              <span>SEO</span>
+            </Tabs.Trigger>
+            {isEditMode && postId && (
+              <Tabs.Trigger value="history" className={styles.tabsTrigger}>
+                <Icon icon="clock" size={16} />
+                <span>History</span>
+              </Tabs.Trigger>
+            )}
+          </Tabs.List>
 
-        {isEditMode && postId && (
-          <VersionHistoryPanel
-            postId={postId}
-            onViewVersion={(versionId) => {
-              // TODO: Implement single version viewer (could load into editor)
-              console.log('View version:', versionId);
-            }}
-            onCompareVersions={(v1, v2) => {
-              setComparisonVersions({ v1, v2 });
-            }}
-          />
-        )}
+          <div className={styles.tabsContentWrapper}>
+            <Tabs.Content value="publish" className={styles.tabsContent}>
+              <PublishPanel
+                post={postData?.data}
+                slug={slug}
+                onSlugChange={setSlug}
+                selectedPostType={selectedPostType}
+                onPostTypeChange={setSelectedPostType}
+                postTypes={postTypesData?.data}
+                isEditMode={isEditMode}
+                onSaveDraft={handleSaveDraft}
+                onPublish={handlePublish}
+                isDirty={isDirty}
+                isSaving={createPost.isPending || updatePost.isPending || createVersion.isPending}
+                lastSaved={lastSaved}
+              />
+            </Tabs.Content>
 
-        <FeaturedImagePanel
-          imageUrl={featuredImage}
-          onChange={setFeaturedImage}
-        />
+            <Tabs.Content value="media" className={styles.tabsContent}>
+              <FeaturedImagePanel
+                imageUrl={featuredImage}
+                onChange={setFeaturedImage}
+                postTitle={title}
+              />
+            </Tabs.Content>
 
-        <CategoriesPanel
-          selectedTerms={selectedTerms}
-          onChange={setSelectedTerms}
-        />
+            <Tabs.Content value="content" className={styles.tabsContent}>
+              <div className={styles.contentTabPanels}>
+                <CategoriesPanel
+                  selectedTerms={selectedTerms}
+                  onChange={setSelectedTerms}
+                />
+                <MetaFieldsPanel
+                  fields={metaFields}
+                  onChange={setMetaFields}
+                />
+              </div>
+            </Tabs.Content>
 
-        <MetaFieldsPanel
-          fields={metaFields}
-          onChange={setMetaFields}
-        />
+            <Tabs.Content value="seo" className={styles.tabsContent}>
+              <SEOPanel
+                postTitle={title}
+                postContent={contentHtml || content}
+                seoData={seoData}
+                onChange={setSeoData}
+              />
+            </Tabs.Content>
 
-        <SEOPanel
-          postTitle={title}
-          postContent={contentHtml || content}
-          seoData={seoData}
-          onChange={setSeoData}
-        />
+            {isEditMode && postId && (
+              <Tabs.Content value="history" className={styles.tabsContent}>
+                <VersionHistoryPanel
+                  postId={postId}
+                  onViewVersion={(versionId) => {
+                    // TODO: Implement single version viewer (could load into editor)
+                    console.log('View version:', versionId);
+                  }}
+                  onCompareVersions={(v1, v2) => {
+                    setComparisonVersions({ v1, v2 });
+                  }}
+                />
+              </Tabs.Content>
+            )}
+          </div>
+        </Tabs.Root>
       </div>
 
       {/* Version Comparison Modal */}

@@ -4,14 +4,17 @@ import { useState } from 'react';
 import { Image as ImageIcon, X } from 'lucide-react';
 import { MediaPicker } from '../media/MediaPicker';
 import { MediaItem } from '@/lib/media-api';
+import { FeaturedImagePreview } from './FeaturedImagePreview';
+import * as Separator from '@radix-ui/react-separator';
 import styles from './FeaturedImagePanel.module.scss';
 
 interface FeaturedImagePanelProps {
   imageUrl: string;
   onChange: (url: string) => void;
+  postTitle?: string;
 }
 
-export function FeaturedImagePanel({ imageUrl, onChange }: FeaturedImagePanelProps) {
+export function FeaturedImagePanel({ imageUrl, onChange, postTitle }: FeaturedImagePanelProps) {
   const [showPicker, setShowPicker] = useState(false);
 
   const handleSelect = (media: MediaItem | MediaItem[]) => {
@@ -34,9 +37,18 @@ export function FeaturedImagePanel({ imageUrl, onChange }: FeaturedImagePanelPro
       {imageUrl ? (
         <div className={styles.imagePreview}>
           <img src={imageUrl} alt="Featured" className={styles.image} />
-          <button onClick={handleRemove} className={styles.removeButton} title="Remove image">
-            <X className={styles.removeIcon} />
-          </button>
+          <div className={styles.imageActions}>
+            <button
+              onClick={() => setShowPicker(true)}
+              className={styles.changeButton}
+              title="Change image"
+            >
+              Change
+            </button>
+            <button onClick={handleRemove} className={styles.removeButton} title="Remove image">
+              <X className={styles.removeIcon} />
+            </button>
+          </div>
         </div>
       ) : (
         <button
@@ -48,6 +60,14 @@ export function FeaturedImagePanel({ imageUrl, onChange }: FeaturedImagePanelPro
             <span className={styles.uploadText}>Select from Media Library</span>
           </div>
         </button>
+      )}
+
+      {/* Preview Variations */}
+      {imageUrl && (
+        <>
+          <Separator.Root className={styles.separator} />
+          <FeaturedImagePreview imageUrl={imageUrl} postTitle={postTitle} />
+        </>
       )}
 
       {/* Media Picker Modal */}

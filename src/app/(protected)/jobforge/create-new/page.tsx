@@ -30,6 +30,9 @@ export default function CreateJobWizardPage() {
   const [proposedChanges, setProposedChanges] = useState<ProposedChange[]>([]);
   const [originalJobData, setOriginalJobData] = useState<Partial<JobSpec> | null>(null);
 
+  const [jobTitle, setJobTitle] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
+
   const [jobData, setJobData] = useState<Partial<JobSpec>>({
     title: '',
     industry: '',
@@ -111,16 +114,25 @@ export default function CreateJobWizardPage() {
     return { responsibilities, requiredSkills, desirableSkills, benefits };
   };
 
-  const [descriptionText, setDescriptionText] = useState('');
-
   const handleAnalyze = async () => {
-    const parsed = parseDescriptionText(descriptionText);
+    // Extract structured fields from title and description
+    const extractedFields = extractFieldsFromText(jobTitle, jobDescription);
+    const parsed = parseDescriptionText(jobDescription);
 
     const updatedJobData = {
       ...jobData,
+      title: jobTitle,
+      industry: extractedFields.industry,
+      seniorityLevel: extractedFields.seniorityLevel,
+      location: {
+        ...jobData.location!,
+        city: extractedFields.location,
+        workType: extractedFields.workType,
+      },
+      salary: extractedFields.salary.min > 0 ? extractedFields.salary : jobData.salary,
       description: {
         ...jobData.description!,
-        overview: descriptionText.split('\n\n')[0] || descriptionText,
+        overview: jobDescription.split('\n\n')[0] || jobDescription,
         responsibilities: parsed.responsibilities,
         requirements: {
           required: parsed.requiredSkills,
@@ -138,6 +150,55 @@ export default function CreateJobWizardPage() {
     const result = await analyzeJobSpec(updatedJobData);
     setAnalysis(result);
     setCurrentStep('analysis');
+  };
+
+  // Extract structured fields from free-form text
+  const extractFieldsFromText = (title: string, description: string) => {
+    const text = `${title} ${description}`.toLowerCase();
+
+    // Extract industry
+    let industry = 'Technology';
+    if (text.includes('finance') || text.includes('banking') || text.includes('fintech')) industry = 'Finance';
+    else if (text.includes('healthcare') || text.includes('medical') || text.includes('hospital')) industry = 'Healthcare';
+    else if (text.includes('retail') || text.includes('ecommerce') || text.includes('shop')) industry = 'Retail';
+    else if (text.includes('education') || text.includes('teaching') || text.includes('university')) industry = 'Education';
+    else if (text.includes('marketing') || text.includes('advertising') || text.includes('brand')) industry = 'Marketing';
+    else if (text.includes('design') || text.includes('creative') || text.includes('art')) industry = 'Creative';
+
+    // Extract seniority
+    let seniorityLevel: any = 'mid';
+    if (text.includes('junior') || text.includes('graduate') || text.includes('entry')) seniorityLevel = 'junior';
+    else if (text.includes('senior') || text.includes('lead')) seniorityLevel = 'senior';
+    else if (text.includes('principal') || text.includes('staff') || text.includes('director')) seniorityLevel = 'lead';
+    else if (text.includes('executive') || text.includes('vp') || text.includes('cto') || text.includes('ceo')) seniorityLevel = 'executive';
+
+    // Extract location
+    let location = '';
+    if (text.includes('london')) location = 'London';
+    else if (text.includes('manchester')) location = 'Manchester';
+    else if (text.includes('birmingham')) location = 'Birmingham';
+    else if (text.includes('leeds')) location = 'Leeds';
+    else if (text.includes('glasgow')) location = 'Glasgow';
+    else if (text.includes('new york')) location = 'New York';
+    else if (text.includes('san francisco')) location = 'San Francisco';
+
+    // Extract work type
+    let workType: any = 'hybrid';
+    if (text.includes('remote') || text.includes('work from home')) workType = 'remote';
+    else if (text.includes('on-site') || text.includes('onsite') || text.includes('office')) workType = 'onsite';
+
+    // Extract salary (basic pattern matching)
+    let salary = { min: 0, max: 0, currency: 'GBP', period: 'yearly' as const, displayOnJD: true };
+    const salaryMatch = text.match(/£?([\d,]+)k?\s*-\s*£?([\d,]+)k?/);
+    if (salaryMatch) {
+      const min = parseInt(salaryMatch[1].replace(/,/g, ''), 10);
+      const max = parseInt(salaryMatch[2].replace(/,/g, ''), 10);
+      // If numbers are small (e.g., 40-60), assume they're in thousands
+      salary.min = min < 1000 ? min * 1000 : min;
+      salary.max = max < 1000 ? max * 1000 : max;
+    }
+
+    return { industry, seniorityLevel, location, workType, salary };
   };
 
   const handleGoBack = () => {
@@ -331,13 +392,11 @@ export default function CreateJobWizardPage() {
           <div className={styles.wizardHeader}>
             <h1 className={styles.wizardTitle}>Create Job Specification</h1>
             <p className={styles.wizardSubtitle}>
-              Fill in the details below. Our AI will analyze and provide feedback in the next step.
+              Enter the job title and description. Our AI will extract details and structure the information for you.
             </p>
           </div>
 
           <div className={styles.formSection}>
-            <h3 className={styles.formSectionTitle}>Basic Information</h3>
-
             <div className={styles.formGroup}>
               <label className={styles.formLabel}>
                 Job Title <span className={styles.required}>*</span>
@@ -345,138 +404,26 @@ export default function CreateJobWizardPage() {
               <input
                 type="text"
                 className={styles.formInput}
-                value={jobData.title}
-                onChange={(e) => setJobData({ ...jobData, title: e.target.value })}
+                value={jobTitle}
+                onChange={(e) => setJobTitle(e.target.value)}
                 placeholder="e.g., Senior Software Engineer"
               />
             </div>
 
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>
-                  Industry <span className={styles.required}>*</span>
-                </label>
-                <select
-                  className={styles.formSelect}
-                  value={jobData.industry}
-                  onChange={(e) => setJobData({ ...jobData, industry: e.target.value })}
-                >
-                  <option value="">Select industry</option>
-                  <option value="Technology">Technology</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Healthcare">Healthcare</option>
-                  <option value="Retail">Retail</option>
-                  <option value="Education">Education</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Creative">Creative</option>
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Seniority Level</label>
-                <select
-                  className={styles.formSelect}
-                  value={jobData.seniorityLevel}
-                  onChange={(e) => setJobData({ ...jobData, seniorityLevel: e.target.value as any })}
-                >
-                  <option value="junior">Junior</option>
-                  <option value="mid">Mid-Level</option>
-                  <option value="senior">Senior</option>
-                  <option value="lead">Lead</option>
-                  <option value="executive">Executive</option>
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Location</label>
-                <input
-                  type="text"
-                  className={styles.formInput}
-                  value={jobData.location?.city}
-                  onChange={(e) => setJobData({
-                    ...jobData,
-                    location: { ...jobData.location!, city: e.target.value }
-                  })}
-                  placeholder="City"
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Work Type</label>
-                <select
-                  className={styles.formSelect}
-                  value={jobData.location?.workType}
-                  onChange={(e) => setJobData({
-                    ...jobData,
-                    location: { ...jobData.location!, workType: e.target.value as any }
-                  })}
-                >
-                  <option value="remote">Remote</option>
-                  <option value="hybrid">Hybrid</option>
-                  <option value="onsite">On-site</option>
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Salary Range</label>
-                <div className={styles.salaryRange}>
-                  <input
-                    type="number"
-                    className={styles.formInput}
-                    value={jobData.salary?.min || ''}
-                    onChange={(e) => setJobData({
-                      ...jobData,
-                      salary: { ...jobData.salary!, min: parseInt(e.target.value) || 0 }
-                    })}
-                    placeholder="Min"
-                  />
-                  <span>to</span>
-                  <input
-                    type="number"
-                    className={styles.formInput}
-                    value={jobData.salary?.max || ''}
-                    onChange={(e) => setJobData({
-                      ...jobData,
-                      salary: { ...jobData.salary!, max: parseInt(e.target.value) || 0 }
-                    })}
-                    placeholder="Max"
-                  />
-                  <select
-                    className={styles.formSelect}
-                    value={jobData.salary?.currency}
-                    onChange={(e) => setJobData({
-                      ...jobData,
-                      salary: { ...jobData.salary!, currency: e.target.value }
-                    })}
-                  >
-                    <option value="GBP">GBP</option>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.formSection}>
-            <h3 className={styles.formSectionTitle}>Job Description</h3>
-            <p className={styles.formHelp}>
-              Enter the job description below. You can include sections like responsibilities, requirements, and benefits.
-              Our AI will analyze this in the next step.
-            </p>
-
             <div className={styles.formGroup}>
+              <label className={styles.formLabel}>
+                Job Description <span className={styles.required}>*</span>
+              </label>
+              <p className={styles.formHelp}>
+                Paste or type the full job description. Include responsibilities, requirements, salary, location, and any other details. Our AI will extract and organize everything.
+              </p>
               <textarea
                 className={styles.formTextarea}
-                value={descriptionText}
-                onChange={(e) => setDescriptionText(e.target.value)}
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
                 placeholder="Example:
 
-We are seeking an experienced Senior Software Engineer to join our team...
+We are seeking an experienced Senior Software Engineer to join our growing technology team in London. This is a hybrid role offering £60,000 - £80,000.
 
 Responsibilities:
 - Lead development of React applications
@@ -492,7 +439,7 @@ Benefits:
 - Health insurance
 - Remote work options
 - Professional development budget"
-                rows={16}
+                rows={20}
               />
             </div>
           </div>
@@ -503,10 +450,19 @@ Benefits:
             </button>
             <button
               onClick={handleAnalyze}
-              disabled={!jobData.title || !jobData.industry || !descriptionText.trim()}
+              disabled={!jobTitle.trim() || !jobDescription.trim() || isAnalyzing}
               className={styles.buttonPrimary}
             >
-              Analyze with AI →
+              {isAnalyzing ? (
+                <>
+                  <div className={styles.buttonSpinner} />
+                  Analyzing with AI...
+                </>
+              ) : (
+                <>
+                  Analyze with AI →
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -518,8 +474,106 @@ Benefits:
           <div className={styles.wizardHeader}>
             <h1 className={styles.wizardTitle}>AI Analysis & Feedback</h1>
             <p className={styles.wizardSubtitle}>
-              Review the analysis below and make improvements before finalizing your job spec.
+              Review the extracted details and AI analysis. Edit any fields as needed.
             </p>
+          </div>
+
+          {/* Extracted Fields - Editable */}
+          <div className={styles.extractedFields}>
+            <h3 className={styles.extractedTitle}>Extracted Details</h3>
+            <p className={styles.extractedSubtitle}>Our AI extracted these details from your description. Feel free to adjust them.</p>
+
+            <div className={styles.fieldGrid}>
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Industry</label>
+                <select
+                  className={styles.fieldInput}
+                  value={jobData.industry}
+                  onChange={(e) => setJobData({ ...jobData, industry: e.target.value })}
+                >
+                  <option value="Technology">Technology</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Education">Education</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Creative">Creative</option>
+                </select>
+              </div>
+
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Seniority</label>
+                <select
+                  className={styles.fieldInput}
+                  value={jobData.seniorityLevel}
+                  onChange={(e) => setJobData({ ...jobData, seniorityLevel: e.target.value as any })}
+                >
+                  <option value="junior">Junior</option>
+                  <option value="mid">Mid-Level</option>
+                  <option value="senior">Senior</option>
+                  <option value="lead">Lead</option>
+                  <option value="executive">Executive</option>
+                </select>
+              </div>
+
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Location</label>
+                <input
+                  type="text"
+                  className={styles.fieldInput}
+                  value={jobData.location?.city}
+                  onChange={(e) => setJobData({
+                    ...jobData,
+                    location: { ...jobData.location!, city: e.target.value }
+                  })}
+                  placeholder="City"
+                />
+              </div>
+
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Work Type</label>
+                <select
+                  className={styles.fieldInput}
+                  value={jobData.location?.workType}
+                  onChange={(e) => setJobData({
+                    ...jobData,
+                    location: { ...jobData.location!, workType: e.target.value as any }
+                  })}
+                >
+                  <option value="remote">Remote</option>
+                  <option value="hybrid">Hybrid</option>
+                  <option value="onsite">On-site</option>
+                </select>
+              </div>
+
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Salary Min</label>
+                <input
+                  type="number"
+                  className={styles.fieldInput}
+                  value={jobData.salary?.min || ''}
+                  onChange={(e) => setJobData({
+                    ...jobData,
+                    salary: { ...jobData.salary!, min: parseInt(e.target.value) || 0 }
+                  })}
+                  placeholder="Min"
+                />
+              </div>
+
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Salary Max</label>
+                <input
+                  type="number"
+                  className={styles.fieldInput}
+                  value={jobData.salary?.max || ''}
+                  onChange={(e) => setJobData({
+                    ...jobData,
+                    salary: { ...jobData.salary!, max: parseInt(e.target.value) || 0 }
+                  })}
+                  placeholder="Max"
+                />
+              </div>
+            </div>
           </div>
 
           <JobSpecAnalysis
@@ -547,7 +601,14 @@ Benefits:
                 disabled={isCreating}
                 className={styles.buttonPrimary}
               >
-                {isCreating ? 'Saving...' : 'Skip & Save Draft'}
+                {isCreating ? (
+                  <>
+                    <div className={styles.buttonSpinner} />
+                    Saving...
+                  </>
+                ) : (
+                  'Skip & Save Draft'
+                )}
               </button>
             )}
           </div>
@@ -635,7 +696,14 @@ Benefits:
               disabled={isCreating}
               className={styles.buttonPrimary}
             >
-              {isCreating ? 'Saving...' : `Apply ${proposedChanges.filter(c => c.accepted).length} Changes & Save Draft`}
+              {isCreating ? (
+                <>
+                  <div className={styles.buttonSpinner} />
+                  Saving...
+                </>
+              ) : (
+                `Apply ${proposedChanges.filter(c => c.accepted).length} Changes & Save Draft`
+              )}
             </button>
           </div>
         </div>

@@ -71,20 +71,20 @@ export function GlobalPostButton() {
             </div>
           </DropdownMenu.Item>
 
-          <DropdownMenu.Separator className={styles.dropdownSeparator} />
+          {/*<DropdownMenu.Separator className={styles.dropdownSeparator} />*/}
 
-          <DropdownMenu.Item
-            className={styles.dropdownItem}
-            onSelect={() => handleNavigate('/webinars/new')}
-          >
-            <Icon icon="video" size={20} className={styles.dropdownIcon} />
-            <div className={styles.dropdownText}>
-              <div className={styles.dropdownLabel}>Webinar</div>
-              <div className={styles.dropdownDescription}>
-                Host a live or scheduled webinar
-              </div>
-            </div>
-          </DropdownMenu.Item>
+          {/*<DropdownMenu.Item*/}
+          {/*  className={styles.dropdownItem}*/}
+          {/*  onSelect={() => handleNavigate('/webinars/new')}*/}
+          {/*>*/}
+          {/*  <Icon icon="video" size={20} className={styles.dropdownIcon} />*/}
+          {/*  <div className={styles.dropdownText}>*/}
+          {/*    <div className={styles.dropdownLabel}>Webinar</div>*/}
+          {/*    <div className={styles.dropdownDescription}>*/}
+          {/*      Host a live or scheduled webinar*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</DropdownMenu.Item>*/}
 
           <DropdownMenu.Separator className={styles.dropdownSeparator} />
 
@@ -101,48 +101,48 @@ export function GlobalPostButton() {
             </div>
           </DropdownMenu.Item>
 
-          <DropdownMenu.Separator className={styles.dropdownSeparator} />
+          {/*<DropdownMenu.Separator className={styles.dropdownSeparator} />*/}
 
-          <DropdownMenu.Item
-            className={styles.dropdownItem}
-            onSelect={() => handleNavigate('/showcases/new')}
-          >
-            <Icon icon="star" size={20} className={styles.dropdownIcon} />
-            <div className={styles.dropdownText}>
-              <div className={styles.dropdownLabel}>Showcase</div>
-              <div className={styles.dropdownDescription}>
-                Share a success story or case study
-              </div>
-            </div>
-          </DropdownMenu.Item>
+          {/*<DropdownMenu.Item*/}
+          {/*  className={styles.dropdownItem}*/}
+          {/*  onSelect={() => handleNavigate('/showcases/new')}*/}
+          {/*>*/}
+          {/*  <Icon icon="star" size={20} className={styles.dropdownIcon} />*/}
+          {/*  <div className={styles.dropdownText}>*/}
+          {/*    <div className={styles.dropdownLabel}>Showcase</div>*/}
+          {/*    <div className={styles.dropdownDescription}>*/}
+          {/*      Share a success story or case study*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</DropdownMenu.Item>*/}
 
-          <DropdownMenu.Item
-            className={styles.dropdownItem}
-            onSelect={() => handleNavigate('/resources/new')}
-          >
-            <Icon icon="book" size={20} className={styles.dropdownIcon} />
-            <div className={styles.dropdownText}>
-              <div className={styles.dropdownLabel}>Resource</div>
-              <div className={styles.dropdownDescription}>
-                Add a guide, template, or documentation
-              </div>
-            </div>
-          </DropdownMenu.Item>
+          {/*<DropdownMenu.Item*/}
+          {/*  className={styles.dropdownItem}*/}
+          {/*  onSelect={() => handleNavigate('/resources/new')}*/}
+          {/*>*/}
+          {/*  <Icon icon="book" size={20} className={styles.dropdownIcon} />*/}
+          {/*  <div className={styles.dropdownText}>*/}
+          {/*    <div className={styles.dropdownLabel}>Resource</div>*/}
+          {/*    <div className={styles.dropdownDescription}>*/}
+          {/*      Add a guide, template, or documentation*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</DropdownMenu.Item>*/}
 
-          <DropdownMenu.Separator className={styles.dropdownSeparator} />
+          {/*<DropdownMenu.Separator className={styles.dropdownSeparator} />*/}
 
-          <DropdownMenu.Item
-            className={styles.dropdownItem}
-            onSelect={() => handleNavigate('/exchanges/new')}
-          >
-            <Icon icon="repeat" size={20} className={styles.dropdownIcon} />
-            <div className={styles.dropdownText}>
-              <div className={styles.dropdownLabel}>Exchange</div>
-              <div className={styles.dropdownDescription}>
-                Offer or request equipment, space, or expertise
-              </div>
-            </div>
-          </DropdownMenu.Item>
+          {/*<DropdownMenu.Item*/}
+          {/*  className={styles.dropdownItem}*/}
+          {/*  onSelect={() => handleNavigate('/exchanges/new')}*/}
+          {/*>*/}
+          {/*  <Icon icon="repeat" size={20} className={styles.dropdownIcon} />*/}
+          {/*  <div className={styles.dropdownText}>*/}
+          {/*    <div className={styles.dropdownLabel}>Exchange</div>*/}
+          {/*    <div className={styles.dropdownDescription}>*/}
+          {/*      Offer or request equipment, space, or expertise*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</DropdownMenu.Item>*/}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

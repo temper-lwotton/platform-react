@@ -17,6 +17,17 @@ export default function JobForgePage() {
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 5);
 
+  // Calculate total AI suggestions count
+  const totalSuggestions = jobs.reduce((count, job) => {
+    return count + (job.analysis?.tips?.length || 0);
+  }, 0);
+
+  // Count high priority suggestions
+  const highPrioritySuggestions = jobs.reduce((count, job) => {
+    const highPriorityCount = job.analysis?.tips?.filter(tip => tip.priority === 'high').length || 0;
+    return count + highPriorityCount;
+  }, 0);
+
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
     const diffMs = now.getTime() - new Date(date).getTime();
@@ -66,12 +77,17 @@ export default function JobForgePage() {
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles.statValue}>{stats.awaitingApprovalCount}</div>
-          <div className={styles.statLabel}>Awaiting Approval</div>
-          {stats.awaitingApprovalCount > 0 && (
-            <Link href="/jobforge/approvals" className={styles.statLink}>
+          <div className={styles.statValue}>{totalSuggestions}</div>
+          <div className={styles.statLabel}>AI Suggestions</div>
+          {totalSuggestions > 0 && (
+            <Link href="/jobforge/suggestions" className={styles.statLink}>
               View all →
             </Link>
+          )}
+          {highPrioritySuggestions > 0 && (
+            <div className={styles.statBadge}>
+              {highPrioritySuggestions} high priority
+            </div>
           )}
         </div>
 
@@ -158,6 +174,13 @@ export default function JobForgePage() {
           >
             <Icon icon="book" size={24} />
             <span>Use Template</span>
+          </button>
+          <button
+            onClick={() => router.push('/jobforge/suggestions')}
+            className={styles.quickAction}
+          >
+            <Icon icon="lightbulb" size={24} />
+            <span>View AI Suggestions</span>
           </button>
           <button
             onClick={() => router.push('/jobforge/create-new')}

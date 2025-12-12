@@ -1,0 +1,385 @@
+@use '../../../styles/abstracts' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  border: 2px dashed var(--color-border-primary);
+
+  p {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+.header {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+// Preview Options
+.options {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.optionLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+// Radix Switch Styling
+.switch {
+  width: 36px;
+  height: 20px;
+  background: var(--color-border-primary);
+  border-radius: 10px;
+  position: relative;
+  transition: background 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-text-tertiary);
+  }
+
+  &[data-state='checked'] {
+    background: var(--color-primary);
+  }
+}
+
+.switchThumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  transform: translateX(2px);
+  will-change: transform;
+
+  &[data-state='checked'] {
+    transform: translateX(18px);
+  }
+}
+
+// Tabs Styling
+.tabsList {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--color-border-primary);
+  margin-bottom: 1rem;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-primary);
+    border-radius: 2px;
+  }
+}
+
+.tabsTrigger {
+  all: unset;
+  padding: 0.625rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: transparent;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--color-text-primary);
+    background: var(--color-bg-hover);
+  }
+
+  &[data-state='active'] {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+}
+
+.previewWrapper {
+  margin-bottom: 1rem;
+}
+
+.tabsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeIn 0.2s ease-in;
+
+  &[data-state='inactive'] {
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Preview Card Container
+.previewCard {
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--color-bg-primary);
+  transition: all 0.3s;
+
+  &.darkMode {
+    background: #1a1a1a;
+    border-color: #333;
+
+    .cardContent {
+      background: #1a1a1a;
+      border-top-color: #333;
+    }
+
+    .cardDescription {
+      color: #a0a0a0;
+    }
+
+    .overlayTitle {
+      color: white;
+    }
+  }
+}
+
+// Card-Specific Preview Styles
+.imageContainer {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+// Showcase Card (16:9)
+.preview_showcase {
+  .imageContainer {
+    position: relative;
+    padding-top: 56.25%; // 16:9 aspect ratio
+  }
+
+  .previewImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+// Event Card (Fixed 200px)
+.preview_event {
+  .imageContainer {
+    height: 200px;
+  }
+}
+
+// Exchange Card (2:1)
+.preview_exchange {
+  .imageContainer {
+    position: relative;
+    padding-bottom: 50%; // 2:1 aspect ratio
+  }
+
+  .previewImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+// Media Card (4:3)
+.preview_media {
+  .imageContainer {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+// Open Call Card (Square)
+.preview_opencall {
+  max-width: 300px;
+
+  .imageContainer {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+// Status Update (Variable)
+.preview_status {
+  .imageContainer {
+    min-height: 200px;
+    max-height: 400px;
+  }
+
+  .previewImage {
+    height: auto;
+  }
+}
+
+// Image Overlay
+.imageOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 1rem 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4), transparent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.overlayTitle {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overlayBadge {
+  padding: 0.25rem 0.625rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.cardContent {
+  padding: 1rem;
+  background: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.cardDescription {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+// Info Panel
+.infoPanel {
+  padding: 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.375rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.infoLabel {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.infoValue {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+// Tips Section
+.tips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  border-left: 3px solid var(--color-primary);
+}
+
+.tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+
+  svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  strong {
+    color: var(--color-text-primary);
+  }
+}

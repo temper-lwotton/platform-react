@@ -205,8 +205,8 @@ export function JobSpecAnalysis({
             {analysis.tips.sort((a, b) => {
               const priorityOrder = { high: 0, medium: 1, low: 2 };
               return priorityOrder[a.priority] - priorityOrder[b.priority];
-            }).map((tip) => (
-              <div key={tip.id} className={styles.tip}>
+            }).map((tip, index) => (
+              <div key={`${tip.id}-${index}`} className={styles.tip}>
                 <div className={styles.tipHeader}>
                   <div>
                     <span className={`${styles.tipPriority} ${styles[`priority-${tip.priority}`]}`}>

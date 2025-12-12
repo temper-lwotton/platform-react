@@ -932,3 +932,92 @@
   color: var(--gray-400, #9ca3af);
   flex-shrink: 0;
 }
+
+// Extracted Fields Section
+.extractedFields {
+  background: white;
+  border: 2px solid var(--primary-200, #bfdbfe);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.extractedTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-900, #111827);
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &::before {
+    content: '✨';
+    font-size: 1.25rem;
+  }
+}
+
+.extractedSubtitle {
+  font-size: 0.875rem;
+  color: var(--gray-600, #4b5563);
+  margin: 0 0 1.5rem 0;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.fieldItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fieldLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500, #6b7280);
+}
+
+.fieldInput {
+  padding: 0.75rem;
+  border: 1px solid var(--gray-300, #d1d5db);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-900, #111827);
+  background: white;
+  transition: all 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-500, #3b82f6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--gray-400, #9ca3af);
+  }
+}
+
+// Button Spinner
+.buttonSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: buttonSpin 0.8s linear infinite;
+}
+
+@keyframes buttonSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

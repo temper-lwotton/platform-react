@@ -6,8 +6,19 @@ import { format } from 'date-fns';
 import { useUnpublishPost } from '@/hooks/cms';
 import styles from './PublishPanel.module.scss';
 
+interface PostType {
+  id: number;
+  singularLabel: string;
+}
+
 interface PublishPanelProps {
   post?: Post;
+  slug: string;
+  onSlugChange: (slug: string) => void;
+  selectedPostType: number | null;
+  onPostTypeChange: (typeId: number) => void;
+  postTypes?: PostType[];
+  isEditMode: boolean;
   onSaveDraft: () => void;
   onPublish: () => void;
   isDirty: boolean;
@@ -17,6 +28,12 @@ interface PublishPanelProps {
 
 export function PublishPanel({
   post,
+  slug,
+  onSlugChange,
+  selectedPostType,
+  onPostTypeChange,
+  postTypes = [],
+  isEditMode,
   onSaveDraft,
   onPublish,
   isDirty,
@@ -34,9 +51,35 @@ export function PublishPanel({
       }
     }
   };
+
+  // Generate URL preview
+  const urlPreview = slug ? `${typeof window !== 'undefined' ? window.location.origin : ''}/posts/${slug}` : '';
+
   return (
     <div className={styles.panel}>
       <h3 className={styles.title}>Publish</h3>
+
+      {/* Post Type Selector (only for new posts) */}
+      {!isEditMode && (
+        <div className={styles.postTypeSection}>
+          <label htmlFor="post-type" className={styles.postTypeLabel}>
+            Post Type
+          </label>
+          <select
+            id="post-type"
+            value={selectedPostType || ''}
+            onChange={(e) => onPostTypeChange(Number(e.target.value))}
+            className={styles.postTypeSelect}
+          >
+            <option value="">Select a post type</option>
+            {postTypes.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.singularLabel}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Status */}
       <div className={styles.status}>
@@ -65,6 +108,27 @@ export function PublishPanel({
         {post?.hasUnpublishedChanges && (
           <div className={styles.changesNotice}>
             Unpublished changes
+          </div>
+        )}
+      </div>
+
+      {/* Slug Input */}
+      <div className={styles.slugSection}>
+        <label htmlFor="post-slug" className={styles.slugLabel}>
+          URL Slug
+        </label>
+        <input
+          id="post-slug"
+          type="text"
+          value={slug}
+          onChange={(e) => onSlugChange(e.target.value)}
+          placeholder="post-slug"
+          className={styles.slugInput}
+        />
+        {slug && (
+          <div className={styles.slugPreview}>
+            <Globe className={styles.slugPreviewIcon} />
+            <span className={styles.slugPreviewUrl}>{urlPreview}</span>
           </div>
         )}
       </div>

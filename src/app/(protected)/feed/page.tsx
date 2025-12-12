@@ -717,16 +717,16 @@ export default function FeedPage() {
           <>
             <div className="feed-list">
               {/* Status Updates (Mock Data) */}
-              {mockStatusUpdates.map((statusUpdate, index) => (
-                <div key={`status-${statusUpdate.id}-${index}`} className="feed-item">
-                  <StatusUpdateCard
-                    statusUpdate={statusUpdate}
-                    isAdmin={false}
-                    isPinned={index === 0}
-                    currentSpaceId={statusUpdate.space.id}
-                  />
-                </div>
-              ))}
+              {/*{mockStatusUpdates.map((statusUpdate, index) => (*/}
+              {/*  <div key={`status-${statusUpdate.id}-${index}`} className="feed-item">*/}
+              {/*    <StatusUpdateCard*/}
+              {/*      statusUpdate={statusUpdate}*/}
+              {/*      isAdmin={false}*/}
+              {/*      isPinned={index === 0}*/}
+              {/*      currentSpaceId={statusUpdate.space.id}*/}
+              {/*    />*/}
+              {/*  </div>*/}
+              {/*))}*/}
 
               {feedItems.map((item, index) => {
                 if (item.type === 'discussion') {

@@ -23,16 +23,17 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     { href: '/feed', label: 'Home', requiresAuth: true },
-    { href: '/users', label: 'Connect', requiresAuth: true },
-    {
-        label: 'Grow',
-        requiresAuth: true,
-        children: [
-            { href: '/testing', label: 'Funding', icon: 'star' },
-            { href: '/testing', label: 'Opportunities', icon: 'book' },
-            { href: '/testing', label: 'Find an expert', icon: 'repeat' }
-        ]
-    },
+    { href: '/users', label: 'People', requiresAuth: true },
+    { href: '/events', label: 'Events', requiresAuth: true },
+    // {
+    //     label: 'Grow',
+    //     requiresAuth: true,
+    //     children: [
+    //         { href: '/testing', label: 'Funding', icon: 'star' },
+    //         { href: '/testing', label: 'Opportunities', icon: 'book' },
+    //         { href: '/testing', label: 'Find an expert', icon: 'repeat' }
+    //     ]
+    // },
     {
         label: 'Collaborate',
         requiresAuth: true,
@@ -47,8 +48,7 @@ const navItems: NavItem[] = [
         requiresAuth: true,
         children: [
             { href: '/showcases', label: 'Success Stories', icon: 'star' },
-            { href: '/resources', label: 'Knowledge Base', icon: 'book' },
-            { href: '/events', label: 'Events', icon: 'book' },
+            { href: '/resources', label: 'Knowledge Base', icon: 'book' }
         ]
     },
     {
@@ -60,14 +60,13 @@ const navItems: NavItem[] = [
             { href: '/test', label: 'Navigation item', icon: 'book' },
         ]
     },
-    {
-        label: 'Exchange',
-        requiresAuth: true,
-        children: [
-            { href: '/test', label: 'Navigation item', icon: 'star' },
-            { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
-        ]
-    },
+    // {
+    //     label: 'Exchange',
+    //     requiresAuth: true,
+    //     children: [
+    //         { href: '/exchanges', label: 'Community Exchange', icon: 'repeat' }
+    //     ]
+    // },
     { href: '/login', label: 'Login', hideWhenAuth: true },
 ];
 
@@ -177,9 +176,9 @@ export function Navigation() {
                             <li>
                                 <NotificationDropdown />
                             </li>
-                            <li>
-                                <GoLiveButton />
-                            </li>
+                            {/*<li>*/}
+                            {/*    <GoLiveButton />*/}
+                            {/*</li>*/}
                             <li>
                                 <GlobalPostButton />
                             </li>

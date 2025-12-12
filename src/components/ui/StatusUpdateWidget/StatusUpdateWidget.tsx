@@ -170,36 +170,36 @@ export function StatusUpdateWidget() {
             </div>
 
             {/* Current Status Display (when collapsed) */}
-            {!isExpanded && currentStatus && (
-                <div className={styles.current}>
-                    <div className={styles.currentContent}>
-                        {currentStatus.emoji && (
-                            <span className={styles.currentEmoji}>{currentStatus.emoji}</span>
-                        )}
-                        <span className={styles.currentText}>{currentStatus.text}</span>
-                    </div>
-                    <div className={styles.currentMeta}>
-                        Last updated {formatTimeAgo(currentStatus.updatedAt)} · <button onClick={handleFocus}>Edit</button>
-                    </div>
-                </div>
-            )}
+            {/*{!isExpanded && currentStatus && (*/}
+            {/*    <div className={styles.current}>*/}
+            {/*        <div className={styles.currentContent}>*/}
+            {/*            {currentStatus.emoji && (*/}
+            {/*                <span className={styles.currentEmoji}>{currentStatus.emoji}</span>*/}
+            {/*            )}*/}
+            {/*            <span className={styles.currentText}>{currentStatus.text}</span>*/}
+            {/*        </div>*/}
+            {/*        <div className={styles.currentMeta}>*/}
+            {/*            Last updated {formatTimeAgo(currentStatus.updatedAt)} · <button onClick={handleFocus}>Edit</button>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*)}*/}
 
             {/* Quick Templates (when collapsed) */}
-            {!isExpanded && (
-                <div className={styles.templates}>
-                    {QUICK_TEMPLATES.slice(0, 6).map((template) => (
-                        <button
-                            key={template.id}
-                            className={styles.templateBtn}
-                            onClick={() => handleTemplateSelect(template)}
-                            title={template.label}
-                        >
-                            <span className={styles.templateEmoji}>{template.emoji}</span>
-                            <span className={styles.templateLabel}>{template.label}</span>
-                        </button>
-                    ))}
-                </div>
-            )}
+            {/*{!isExpanded && (*/}
+            {/*    <div className={styles.templates}>*/}
+            {/*        {QUICK_TEMPLATES.slice(0, 6).map((template) => (*/}
+            {/*            <button*/}
+            {/*                key={template.id}*/}
+            {/*                className={styles.templateBtn}*/}
+            {/*                onClick={() => handleTemplateSelect(template)}*/}
+            {/*                title={template.label}*/}
+            {/*            >*/}
+            {/*                <span className={styles.templateEmoji}>{template.emoji}</span>*/}
+            {/*                <span className={styles.templateLabel}>{template.label}</span>*/}
+            {/*            </button>*/}
+            {/*        ))}*/}
+            {/*    </div>*/}
+            {/*)}*/}
 
             {/* Media Preview */}
             {isExpanded && mediaAttachments.length > 0 && (
