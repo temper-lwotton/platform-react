@@ -2381,6 +2381,21 @@
   cursor: not-allowed;
 }
 
+.comment-edit-button {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.comment-edit-button:hover {
+  color: var(--color-primary-hover);
+}
+
 /* Comment Reply Form */
 .comment-reply-form {
   margin-top: 0.75rem;
@@ -2390,8 +2405,18 @@
   padding: 0.75rem;
 }
 
+/* Comment Edit Form */
+.comment-edit-form {
+  margin-top: 0.75rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
 @media (prefers-color-scheme: dark) {
-  .comment-reply-form {
+  .comment-reply-form,
+  .comment-edit-form {
     background: var(--color-bg-tertiary);
     border-color: var(--color-border-primary);
   }
@@ -2426,7 +2451,8 @@
   }
 }
 
-.comment-reply-actions {
+.comment-reply-actions,
+.comment-edit-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;

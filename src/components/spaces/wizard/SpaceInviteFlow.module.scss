@@ -1,0 +1,70 @@
+.inviteFlow { animation: fadeIn 0.3s ease-in; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.header { text-align: center; margin-bottom: 3rem; }
+.header h2 { font-size: 2rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; }
+.header p { font-size: 1.05rem; color: #64748b; }
+.layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; }
+@media (max-width: 968px) { .layout { grid-template-columns: 1fr; } }
+.emailSection, .quickOptions { display: flex; flex-direction: column; gap: 1.5rem; }
+.sectionHeader { display: flex; gap: 1rem; align-items: flex-start; padding: 1.5rem; background: white; border: 2px solid #e2e8f0; border-radius: 12px; }
+.sectionHeader svg { width: 24px; height: 24px; color: #667eea; flex-shrink: 0; margin-top: 0.25rem; }
+.sectionHeader h3 { font-size: 1.125rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; }
+.sectionHeader p { font-size: 0.875rem; color: #64748b; }
+.emailInput { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; }
+.emailInput textarea { width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; font-family: inherit; resize: vertical; margin-bottom: 1rem; transition: all 0.2s; }
+.emailInput textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+.addButton { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.875rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.addButton svg { width: 20px; height: 20px; }
+.addButton:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4); }
+.addButton:disabled { opacity: 0.5; cursor: not-allowed; }
+.invitesList { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; }
+.invitesHeader h4 { font-size: 1rem; font-weight: 600; color: #0f172a; margin-bottom: 1rem; }
+.userSearchSection { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.searchInput { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 10px; transition: all 0.2s; }
+.searchInput svg { width: 20px; height: 20px; color: #94a3b8; flex-shrink: 0; }
+.searchInput input { flex: 1; border: none; outline: none; font-size: 0.95rem; color: #0f172a; }
+.searchInput input::placeholder { color: #cbd5e1; }
+.searchInput:focus-within { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+.clearButton { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border: none; border-radius: 6px; color: #64748b; cursor: pointer; transition: all 0.2s; }
+.clearButton svg { width: 16px; height: 16px; }
+.clearButton:hover { background: #e2e8f0; color: #0f172a; }
+.searchResults { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; max-height: 300px; overflow-y: auto; }
+.userResult { display: flex; align-items: center; gap: 1rem; padding: 0.875rem; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; transition: all 0.2s; }
+.userResult:hover { border-color: #cbd5e1; background: white; }
+.userAvatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.95rem; flex-shrink: 0; }
+.userInfo { flex: 1; min-width: 0; }
+.userName { font-size: 0.95rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
+.userMeta { font-size: 0.875rem; color: #64748b; }
+.addUserButton { display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+.addUserButton svg { width: 16px; height: 16px; }
+.addUserButton:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+.addUserButton:disabled { opacity: 0.6; cursor: not-allowed; background: #10b981; }
+.searchingState, .emptyState { padding: 2rem; text-align: center; color: #94a3b8; font-size: 0.95rem; }
+.emptyState { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+.emptyState svg { width: 40px; height: 40px; color: #cbd5e1; }
+.inviteItem { display: flex; align-items: center; gap: 1rem; padding: 0.875rem; background: #f8fafc; border-radius: 8px; margin-bottom: 0.5rem; }
+.inviteAvatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; flex-shrink: 0; }
+.inviteInfo { flex: 1; min-width: 0; }
+.inviteName { font-size: 0.95rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem; }
+.inviteEmail { font-size: 0.875rem; color: #64748b; }
+.roleSelect { padding: 0.5rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 0.875rem; cursor: pointer; }
+.removeButton { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: white; border: 2px solid #e2e8f0; border-radius: 6px; color: #ef4444; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; }
+.removeButton:hover { background: #fef2f2; border-color: #ef4444; }
+.uploadButton { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.875rem; background: white; color: #64748b; border: 2px dashed #cbd5e1; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.uploadButton svg { width: 20px; height: 20px; }
+.uploadButton:hover { border-color: #667eea; color: #667eea; }
+.optionCard { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; }
+.optionHeader { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+.optionHeader svg { width: 24px; height: 24px; color: #667eea; flex-shrink: 0; }
+.optionHeader h3 { font-size: 1.125rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
+.optionHeader p { font-size: 0.875rem; color: #64748b; }
+.linkBox { display: flex; gap: 0.5rem; }
+.linkInput { flex: 1; padding: 0.875rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.875rem; font-family: 'Monaco', monospace; background: #f8fafc; }
+.copyButton { display: flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.25rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.copyButton svg { width: 18px; height: 18px; }
+.copyButton:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+.skipNote { font-size: 0.95rem; color: #64748b; line-height: 1.6; }
+.aiTip { display: flex; gap: 0.75rem; padding: 1.25rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%); border: 2px solid #e2e8f0; border-radius: 12px; }
+.aiTip svg { width: 20px; height: 20px; color: #667eea; flex-shrink: 0; margin-top: 0.125rem; }
+.aiTip strong { display: block; font-size: 0.95rem; font-weight: 600; color: #0f172a; margin-bottom: 0.375rem; }
+.aiTip p { font-size: 0.875rem; color: #64748b; line-height: 1.5; }

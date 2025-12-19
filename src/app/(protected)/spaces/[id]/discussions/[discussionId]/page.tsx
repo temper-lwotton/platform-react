@@ -15,6 +15,7 @@ import { MentionUser } from '@/hooks/useMentions';
 import { getMentionedUserIds } from '@/lib/mentions';
 import { getSpace } from '@/lib/spaces';
 import { Button } from '@/components/ui/primitives';
+import { InlineModerationControls } from '@/components/cms/moderation/InlineModerationControls';
 
 export default function DiscussionPage() {
     const params = useParams();
@@ -72,6 +73,12 @@ export default function DiscussionPage() {
             avatar: member.profile?.photo,
         }));
     }, [space]);
+
+    // Check if current user is admin
+    const isAdmin = useMemo(() => {
+        if (!currentUserId || !space?.admins) return false;
+        return space.admins.some(admin => admin.id === currentUserId);
+    }, [currentUserId, space?.admins]);
 
     // Transform API comment structure (__children) to our format (replies)
     const commentTree = useMemo(() => {
@@ -264,6 +271,7 @@ export default function DiscussionPage() {
                                 currentUserId={currentUserId}
                                 commentMutation={commentMutation}
                                 mentionUsers={mentionUsers}
+                                isAdmin={isAdmin}
                             />
                         ))}
                     </div>
@@ -281,13 +289,18 @@ interface CommentItemProps {
     currentUserId: string | null;
     commentMutation: any;
     mentionUsers: MentionUser[];
+    isAdmin: boolean;
 }
 
-function CommentItem({ comment, depth = 0, currentUserId, commentMutation, mentionUsers }: CommentItemProps) {
+function CommentItem({ comment, depth = 0, currentUserId, commentMutation, mentionUsers, isAdmin }: CommentItemProps) {
     const [isReplying, setIsReplying] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const [replyText, setReplyText] = useState('');
     const [replyHtml, setReplyHtml] = useState('');
+    const [editText, setEditText] = useState('');
+    const [editHtml, setEditHtml] = useState('');
     const [clearNestedEditor, setClearNestedEditor] = useState(0);
+    const [clearEditEditor, setClearEditEditor] = useState(0);
 
     const authorName = (comment.author as any)?.fullName
         || comment.author?.profile?.fullName
@@ -341,6 +354,40 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
         }
     };
 
+    const handleEdit = () => {
+        setIsEditing(true);
+        setEditText(comment.content || '');
+        setEditHtml(comment.content || '');
+    };
+
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        setEditText('');
+        setEditHtml('');
+    };
+
+    const handleSaveEdit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (editText.trim() && currentUserId) {
+            try {
+                // TODO: Add updateComment mutation when API supports it
+                console.log('Saving comment edit:', { commentId: comment.id, content: editHtml });
+                // For now, just close the edit form
+                setIsEditing(false);
+                setEditText('');
+                setEditHtml('');
+            } catch (error) {
+                console.error('Failed to save edit:', error);
+            }
+        }
+    };
+
+    const handleModerate = (action: string, reason?: string) => {
+        console.log('Moderating comment:', { commentId: comment.id, action, reason });
+        // TODO: Implement moderation actions when API supports it
+        // This would include: approve, flag, hide, warn, delete, ban
+    };
+
     return (
         <div className="comment" style={{ marginLeft: depth > 0 ? `${depth * 1.5}rem` : 0 }}>
             <div className="comment-header">
@@ -361,13 +408,51 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
                 </div>
             </div>
 
-            <RichContentWithMentions
-                content={comment.content}
-                users={mentionUsers}
-                className="comment-content"
-            />
+            {isEditing ? (
+                <form className="comment-edit-form" onSubmit={handleSaveEdit}>
+                    <div className="comment-edit-note">
+                        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '0.5rem' }}>
+                            Editing comment by {authorName}
+                        </p>
+                    </div>
+                    <LexicalCommentEditor
+                        key={clearEditEditor}
+                        users={mentionUsers}
+                        placeholder="Edit comment..."
+                        onChange={(text, html) => {
+                            setEditText(text);
+                            setEditHtml(html);
+                        }}
+                        onMention={(user) => console.log('Mentioned in edit:', user.name)}
+                        disabled={false}
+                        autoFocus={true}
+                    />
+                    <div className="comment-edit-actions">
+                        <Button
+                            type="button"
+                            onClick={handleCancelEdit}
+                            variant="outline"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={!editText.trim()}
+                            variant="primary"
+                        >
+                            Save Changes
+                        </Button>
+                    </div>
+                </form>
+            ) : (
+                <RichContentWithMentions
+                    content={comment.content}
+                    users={mentionUsers}
+                    className="comment-content"
+                />
+            )}
 
-            {currentUserId && (
+            {currentUserId && !isEditing && (
                 <div className="comment-actions">
                     <button
                         className="comment-reply-button"
@@ -376,6 +461,20 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
                     >
                         Reply
                     </button>
+                    {/* Temporarily showing for all users for illustration purposes */}
+                    <button
+                        className="comment-edit-button"
+                        onClick={handleEdit}
+                    >
+                        Edit
+                    </button>
+                    <InlineModerationControls
+                        contentType="comment"
+                        contentId={comment.id}
+                        isAdmin={true}
+                        onAction={handleModerate}
+                        compact={true}
+                    />
                 </div>
             )}
 
@@ -429,6 +528,7 @@ function CommentItem({ comment, depth = 0, currentUserId, commentMutation, menti
                             currentUserId={currentUserId}
                             commentMutation={commentMutation}
                             mentionUsers={mentionUsers}
+                            isAdmin={isAdmin}
                         />
                     ))}
                 </div>

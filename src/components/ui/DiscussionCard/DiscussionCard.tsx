@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Discussion } from '@/lib/discussions';
 import { Icon } from '../Icon';
 import { useToast } from '../ToastProvider';
 import { Avatar } from '../primitives';
+import { useIsAdmin } from '@/hooks/cms/usePermissions';
+import { generateDiscussionBroadcast } from '@/lib/broadcasts/templates';
+import { InlineModerationControls } from '@/components/cms/moderation/InlineModerationControls';
 import styles from './DiscussionCard.module.scss';
 
 interface DiscussionCardProps {
@@ -14,8 +19,11 @@ interface DiscussionCardProps {
 }
 
 export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
+    const router = useRouter();
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const { showToast } = useToast();
+    const isAdmin = useIsAdmin();
 
     const authorName = discussion.author?.profile?.fullName
         || `${discussion.author?.profile?.firstName || ''} ${discussion.author?.profile?.lastName || ''}`.trim()
@@ -50,6 +58,20 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
         } else {
             showToast(`Removed "${discussion.title}" from bookmarks`);
         }
+    };
+
+    const handleBroadcast = () => {
+        // Generate broadcast template
+        const template = generateDiscussionBroadcast(discussion, spaceId);
+
+        // Store template in localStorage for the broadcast editor to pick up
+        localStorage.setItem('broadcast_template', JSON.stringify(template));
+
+        // Navigate to broadcast creation page
+        router.push('/admin/broadcasts/new?source=discussion');
+
+        showToast('Creating broadcast for discussion...');
+        setIsAdminMenuOpen(false);
     };
 
     return (
@@ -99,17 +121,74 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
                         {discussion.commentsCount ?? 0}
                     </span>
                 </div>
-                <button
-                    onClick={handleBookmark}
-                    className={styles.bookmark}
-                    aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-                >
-                    <Icon
-                        icon="bookmark"
-                        size={18}
-                        className={styles.bookmarkIcon}
-                    />
-                </button>
+                <div className={styles.actions}>
+                    {isAdmin && (
+                        <DropdownMenu.Root open={isAdminMenuOpen} onOpenChange={setIsAdminMenuOpen}>
+                            <DropdownMenu.Trigger asChild>
+                                <button
+                                    className={styles.adminMenuButton}
+                                    onClick={(e) => e.stopPropagation()}
+                                    title="Admin options"
+                                >
+                                    <Icon icon="moreVertical" size={18} />
+                                </button>
+                            </DropdownMenu.Trigger>
+
+                            <DropdownMenu.Portal>
+                                <DropdownMenu.Content
+                                    className={styles.adminMenu}
+                                    align="end"
+                                    sideOffset={4}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <DropdownMenu.Item
+                                        className={styles.adminMenuItem}
+                                        onSelect={handleBroadcast}
+                                    >
+                                        <Icon icon="mail" size={16} className={styles.adminMenuIcon} />
+                                        <div className={styles.adminMenuText}>
+                                            <div className={styles.adminMenuLabel}>Broadcast This</div>
+                                            <div className={styles.adminMenuDesc}>
+                                                Create an email campaign for this discussion
+                                            </div>
+                                        </div>
+                                    </DropdownMenu.Item>
+
+                                    <DropdownMenu.Separator className={styles.adminMenuSeparator} />
+
+                                    <DropdownMenu.Item
+                                        className={styles.adminMenuItem}
+                                        onSelect={(e) => e.preventDefault()}
+                                    >
+                                        <div className={styles.moderationSection}>
+                                            <InlineModerationControls
+                                                contentId={discussion.id}
+                                                contentType="post"
+                                                isAdmin={isAdmin}
+                                                compact={true}
+                                                onAction={(action) => {
+                                                    showToast(`Moderation action: ${action}`);
+                                                    setIsAdminMenuOpen(false);
+                                                }}
+                                            />
+                                        </div>
+                                    </DropdownMenu.Item>
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Portal>
+                        </DropdownMenu.Root>
+                    )}
+                    <button
+                        onClick={handleBookmark}
+                        className={styles.bookmark}
+                        aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                    >
+                        <Icon
+                            icon="bookmark"
+                            size={18}
+                            className={styles.bookmarkIcon}
+                        />
+                    </button>
+                </div>
             </div>
         </article>
     );

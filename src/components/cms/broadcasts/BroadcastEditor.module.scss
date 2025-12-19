@@ -1,0 +1,252 @@
+@use '../../../styles/abstracts' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+// Header
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.backButton {
+  @include button-base;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+
+  &:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-text-primary);
+  }
+}
+
+.backIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.title {
+  flex: 1;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.saveButton {
+  @include button-base;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+
+  &:hover {
+    background: var(--color-bg-hover);
+  }
+}
+
+// Stepper
+.stepperWrapper {
+  @include card-base;
+  padding: 2rem;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.stepContainer {
+  display: flex;
+  align-items: center;
+  flex: 1;
+
+  &:last-child {
+    flex: 0;
+  }
+}
+
+.step {
+  @include button-base;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:not(.disabled):hover {
+    .stepNumber {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.stepNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 1.125rem;
+  border: 2px solid var(--color-border-primary);
+  transition: all 0.2s;
+  flex-shrink: 0;
+
+  .step.active & {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-bg);
+  }
+
+  .step.completed & {
+    background: var(--color-success);
+    color: white;
+    border-color: var(--color-success);
+  }
+}
+
+.checkIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.stepInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.stepName {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+
+  .step.active & {
+    color: var(--color-text-primary);
+  }
+
+  .step.completed & {
+    color: var(--color-text-primary);
+  }
+}
+
+.stepConnector {
+  flex: 1;
+  height: 2px;
+  background: var(--color-border-primary);
+  margin: 0 1rem;
+  transition: all 0.3s;
+
+  &.completed {
+    background: var(--color-success);
+  }
+}
+
+// Content
+.content {
+  @include card-base;
+  padding: 2rem;
+  min-height: 500px;
+}
+
+// Footer
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  position: sticky;
+  bottom: 1rem;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.footerButton {
+  @include button-base;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background: var(--color-bg-hover);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.footerButtonPrimary {
+  @include button-base;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+
+  &:hover {
+    background: var(--color-primary-hover);
+  }
+}
+
+.footerButtonIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.footerCenter {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}

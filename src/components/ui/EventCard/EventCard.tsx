@@ -2,11 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Event, formatEventDateRange, isUpcoming, isOngoing, isPast } from '@/lib/events';
 import { Icon } from '../Icon';
 import { useToast } from '../ToastProvider';
 import { Avatar, Badge } from '../primitives';
+import { useIsAdmin } from '@/hooks/cms/usePermissions';
+import { generateEventBroadcast } from '@/lib/broadcasts/templates';
+import { InlineModerationControls } from '@/components/cms/moderation/InlineModerationControls';
 import styles from './EventCard.module.scss';
 
 type RSVPStatus = 'going' | 'maybe' | 'not_going' | null;
@@ -17,10 +21,13 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, showRSVP = false }: EventCardProps) {
+  const router = useRouter();
   const [rsvpStatus, setRsvpStatus] = useState<RSVPStatus>(null);
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const { showToast } = useToast();
+  const isAdmin = useIsAdmin();
 
   const dateRange = formatEventDateRange(event.eventStart, event.eventEnd);
   const status = isOngoing(event.eventStart, event.eventEnd)
@@ -80,6 +87,20 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
     } else {
       showToast(`Removed "${event.title}" from bookmarks`);
     }
+  };
+
+  const handleBroadcast = () => {
+    // Generate broadcast template
+    const template = generateEventBroadcast(event);
+
+    // Store template in localStorage for the broadcast editor to pick up
+    localStorage.setItem('broadcast_template', JSON.stringify(template));
+
+    // Navigate to broadcast creation page
+    router.push('/admin/broadcasts/new?source=event');
+
+    showToast('Creating broadcast for event...');
+    setIsAdminMenuOpen(false);
   };
 
   return (
@@ -169,6 +190,62 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
           </div>
 
           <div className={styles.actions}>
+            {isAdmin && (
+              <DropdownMenu.Root open={isAdminMenuOpen} onOpenChange={setIsAdminMenuOpen}>
+                <DropdownMenu.Trigger asChild>
+                  <button
+                    className={styles.adminMenuButton}
+                    onClick={(e) => e.stopPropagation()}
+                    title="Admin options"
+                  >
+                    <Icon icon="moreVertical" size={18} />
+                  </button>
+                </DropdownMenu.Trigger>
+
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    className={styles.adminMenu}
+                    align="end"
+                    sideOffset={4}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <DropdownMenu.Item
+                      className={styles.adminMenuItem}
+                      onSelect={handleBroadcast}
+                    >
+                      <Icon icon="mail" size={16} className={styles.adminMenuIcon} />
+                      <div className={styles.adminMenuText}>
+                        <div className={styles.adminMenuLabel}>Broadcast This</div>
+                        <div className={styles.adminMenuDesc}>
+                          Create an email campaign for this event
+                        </div>
+                      </div>
+                    </DropdownMenu.Item>
+
+                    <DropdownMenu.Separator className={styles.adminMenuSeparator} />
+
+                    <DropdownMenu.Item
+                      className={styles.adminMenuItem}
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <div className={styles.moderationSection}>
+                        <InlineModerationControls
+                          contentId={event.id}
+                          contentType="post"
+                          isAdmin={isAdmin}
+                          compact={true}
+                          onAction={(action) => {
+                            showToast(`Moderation action: ${action}`);
+                            setIsAdminMenuOpen(false);
+                          }}
+                        />
+                      </div>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
+            )}
+
             {event.link && (
               <a
                 href={event.link}

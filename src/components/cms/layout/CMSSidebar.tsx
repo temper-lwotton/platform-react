@@ -14,6 +14,14 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  Radio,
+  BarChart3,
+  Zap,
+  TrendingUp,
+  AlertCircle,
+  Users,
+  Target,
+  CheckCircle,
 } from 'lucide-react';
 import styles from './CMSSidebar.module.scss';
 
@@ -29,51 +37,145 @@ interface NavItem {
   badge?: number;
 }
 
-const navItems: NavItem[] = [
+interface NavSection {
+  title?: string;
+  items: NavItem[];
+}
+
+const navSections: NavSection[] = [
   {
-    label: 'Dashboard',
-    href: '/admin',
-    icon: LayoutDashboard,
+    items: [
+      {
+        label: 'Dashboard',
+        href: '/admin',
+        icon: LayoutDashboard,
+      },
+      {
+        label: 'Analytics',
+        href: '/admin/analytics',
+        icon: BarChart3,
+      },
+    ],
   },
   {
-    label: 'Posts',
-    href: '/admin/posts',
-    icon: FileText,
+    title: 'Content',
+    items: [
+      {
+        label: 'Posts',
+        href: '/admin/posts',
+        icon: FileText,
+      },
+      {
+        label: 'Post Types',
+        href: '/admin/post-types',
+        icon: FolderOpen,
+      },
+      {
+        label: 'Taxonomies',
+        href: '/admin/taxonomies',
+        icon: Tags,
+      },
+      {
+        label: 'Block Templates',
+        href: '/admin/block-templates',
+        icon: Blocks,
+      },
+      {
+        label: 'Media',
+        href: '/admin/media',
+        icon: Image,
+      },
+      {
+        label: 'Comments',
+        href: '/admin/comments',
+        icon: MessageSquare,
+      },
+    ],
   },
   {
-    label: 'Post Types',
-    href: '/admin/post-types',
-    icon: FolderOpen,
+    title: 'Moderation & Safety',
+    items: [
+      {
+        label: 'Moderation Queue',
+        href: '/admin/moderation',
+        icon: Shield,
+      },
+      {
+        label: 'Auto-Mod Rules',
+        href: '/admin/moderation/rules',
+        icon: Zap,
+      },
+      {
+        label: 'Mod Analytics',
+        href: '/admin/moderation/analytics',
+        icon: TrendingUp,
+      },
+      {
+        label: 'Appeals',
+        href: '/admin/moderation/appeals',
+        icon: AlertCircle,
+      },
+    ],
   },
   {
-    label: 'Taxonomies',
-    href: '/admin/taxonomies',
-    icon: Tags,
+    title: 'Members',
+    items: [
+      {
+        label: 'Member Directory',
+        href: '/admin/members',
+        icon: Users,
+      },
+      {
+        label: 'Segments',
+        href: '/admin/members/segments',
+        icon: Target,
+      },
+      {
+        label: 'Onboarding',
+        href: '/admin/members/onboarding',
+        icon: CheckCircle,
+      },
+      {
+        label: 'Analytics',
+        href: '/admin/members/analytics',
+        icon: BarChart3,
+      },
+    ],
   },
   {
-    label: 'Block Templates',
-    href: '/admin/block-templates',
-    icon: Blocks,
+    title: 'Administration',
+    items: [
+      {
+        label: 'User Roles',
+        href: '/admin/users/roles',
+        icon: Shield,
+      },
+      {
+        label: 'Settings',
+        href: '/admin/settings',
+        icon: Settings,
+      },
+    ],
   },
   {
-    label: 'Media',
-    href: '/admin/media',
-    icon: Image,
+    title: 'Automation',
+    items: [
+      {
+        label: 'Workflows',
+        href: '/admin/workflows',
+        icon: Zap,
+      },
+    ],
   },
   {
-    label: 'Comments',
-    href: '/admin/comments',
-    icon: MessageSquare,
-  },
-  {
-    label: 'User Roles',
-    href: '/admin/users/roles',
-    icon: Shield,
-  },
-  {
-    label: 'Settings',
-    href: '/admin/settings',
-    icon: Settings,
+    title: 'Communications',
+    items: [
+      {
+        label: 'Broadcasts',
+        href: '/admin/broadcasts',
+        icon: Radio,
+      },
+    ],
   },
 ];
 
@@ -102,35 +204,42 @@ export function CMSSidebar({ isOpen, onToggle }: CMSSidebarProps) {
 
       {/* Navigation */}
       <nav className={styles.nav}>
-        <ul className={styles.navList}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href ||
-              (item.href !== '/admin' && pathname.startsWith(item.href));
+        {navSections.map((section, sectionIndex) => (
+          <div key={sectionIndex} className={styles.navSection}>
+            {section.title && isOpen && (
+              <h3 className={styles.sectionTitle}>{section.title}</h3>
+            )}
+            <ul className={styles.navList}>
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href ||
+                  (item.href !== '/admin' && pathname.startsWith(item.href));
 
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`
-                    ${styles.navItem}
-                    ${isActive ? styles.active : ''}
-                    ${!isOpen ? styles.centered : ''}
-                  `}
-                  title={!isOpen ? item.label : undefined}
-                >
-                  <Icon className={styles.navIcon} />
-                  {isOpen && (
-                    <span className={styles.navLabel}>{item.label}</span>
-                  )}
-                  {isOpen && item.badge && (
-                    <span className={styles.badge}>{item.badge}</span>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={`
+                        ${styles.navItem}
+                        ${isActive ? styles.active : ''}
+                        ${!isOpen ? styles.centered : ''}
+                      `}
+                      title={!isOpen ? item.label : undefined}
+                    >
+                      <Icon className={styles.navIcon} />
+                      {isOpen && (
+                        <span className={styles.navLabel}>{item.label}</span>
+                      )}
+                      {isOpen && item.badge && (
+                        <span className={styles.badge}>{item.badge}</span>
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}

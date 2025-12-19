@@ -1,0 +1,598 @@
+@use '../../../../styles/abstracts' as *;
+
+.stepContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stepHeader {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.stepTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.stepDescription {
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.stepFooter {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.nextButton {
+  @include button-base;
+  padding: 0.875rem 2rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Form Styles
+.formGrid {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.labelIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.required {
+  color: var(--color-error);
+}
+
+.input {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.inputWithIcon {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input {
+    padding-left: 2.75rem;
+    flex: 1;
+  }
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+// Recipients Step
+.recipientTypes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.recipientTypeCard {
+  @include button-base;
+  @include card-base;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary-bg);
+  }
+}
+
+.recipientTypeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background: var(--color-bg-secondary);
+  flex-shrink: 0;
+
+  .selected & {
+    background: var(--color-primary);
+  }
+}
+
+.recipientTypeIconSvg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-text-secondary);
+
+  .selected & {
+    color: white;
+  }
+}
+
+.recipientTypeContent {
+  flex: 1;
+}
+
+.recipientTypeName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.recipientTypeDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.5rem 0;
+}
+
+.recipientTypeCount {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.selectedBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.selectedIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: white;
+}
+
+.segmentSelection {
+  margin: 2rem 0;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.segmentList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.segmentCard {
+  @include button-base;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--color-bg-primary);
+  border: 2px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-bg-hover);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary-bg);
+  }
+}
+
+.segmentInfo {
+  flex: 1;
+}
+
+.segmentName {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.segmentCount {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.segmentSelectedIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.recipientSummary {
+  @include card-base;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--color-primary-bg);
+  border: 2px solid var(--color-primary);
+}
+
+.summaryIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.summaryIconSvg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: white;
+}
+
+.summaryContent {
+  flex: 1;
+}
+
+.summaryLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.summaryValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+// Design Step
+.emailBuilderWrapper {
+  min-height: 500px;
+}
+
+// Review Step
+.reviewSection {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.summaryItemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: var(--color-primary-bg);
+  flex-shrink: 0;
+}
+
+.summaryItemIconSvg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-primary);
+}
+
+.summaryItemLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.summaryItemValue {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+}
+
+.emailPreview {
+  @include card-base;
+  border: 2px solid var(--color-border-primary);
+  overflow: hidden;
+}
+
+.emailPreviewHeader {
+  padding: 1rem;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.previewLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+}
+
+.previewIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.emailPreviewContent {
+  padding: 1.5rem;
+}
+
+.emailMetadata {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.emailMetadataRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.emailMetadataLabel {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 80px;
+}
+
+.emailMetadataValue {
+  color: var(--color-text-primary);
+}
+
+.emailBody {
+  min-height: 200px;
+}
+
+.emailContentPreview {
+  padding: 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+  color: var(--color-text-secondary);
+}
+
+.noContent {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-tertiary);
+}
+
+.sendOptions {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sendOption {
+  @include button-base;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--color-bg-primary);
+  border: 2px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary-bg);
+  }
+}
+
+.sendOptionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background: var(--color-bg-secondary);
+  flex-shrink: 0;
+
+  .selected & {
+    background: var(--color-primary);
+  }
+}
+
+.sendOptionIconSvg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-text-secondary);
+
+  .selected & {
+    color: white;
+  }
+}
+
+.sendOptionContent {
+  flex: 1;
+}
+
+.sendOptionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 0.25rem 0;
+}
+
+.sendOptionDescription {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.scheduledDateInput {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--color-bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.dateTimeInput {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.5rem;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+}
+
+.checklistCard {
+  @include card-base;
+  padding: 1.5rem;
+  background: var(--color-success-bg);
+  border: 2px solid var(--color-success);
+}
+
+.checklistTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+}
+
+.checklistItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+.checklistIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+
+  &.complete {
+    color: var(--color-success);
+  }
+}
