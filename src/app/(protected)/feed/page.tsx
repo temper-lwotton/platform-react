@@ -10,13 +10,7 @@ import { UrgentTasksSidebar } from '@/components/ui/UrgentTasksSidebar';
 import { DiscussionCard } from '@/components/ui/DiscussionCard';
 import { getDiscussions, Discussion } from '@/lib/discussions';
 import { getUpdates, Update } from '@/lib/updates';
-import { getShowcases, Showcase } from '@/lib/showcases';
-import { getResources, Resource } from '@/lib/resources';
-import { getExchanges, Exchange } from '@/lib/exchanges';
 import { UpdateCard } from '@/components/ui/UpdateCard';
-import { ShowcaseCard } from '@/components/ui/ShowcaseCard';
-import { ResourceCard } from '@/components/ui/ResourceCard';
-import { ExchangeCard } from '@/components/ui/ExchangeCard';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { MOCK_TASKS } from '@/lib/tasks';
 import { Icon } from '@/components/ui/Icon';
@@ -27,8 +21,8 @@ import { mockStatusUpdates } from '@/lib/status-updates';
 import { SuggestedCarousel } from '@/components/ui/SuggestedCarousel';
 
 type FeedItem = {
-  type: 'discussion' | 'event' | 'update' | 'showcase' | 'resource' | 'exchange';
-  data: Discussion | Event | Update | Showcase | Resource | Exchange;
+  type: 'discussion' | 'event' | 'update';
+  data: Discussion | Event | Update;
   createdAt: string;
 };
 
@@ -41,7 +35,7 @@ export default function FeedPage() {
 
   // Filter states
   const [selectedSpaces, setSelectedSpaces] = useState<Set<number>>(new Set());
-  const [contentType, setContentType] = useState<'all' | 'discussions' | 'events' | 'updates' | 'showcases' | 'resources' | 'exchanges'>('all');
+  const [contentType, setContentType] = useState<'all' | 'discussions' | 'events' | 'updates'>('all');
   const [timePeriod, setTimePeriod] = useState<'all' | 'today' | 'week' | 'month'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'active'>('newest');
 
@@ -139,72 +133,6 @@ export default function FeedPage() {
     enabled: accessibleSpaceIds.size > 0,
   });
 
-  // Fetch showcases with infinite scroll
-  const {
-    data: showcasesData,
-    fetchNextPage: fetchNextShowcases,
-    hasNextPage: hasNextShowcases,
-    isFetchingNextPage: isFetchingNextShowcases,
-    isLoading: showcasesLoading,
-  } = useInfiniteQuery({
-    queryKey: ['feed-showcases'],
-    queryFn: ({ pageParam = 0 }) =>
-      getShowcases(),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < ITEMS_PER_PAGE) {
-        return undefined;
-      }
-      return allPages.reduce((acc, page) => acc + page.length, 0);
-    },
-    initialPageParam: 0,
-    enabled: accessibleSpaceIds.size > 0,
-  });
-
-  // Fetch resources with infinite scroll
-  const {
-    data: resourcesData,
-    fetchNextPage: fetchNextResources,
-    hasNextPage: hasNextResources,
-    isFetchingNextPage: isFetchingNextResources,
-    isLoading: resourcesLoading,
-  } = useInfiniteQuery({
-    queryKey: ['feed-resources'],
-    queryFn: ({ pageParam = 0 }) =>
-      getResources(),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < ITEMS_PER_PAGE) {
-        return undefined;
-      }
-      return allPages.reduce((acc, page) => acc + page.length, 0);
-    },
-    initialPageParam: 0,
-    enabled: accessibleSpaceIds.size > 0,
-  });
-
-  // Fetch exchanges with infinite scroll
-  const {
-    data: exchangesData,
-    fetchNextPage: fetchNextExchanges,
-    hasNextPage: hasNextExchanges,
-    isFetchingNextPage: isFetchingNextExchanges,
-    isLoading: exchangesLoading,
-  } = useInfiniteQuery({
-    queryKey: ['feed-exchanges'],
-    queryFn: ({ pageParam = 0 }) =>
-      getExchanges({
-        limit: ITEMS_PER_PAGE,
-        offset: pageParam,
-      }),
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < ITEMS_PER_PAGE) {
-        return undefined;
-      }
-      return allPages.reduce((acc, page) => acc + page.length, 0);
-    },
-    initialPageParam: 0,
-    enabled: accessibleSpaceIds.size > 0,
-  });
-
   // Fetch all events for sidebar (without pagination)
   const { data: allEvents } = useQuery<Event[]>({
     queryKey: ['sidebar-events'],
@@ -230,9 +158,9 @@ export default function FeedPage() {
     enabled: userSpaceIds.length > 0,
   });
 
-  const isLoading = userLoading || discussionsLoading || eventsLoading || updatesLoading || showcasesLoading || resourcesLoading || exchangesLoading;
-  const hasMore = hasNextDiscussions || hasNextEvents || hasNextUpdates || hasNextShowcases || hasNextResources || hasNextExchanges;
-  const isFetchingMore = isFetchingNextDiscussions || isFetchingNextEvents || isFetchingNextUpdates || isFetchingNextShowcases || isFetchingNextResources || isFetchingNextExchanges;
+  const isLoading = userLoading || discussionsLoading || eventsLoading || updatesLoading;
+  const hasMore = hasNextDiscussions || hasNextEvents || hasNextUpdates;
+  const isFetchingMore = isFetchingNextDiscussions || isFetchingNextEvents || isFetchingNextUpdates;
 
   // Filter handlers
   const toggleSpace = (spaceId: number) => {
@@ -255,12 +183,9 @@ export default function FeedPage() {
   const allDiscussions = discussionsData?.pages.flat() ?? [];
   const allEventItems = eventsData?.pages.flat() ?? [];
   const allUpdateItems = updatesData?.pages.flat() ?? [];
-  const allShowcaseItems = showcasesData?.pages.flat() ?? [];
-  const allResourceItems = resourcesData?.pages.flat() ?? [];
-  const allExchangeItems = exchangesData?.pages.flat() ?? [];
 
   // Helper function to extract space ID from any content type
-  const getSpaceId = (item: Discussion | Event | Update | Showcase | Resource | Exchange): number | null => {
+  const getSpaceId = (item: Discussion | Event | Update): number | null => {
     if ('space' in item && item.space) {
       const space = item.space as any;
       // For discussions, space can be an object or ID
@@ -327,54 +252,6 @@ export default function FeedPage() {
       });
     }
 
-    // Add showcases if content type allows
-    if (contentType === 'all' || contentType === 'showcases') {
-      allShowcaseItems.forEach(showcase => {
-        const spaceId = getSpaceId(showcase);
-        if (spaceId && accessibleSpaceIds.has(spaceId)) {
-          if (selectedSpaces.size === 0 || selectedSpaces.has(spaceId)) {
-            items.push({
-              type: 'showcase',
-              data: showcase,
-              createdAt: showcase.createdAt,
-            });
-          }
-        }
-      });
-    }
-
-    // Add resources if content type allows
-    if (contentType === 'all' || contentType === 'resources') {
-      allResourceItems.forEach(resource => {
-        const spaceId = getSpaceId(resource);
-        if (spaceId && accessibleSpaceIds.has(spaceId)) {
-          if (selectedSpaces.size === 0 || selectedSpaces.has(spaceId)) {
-            items.push({
-              type: 'resource',
-              data: resource,
-              createdAt: resource.createdAt,
-            });
-          }
-        }
-      });
-    }
-
-    // Add exchanges if content type allows
-    if (contentType === 'all' || contentType === 'exchanges') {
-      allExchangeItems.forEach(exchange => {
-        const spaceId = getSpaceId(exchange);
-        if (spaceId && accessibleSpaceIds.has(spaceId)) {
-          if (selectedSpaces.size === 0 || selectedSpaces.has(spaceId)) {
-            items.push({
-              type: 'exchange',
-              data: exchange,
-              createdAt: exchange.createdAt,
-            });
-          }
-        }
-      });
-    }
-
     // Filter by time period
     const now = new Date();
     const filteredByTime = items.filter(item => {
@@ -418,12 +295,6 @@ export default function FeedPage() {
           aCount = 0; // Events don't have engagement count
         } else if (a.type === 'update') {
           aCount = (a.data as Update).likesCount || 0;
-        } else if (a.type === 'showcase') {
-          aCount = (a.data as Showcase).likesCount || 0;
-        } else if (a.type === 'resource') {
-          aCount = (a.data as Resource).viewCount || 0;
-        } else if (a.type === 'exchange') {
-          aCount = (a.data as Exchange).interestedCount || 0;
         }
 
         if (b.type === 'discussion') {
@@ -432,12 +303,6 @@ export default function FeedPage() {
           bCount = 0; // Events don't have engagement count
         } else if (b.type === 'update') {
           bCount = (b.data as Update).likesCount || 0;
-        } else if (b.type === 'showcase') {
-          bCount = (b.data as Showcase).likesCount || 0;
-        } else if (b.type === 'resource') {
-          bCount = (b.data as Resource).viewCount || 0;
-        } else if (b.type === 'exchange') {
-          bCount = (b.data as Exchange).interestedCount || 0;
         }
 
         return bCount - aCount;
@@ -446,7 +311,7 @@ export default function FeedPage() {
     });
 
     return sorted;
-  }, [allDiscussions, allEventItems, allUpdateItems, allShowcaseItems, allResourceItems, allExchangeItems, accessibleSpaceIds, selectedSpaces, contentType, timePeriod, sortBy]);
+  }, [allDiscussions, allEventItems, allUpdateItems, accessibleSpaceIds, selectedSpaces, contentType, timePeriod, sortBy]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -465,15 +330,6 @@ export default function FeedPage() {
           }
           if (hasNextUpdates) {
             fetchNextUpdates();
-          }
-          if (hasNextShowcases) {
-            fetchNextShowcases();
-          }
-          if (hasNextResources) {
-            fetchNextResources();
-          }
-          if (hasNextExchanges) {
-            fetchNextExchanges();
           }
         }
       },
@@ -498,15 +354,9 @@ export default function FeedPage() {
     hasNextDiscussions,
     hasNextEvents,
     hasNextUpdates,
-    hasNextShowcases,
-    hasNextResources,
-    hasNextExchanges,
     fetchNextDiscussions,
     fetchNextEvents,
     fetchNextUpdates,
-    fetchNextShowcases,
-    fetchNextResources,
-    fetchNextExchanges,
   ]);
 
   if (isLoading) {
@@ -533,7 +383,7 @@ export default function FeedPage() {
           <div className="feed-empty">
             <p className="feed-empty-title">No spaces found</p>
             <p className="feed-empty-description">
-              Join or create a space to see discussions and events in your feed
+              Join or create a space to see discussions, events, and updates in your feed
             </p>
           </div>
         </div>
@@ -635,27 +485,6 @@ export default function FeedPage() {
                   <Icon icon="bell" size={14} />
                   Updates
                 </button>
-                <button
-                  onClick={() => setContentType('showcases')}
-                  className={`feed-filter-btn ${contentType === 'showcases' ? 'feed-filter-btn--active' : ''}`}
-                >
-                  <Icon icon="star" size={14} />
-                  Showcases
-                </button>
-                <button
-                  onClick={() => setContentType('resources')}
-                  className={`feed-filter-btn ${contentType === 'resources' ? 'feed-filter-btn--active' : ''}`}
-                >
-                  <Icon icon="book" size={14} />
-                  Resources
-                </button>
-                <button
-                  onClick={() => setContentType('exchanges')}
-                  className={`feed-filter-btn ${contentType === 'exchanges' ? 'feed-filter-btn--active' : ''}`}
-                >
-                  <Icon icon="repeat" size={14} />
-                  Exchanges
-                </button>
               </div>
             </div>
 
@@ -710,7 +539,7 @@ export default function FeedPage() {
           <div className="feed-empty">
             <p className="feed-empty-title">No activity yet</p>
             <p className="feed-empty-description">
-              When people share discussions, create events, post updates, publish showcases, add resources, or create exchanges in your spaces, they'll appear here
+              When people share discussions, create events, or post updates in your spaces, they'll appear here
             </p>
           </div>
         ) : (
@@ -756,27 +585,6 @@ export default function FeedPage() {
                   return (
                     <div key={`update-${update.id}-${index}`} className="feed-item">
                       <UpdateCard update={update} />
-                    </div>
-                  );
-                } else if (item.type === 'showcase') {
-                  const showcase = item.data as Showcase;
-                  return (
-                    <div key={`showcase-${showcase.id}-${index}`} className="feed-item">
-                      <ShowcaseCard showcase={showcase} />
-                    </div>
-                  );
-                } else if (item.type === 'resource') {
-                  const resource = item.data as Resource;
-                  return (
-                    <div key={`resource-${resource.id}-${index}`} className="feed-item">
-                      <ResourceCard resource={resource} />
-                    </div>
-                  );
-                } else if (item.type === 'exchange') {
-                  const exchange = item.data as Exchange;
-                  return (
-                    <div key={`exchange-${exchange.id}-${index}`} className="feed-item">
-                      <ExchangeCard exchange={exchange} />
                     </div>
                   );
                 }

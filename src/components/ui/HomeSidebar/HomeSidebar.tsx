@@ -9,7 +9,6 @@ import { getSpace } from '@/lib/spaces';
 import { getCurrentUserId, fetchCurrentUser } from '@/lib/auth';
 import { Icon } from '../Icon';
 import { SpaceSettingsPopover } from '../SpaceSettingsPopover';
-import { useJobForgeStats } from '@/lib/jobforge/hooks';
 import styles from './HomeSidebar.module.scss';
 
 export function HomeSidebar() {
@@ -49,9 +48,6 @@ export function HomeSidebar() {
 
   const mySpaces = spaceQueries.data || [];
   const spacesLoading = userLoading || spaceQueries.isLoading;
-
-  // Get JobForge stats for badges
-  const { stats: jobForgeStats } = useJobForgeStats();
 
   // Mock function to generate activity count - replace with real API call later
   const getSpaceActivityCount = (spaceId: string | number): number => {

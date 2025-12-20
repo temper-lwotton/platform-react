@@ -28,7 +28,9 @@
       "Bash(xargs cat:*)",
       "Bash(xargs:*)",
       "Bash(/Users/lukewotton/Projects/spaces-frontend/src/components/form-builder/settings/ValidationSettings.tsx)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(lsof:*)",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": []

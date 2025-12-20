@@ -8,7 +8,6 @@ import { NotificationDropdown } from '../NotificationDropdown';
 import { MessagesDropdown } from '../MessagesDropdown';
 import { BookmarksDropdown } from '../BookmarksDropdown';
 import { UserMenu } from '../UserMenu';
-import { GoLiveButton } from '../GoLiveButton';
 import { useAuth } from '@/hooks/useAuth';
 import { Icon, IconName } from '../Icon';
 import styles from './Navigation.module.scss';
@@ -43,14 +42,14 @@ const navItems: NavItem[] = [
             { href: '/test', label: 'Navigation item', icon: 'repeat' }
         ]
     },
-    {
-        label: 'Learn',
-        requiresAuth: true,
-        children: [
-            { href: '/showcases', label: 'Success Stories', icon: 'star' },
-            { href: '/resources', label: 'Knowledge Base', icon: 'book' }
-        ]
-    },
+    // {
+    //     label: 'Learn',
+    //     requiresAuth: true,
+    //     children: [
+    //         { href: '/showcases', label: 'Success Stories', icon: 'star' },
+    //         { href: '/resources', label: 'Knowledge Base', icon: 'book' }
+    //     ]
+    // },
     {
         label: 'Contribute',
         requiresAuth: true,
