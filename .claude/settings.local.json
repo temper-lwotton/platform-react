@@ -30,7 +30,10 @@
       "Bash(/Users/lukewotton/Projects/spaces-frontend/src/components/form-builder/settings/ValidationSettings.tsx)",
       "Bash(npm run dev:*)",
       "Bash(lsof:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(git show:*)",
+      "Bash(/tmp/media-library-page.module.scss)",
+      "Bash(tail:*)"
     ],
     "deny": [],
     "ask": []

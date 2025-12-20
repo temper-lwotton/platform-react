@@ -136,13 +136,13 @@ export function UserMenu() {
                     <span>Preferences</span>
                 </Link>
 
-                {/* Media Library Link */}
+                {/* Admin Area Link */}
                 <Link
-                    href="/media-library"
+                    href="/admin"
                     className={styles.item}>
 
-                    <Icon icon="image" size={16} />
-                    <span>Media Library</span>
+                    <Icon icon="shield" size={16} />
+                    <span>Admin Area</span>
                 </Link>
 
                 <div className={styles.divider} />

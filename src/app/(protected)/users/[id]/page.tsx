@@ -153,7 +153,14 @@ export default function UserPage() {
                         )}
 
                         {/* Action Buttons */}
-                        {!isOwnProfile && (
+                        {isOwnProfile ? (
+                            <div className="user-detail-actions">
+                                <Link href={`/users/${id}/edit`} className="user-detail-btn user-detail-btn--primary">
+                                    <Icon icon="edit" size={16} />
+                                    Edit Profile
+                                </Link>
+                            </div>
+                        ) : (
                             <div className="user-detail-actions">
                                 {user.connectionStatus === 'connected' ? (
                                     <>

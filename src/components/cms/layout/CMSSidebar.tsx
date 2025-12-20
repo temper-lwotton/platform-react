@@ -5,11 +5,8 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   FileText,
-  FolderOpen,
   Tags,
-  Blocks,
   Image,
-  MessageSquare,
   Shield,
   Settings,
   ChevronLeft,
@@ -61,14 +58,9 @@ const navSections: NavSection[] = [
     title: 'Content',
     items: [
       {
-        label: 'Posts',
-        href: '/admin/posts',
+        label: 'Pages',
+        href: '/admin/pages',
         icon: FileText,
-      },
-      {
-        label: 'Post Types',
-        href: '/admin/post-types',
-        icon: FolderOpen,
       },
       {
         label: 'Taxonomies',
@@ -76,19 +68,9 @@ const navSections: NavSection[] = [
         icon: Tags,
       },
       {
-        label: 'Block Templates',
-        href: '/admin/block-templates',
-        icon: Blocks,
-      },
-      {
         label: 'Media',
         href: '/admin/media',
         icon: Image,
-      },
-      {
-        label: 'Comments',
-        href: '/admin/comments',
-        icon: MessageSquare,
       },
     ],
   },
@@ -154,16 +136,6 @@ const navSections: NavSection[] = [
         label: 'Settings',
         href: '/admin/settings',
         icon: Settings,
-      },
-    ],
-  },
-  {
-    title: 'Automation',
-    items: [
-      {
-        label: 'Workflows',
-        href: '/admin/workflows',
-        icon: Zap,
       },
     ],
   },
