@@ -17,13 +17,14 @@
   flex-shrink: 0;
 
   &:hover {
-    background: rgba(124, 58, 237, 0.1);
-    color: var(--color-primary);
+    background: var(--color-bg-hover);
+    color: var(--color-text-primary);
+    opacity: 1;
   }
 
   &:focus-visible {
     opacity: 1;
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
   }
 }
@@ -110,13 +111,13 @@
   transition: all 0.15s;
 
   &:hover {
-    border-color: var(--color-primary);
-    background: rgba(124, 58, 237, 0.02);
+    border-color: var(--color-border-secondary);
+    background: var(--color-bg-hover);
   }
 
   &:has(.radio:checked) {
-    border-color: var(--color-primary);
-    background: rgba(124, 58, 237, 0.05);
+    border-color: var(--color-border-focus);
+    background: rgba(192, 242, 60, 0.05);
   }
 }
 

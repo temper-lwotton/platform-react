@@ -47,13 +47,13 @@
 .spaceLink {
   display: inline-flex;
   align-items: center;
-  color: var(--color-primary);
+  color: var(--color-text-primary);
   font-weight: 600;
   text-decoration: none;
   transition: color 0.15s;
 
   &:hover {
-    color: var(--color-primary-hover);
+    color: var(--black);
   }
 }
 
@@ -263,23 +263,24 @@
 
   &.rsvpButtonGoing {
     background: var(--color-success);
-    border-color: #10b981;
-    color: white;
+    border-color: var(--color-success);
+    color: var(--color-text-primary);
+    font-weight: 600;
 
     &:hover {
-      background: var(--color-success);
-      border-color: var(--color-success);
+      background: rgba(192, 242, 60, 0.85);
+      border-color: rgba(192, 242, 60, 0.85);
     }
   }
 
   &.rsvpButtonMaybe {
-    background: #f59e0b;
-    border-color: #f59e0b;
+    background: var(--amber-500);
+    border-color: var(--amber-500);
     color: white;
 
     &:hover {
-      background: #d97706;
-      border-color: #d97706;
+      background: var(--amber-600);
+      border-color: var(--amber-600);
     }
   }
 
@@ -374,7 +375,7 @@
   color: var(--color-text-secondary);
 
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
   }
 }
 

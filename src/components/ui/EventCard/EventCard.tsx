@@ -259,7 +259,7 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
               </a>
             )}
 
-            {showRSVP && status === 'upcoming' && (
+            {showRSVP && (status === 'upcoming' || status === 'ongoing') && (
               <DropdownMenu.Root open={isRSVPOpen} onOpenChange={setIsRSVPOpen}>
                 <DropdownMenu.Trigger asChild>
                   <button

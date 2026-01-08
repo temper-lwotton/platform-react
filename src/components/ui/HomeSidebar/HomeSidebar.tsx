@@ -28,9 +28,9 @@ export function HomeSidebar() {
     enabled: isClient && !!currentUserId,
   });
 
-  // Get space IDs from user data
+  // Get space IDs from user data (deduplicate in case user is both admin and member)
   const userSpaceIds = userData
-    ? [...userData.adminSpaces, ...userData.memberSpaces].map(s => String(s.id))
+    ? [...new Set([...userData.adminSpaces, ...userData.memberSpaces].map(s => String(s.id)))]
     : [];
 
   // Fetch full details for each space

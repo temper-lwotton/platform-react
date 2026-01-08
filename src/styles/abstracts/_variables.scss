@@ -54,15 +54,27 @@
   /* White & Black */
   --white: #ffffff;
   --black: #000000;
+
+  /* Accent Colors - Monotone Theme */
+  --accent-primary: #C0F23C;
+  --accent-secondary: #90FF57;
+  --accent-hover: #a8d633;
+  --accent-active: #8fbf2a;
+
+  /* Amber (Warning) */
+  --amber-50: #fffbeb;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
 }
 
-// Light Theme (Default)
+// Light Theme (Default) - Monotone Design
 :root,
 :root[data-theme="light"] {
   /* Backgrounds */
   --color-bg-primary: var(--white);
-  --color-bg-secondary: var(--gray-50);
-  --color-bg-tertiary: var(--gray-100);
+  --color-bg-secondary: #fafafa;
+  --color-bg-tertiary: #f5f5f5;
   --color-bg-elevated: var(--white);
   --color-bg-overlay: rgba(0, 0, 0, 0.5);
   --color-bg-hover: var(--gray-50);
@@ -74,43 +86,50 @@
   --color-text-tertiary: var(--gray-500);
   --color-text-inverse: var(--white);
   --color-text-disabled: var(--gray-400);
-  --color-text-link: var(--blue-600);
-  --color-text-link-hover: var(--blue-700);
+  --color-text-link: var(--gray-900);
+  --color-text-link-hover: var(--black);
 
   /* Borders */
+  --color-border: var(--gray-200);
   --color-border-primary: var(--gray-200);
   --color-border-secondary: var(--gray-300);
-  --color-border-focus: var(--blue-500);
+  --color-border-focus: var(--accent-primary);
   --color-border-error: var(--red-500);
 
-  /* Interactive/Primary */
-  --color-primary: var(--blue-600);
-  --color-primary-hover: var(--blue-700);
-  --color-primary-active: var(--blue-800);
-  --color-primary-bg: var(--blue-50);
+  /* Interactive/Primary - Black buttons */
+  --color-primary: var(--black);
+  --color-primary-hover: var(--gray-900);
+  --color-primary-active: var(--gray-800);
+  --color-primary-bg: var(--gray-50);
   --color-primary-text: var(--white);
 
-  /* Secondary */
-  --color-secondary: var(--gray-600);
-  --color-secondary-hover: var(--gray-700);
-  --color-secondary-bg: var(--gray-100);
+  /* Secondary - Outline style */
+  --color-secondary: var(--gray-700);
+  --color-secondary-hover: var(--gray-800);
+  --color-secondary-bg: transparent;
+
+  /* Accent - For highlights and indicators */
+  --color-accent: var(--accent-primary);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
+  --color-accent-text: var(--gray-900);
 
   /* Status Colors */
-  --color-success: var(--green-600);
-  --color-success-bg: var(--green-50);
-  --color-success-text: var(--green-700);
+  --color-success: rgba(192, 242, 60, 0.7); /* Desaturated accent */
+  --color-success-bg: rgba(192, 242, 60, 0.1);
+  --color-success-text: var(--gray-700);
 
   --color-error: var(--red-600);
   --color-error-bg: var(--red-50);
   --color-error-text: var(--red-700);
 
-  --color-warning: var(--yellow-600);
-  --color-warning-bg: var(--yellow-50);
-  --color-warning-text: var(--yellow-600);
+  --color-warning: var(--amber-500); /* Familiar amber */
+  --color-warning-bg: var(--amber-50);
+  --color-warning-text: var(--amber-700);
 
-  --color-info: var(--blue-600);
-  --color-info-bg: var(--blue-50);
-  --color-info-text: var(--blue-700);
+  --color-info: var(--gray-600);
+  --color-info-bg: var(--gray-100);
+  --color-info-text: var(--gray-700);
 
   /* Surfaces */
   --color-surface-card: var(--white);
@@ -122,6 +141,11 @@
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Gradients - For indicators and highlights */
+  --gradient-accent: linear-gradient(135deg, #C0F23C 0%, #90FF57 100%);
+  --gradient-accent-subtle: linear-gradient(135deg, rgba(192, 242, 60, 0.15) 0%, rgba(144, 255, 87, 0.15) 100%);
+  --gradient-gray-subtle: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
 
   /* Legacy variables for backward compatibility */
   --background: var(--color-bg-primary);

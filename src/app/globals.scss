@@ -1381,7 +1381,7 @@
 }
 
 .user-header-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -2039,7 +2039,7 @@
 }
 
 .discussion-article-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -2300,7 +2300,7 @@
 }
 
 .comment-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -2692,7 +2692,7 @@
 }
 
 .conversation-list-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -2888,7 +2888,7 @@
 }
 
 .message-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -3269,7 +3269,7 @@
 }
 
 .new-conversation-suggestion-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -3942,7 +3942,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -4195,7 +4195,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -4496,7 +4496,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -7479,7 +7479,7 @@
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8064,14 +8064,15 @@
   width: 24px;
   height: 24px;
   border-radius: 6px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  color: var(--color-text-primary);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  border: 1px solid var(--color-border-primary);
 }
 
 .home-sidebar-separator {
@@ -8246,7 +8247,7 @@
 .feed-post-avatar-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8465,7 +8466,7 @@
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8866,7 +8867,7 @@
 }
 
 .event-card-author-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -9520,7 +9521,7 @@
 }
 
 .event-article-host-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -15264,7 +15265,7 @@ button:focus:not(:focus-visible) {
 }
 
 .update-article-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -15389,7 +15390,7 @@ button:focus:not(:focus-visible) {
   position: relative;
   width: 100%;
   padding-top: 56.25%; /* 16:9 Aspect Ratio */
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   overflow: hidden;
 }
 
@@ -15513,7 +15514,7 @@ button:focus:not(:focus-visible) {
 }
 
 .showcase-card-team-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -15553,7 +15554,7 @@ button:focus:not(:focus-visible) {
 }
 
 .showcase-card-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -15635,7 +15636,7 @@ button:focus:not(:focus-visible) {
   position: relative;
   width: 100%;
   height: 400px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
 }
 
 .showcase-article-hero-image {
@@ -15771,7 +15772,7 @@ button:focus:not(:focus-visible) {
 }
 
 .showcase-article-team-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -16009,7 +16010,7 @@ button:focus:not(:focus-visible) {
 }
 
 .resource-article-avatar--placeholder {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   display: flex;
   align-items: center;
@@ -20914,7 +20915,7 @@ button:focus:not(:focus-visible) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   font-weight: 600;
   font-size: 0.875rem;
@@ -21119,7 +21120,7 @@ button:focus:not(:focus-visible) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -21225,7 +21226,7 @@ button:focus:not(:focus-visible) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: white;
   font-weight: 600;
   font-size: 0.625rem;

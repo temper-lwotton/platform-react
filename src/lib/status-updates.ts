@@ -153,7 +153,7 @@ export const mockStatusUpdates: StatusUpdate[] = [
       id: '5',
       fullName: 'Luke Wotton',
       jobTitle: 'Transport Innovation Lead',
-      photo: '/avatars/luke.jpg'
+      photo: null
     },
     type: 'status-update',
     createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
@@ -191,7 +191,7 @@ export const mockStatusUpdates: StatusUpdate[] = [
       id: '12',
       fullName: 'Sarah Chen',
       jobTitle: 'Sustainability Consultant',
-      photo: '/avatars/sarah.jpg'
+      photo: null
     },
     type: 'status-update',
     createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
@@ -223,7 +223,7 @@ export const mockStatusUpdates: StatusUpdate[] = [
       id: '8',
       fullName: 'James Miller',
       jobTitle: 'Fleet Manager',
-      photo: '/avatars/james.jpg'
+      photo: null
     },
     type: 'status-update',
     createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago

@@ -160,13 +160,17 @@ export function UserCard({ user, onConnectionChange }: UserCardProps) {
             {/* 4:3 Cover Image Section */}
             <Link href={`/users/${user.id}`} className={styles.coverLink}>
                 <div className={styles.cover}>
-                    <Avatar
-                        src={profile.photo}
-                        alt={displayName}
-                        fallback={initials}
-                        size="2xl"
-                        className={styles.coverAvatar}
-                    />
+                    {profile.photo ? (
+                        <img
+                            src={profile.photo}
+                            alt={displayName}
+                            className={styles.coverImage}
+                        />
+                    ) : (
+                        <div className={styles.coverPlaceholder}>
+                            <span className={styles.coverInitials}>{initials}</span>
+                        </div>
+                    )}
                 </div>
             </Link>
 

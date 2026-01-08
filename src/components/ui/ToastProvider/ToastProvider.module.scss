@@ -55,7 +55,7 @@
 }
 
 .rootSuccess {
-  border-left-color: #10b981;
+  border-left-color: var(--accent-primary);
 }
 
 .rootError {
@@ -63,7 +63,7 @@
 }
 
 .rootInfo {
-  border-left-color: #3b82f6;
+  border-left-color: var(--color-text-secondary);
 }
 
 .content {
@@ -84,12 +84,12 @@
 }
 
 .rootSuccess .icon {
-  background: #d1fae5;
-  color: #059669;
+  background: rgba(192, 242, 60, 0.15);
+  color: var(--accent-active);
 
   @media (prefers-color-scheme: dark) {
-    background: #064e3b;
-    color: #6ee7b7;
+    background: rgba(192, 242, 60, 0.2);
+    color: var(--accent-secondary);
   }
 }
 
@@ -104,12 +104,12 @@
 }
 
 .rootInfo .icon {
-  background: #dbeafe;
-  color: #2563eb;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
 
   @media (prefers-color-scheme: dark) {
-    background: #1e3a8a;
-    color: #93c5fd;
+    background: var(--gray-800);
+    color: var(--gray-400);
   }
 }
 

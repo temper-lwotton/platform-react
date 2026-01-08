@@ -9,7 +9,7 @@
   color: inherit;
 
   &:hover {
-    border-color: var(--color-primary);
+    border-color: var(--color-border-secondary);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     transform: translateY(-4px);
 
@@ -40,14 +40,28 @@
   @include flex-center;
   overflow: hidden;
   background: var(--color-bg-secondary);
+  position: relative;
 }
 
-.coverAvatar {
-  width: 96px !important;
-  height: 96px !important;
-  font-size: 2rem !important;
-  border-width: 3px;
+.coverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform 0.3s ease;
+}
+
+.coverPlaceholder {
+  width: 100%;
+  height: 100%;
+  @include flex-center;
+  background: var(--gradient-gray-subtle);
+  transition: transform 0.3s ease;
+}
+
+.coverInitials {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
 }
 
 // Card Content
@@ -194,11 +208,13 @@
 }
 
 .connectBtn--connected {
-  background: #10b981;
-  color: white;
+  background: var(--color-success);
+  color: var(--color-text-primary);
+  font-weight: 600;
 
   &:hover:not(:disabled) {
-    background: #dc2626;
+    background: var(--color-error);
+    color: white;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 
@@ -236,7 +252,7 @@
 
 // Error State
 .connectBtn--error {
-  border: 1px solid #dc2626;
+  border: 1px solid var(--color-error);
 }
 
 .error {
@@ -244,8 +260,8 @@
   align-items: center;
   gap: 6px;
   padding: 0.5rem;
-  background: #fef2f2;
-  color: #dc2626;
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
   border-radius: 6px;
   font-size: 0.75rem;
   margin-top: -0.25rem;

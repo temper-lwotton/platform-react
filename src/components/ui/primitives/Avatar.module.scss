@@ -26,10 +26,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-  color: white;
-  font-weight: 600;
+  background: var(--gradient-gray-subtle);
+  color: var(--color-text-primary);
+  font-weight: 700;
   text-transform: uppercase;
+  border: 1px solid var(--color-border-primary);
 }
 
 // Size variants

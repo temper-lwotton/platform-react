@@ -33,7 +33,7 @@
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    border-color: var(--color-primary);
+    border-color: var(--color-border-secondary);
 
     @include dark-mode {
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
