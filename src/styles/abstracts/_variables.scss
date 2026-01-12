@@ -55,11 +55,38 @@
   --white: #ffffff;
   --black: #000000;
 
-  /* Accent Colors - Monotone Theme */
-  --accent-primary: #C0F23C;
-  --accent-secondary: #90FF57;
-  --accent-hover: #a8d633;
-  --accent-active: #8fbf2a;
+  /* Innovation Spectrum Theme - Core Colors */
+
+  /* Purple - Creativity, Innovation, Primary Actions */
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-500: #a855f7;
+  --purple-600: #9333ea;
+  --purple-700: #7e22ce;
+  --purple-800: #6b21a8;
+
+  /* Vibrant Purple - Main Brand */
+  --vibrant-purple: #6C63FF;
+  --vibrant-purple-hover: #5B52E8;
+  --vibrant-purple-active: #4A41D1;
+
+  /* Electric Blue - Information, Navigation, Trust */
+  --electric-blue: #3b82f6;
+  --electric-blue-hover: #2563eb;
+  --electric-blue-active: #1d4ed8;
+  --electric-blue-light: #60a5fa;
+
+  /* Coral Orange - Energy, CTAs, Action */
+  --coral-orange: #f97316;
+  --coral-orange-hover: #ea580c;
+  --coral-orange-active: #c2410c;
+  --coral-orange-light: #fb923c;
+
+  /* Lime Green - Success, Growth, Activity */
+  --lime-green: #C0F23C;
+  --lime-green-hover: #a8d633;
+  --lime-green-active: #8fbf2a;
+  --lime-green-light: #90FF57;
 
   /* Amber (Warning) */
   --amber-50: #fffbeb;
@@ -68,83 +95,96 @@
   --amber-700: #b45309;
 }
 
-// Light Theme (Default) - Monotone Design
+// Light Theme (Default) - Innovation Spectrum Design
 :root,
 :root[data-theme="light"] {
   /* Backgrounds */
-  --color-bg-primary: var(--white);
-  --color-bg-secondary: #fafafa;
-  --color-bg-tertiary: #f5f5f5;
+  --color-bg-primary: #F5F6FA;
+  --color-bg-secondary: #FAFBFC;
+  --color-bg-tertiary: #FFFFFF;
   --color-bg-elevated: var(--white);
   --color-bg-overlay: rgba(0, 0, 0, 0.5);
-  --color-bg-hover: var(--gray-50);
-  --color-bg-active: var(--gray-100);
+  --color-bg-hover: #F0F1F5;
+  --color-bg-active: #E8E9EE;
 
   /* Text */
-  --color-text-primary: var(--gray-900);
-  --color-text-secondary: var(--gray-600);
-  --color-text-tertiary: var(--gray-500);
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
   --color-text-inverse: var(--white);
   --color-text-disabled: var(--gray-400);
-  --color-text-link: var(--gray-900);
-  --color-text-link-hover: var(--black);
+  --color-text-link: var(--vibrant-purple);
+  --color-text-link-hover: var(--vibrant-purple-hover);
 
   /* Borders */
-  --color-border: var(--gray-200);
-  --color-border-primary: var(--gray-200);
-  --color-border-secondary: var(--gray-300);
-  --color-border-focus: var(--accent-primary);
+  --color-border: #E5E7EB;
+  --color-border-primary: #E5E7EB;
+  --color-border-secondary: #D1D5DB;
+  --color-border-focus: var(--vibrant-purple);
   --color-border-error: var(--red-500);
 
-  /* Interactive/Primary - Black buttons */
-  --color-primary: var(--black);
-  --color-primary-hover: var(--gray-900);
-  --color-primary-active: var(--gray-800);
-  --color-primary-bg: var(--gray-50);
+  /* Interactive/Primary - Purple for creativity & innovation */
+  --color-primary: var(--vibrant-purple);
+  --color-primary-hover: var(--vibrant-purple-hover);
+  --color-primary-active: var(--vibrant-purple-active);
+  --color-primary-bg: #F0EFFF;
   --color-primary-text: var(--white);
 
-  /* Secondary - Outline style */
+  /* Secondary - Outline style with subtle purple */
   --color-secondary: var(--gray-700);
-  --color-secondary-hover: var(--gray-800);
+  --color-secondary-hover: var(--vibrant-purple);
   --color-secondary-bg: transparent;
 
-  /* Accent - For highlights and indicators */
-  --color-accent: var(--accent-primary);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-active: var(--accent-active);
+  /* Info - Blue for navigation & information */
+  --color-info: var(--electric-blue);
+  --color-info-hover: var(--electric-blue-hover);
+  --color-info-bg: #eff6ff;
+  --color-info-text: var(--electric-blue-active);
+
+  /* CTA - Orange for energy & urgent actions */
+  --color-cta: var(--coral-orange);
+  --color-cta-hover: var(--coral-orange-hover);
+  --color-cta-active: var(--coral-orange-active);
+  --color-cta-bg: #fff7ed;
+  --color-cta-text: var(--white);
+
+  /* Accent - Lime for highlights and activity indicators */
+  --color-accent: var(--lime-green);
+  --color-accent-hover: var(--lime-green-hover);
+  --color-accent-active: var(--lime-green-active);
   --color-accent-text: var(--gray-900);
 
   /* Status Colors */
-  --color-success: rgba(192, 242, 60, 0.7); /* Desaturated accent */
+  --color-success: var(--lime-green);
   --color-success-bg: rgba(192, 242, 60, 0.1);
-  --color-success-text: var(--gray-700);
+  --color-success-text: var(--lime-green-active);
 
   --color-error: var(--red-600);
   --color-error-bg: var(--red-50);
   --color-error-text: var(--red-700);
 
-  --color-warning: var(--amber-500); /* Familiar amber */
+  --color-warning: var(--amber-500);
   --color-warning-bg: var(--amber-50);
   --color-warning-text: var(--amber-700);
-
-  --color-info: var(--gray-600);
-  --color-info-bg: var(--gray-100);
-  --color-info-text: var(--gray-700);
 
   /* Surfaces */
   --color-surface-card: var(--white);
   --color-surface-modal: var(--white);
   --color-surface-dropdown: var(--white);
-  --color-surface-sidebar: var(--gray-50);
+  --color-surface-sidebar: var(--white);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 16px 0 rgba(0, 0, 0, 0.12);
 
-  /* Gradients - For indicators and highlights */
-  --gradient-accent: linear-gradient(135deg, #C0F23C 0%, #90FF57 100%);
-  --gradient-accent-subtle: linear-gradient(135deg, rgba(192, 242, 60, 0.15) 0%, rgba(144, 255, 87, 0.15) 100%);
+  /* Gradients - Innovation Spectrum */
+  --gradient-primary: linear-gradient(135deg, var(--vibrant-purple) 0%, var(--purple-600) 100%);
+  --gradient-info: linear-gradient(135deg, var(--electric-blue) 0%, var(--electric-blue-hover) 100%);
+  --gradient-cta: linear-gradient(135deg, var(--coral-orange) 0%, var(--coral-orange-hover) 100%);
+  --gradient-success: linear-gradient(135deg, var(--lime-green) 0%, var(--lime-green-light) 100%);
+  --gradient-spectrum: linear-gradient(135deg, var(--vibrant-purple) 0%, var(--electric-blue) 50%, var(--lime-green) 100%);
+  --gradient-warm-spectrum: linear-gradient(135deg, var(--coral-orange) 0%, var(--vibrant-purple) 100%);
   --gradient-gray-subtle: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
 
   /* Legacy variables for backward compatibility */
@@ -182,7 +222,7 @@
   --color-primary: var(--blue-500);
   --color-primary-hover: var(--blue-400);
   --color-primary-active: var(--blue-600);
-  --color-primary-bg: var(--blue-900);
+  --color-primary-bg: var(--gray-800);
   --color-primary-text: var(--white);
 
   /* Secondary */
@@ -254,7 +294,7 @@
     --color-primary: var(--blue-500);
     --color-primary-hover: var(--blue-400);
     --color-primary-active: var(--blue-600);
-    --color-primary-bg: var(--blue-900);
+    --color-primary-bg: var(--gray-800);
     --color-primary-text: var(--white);
 
     /* Secondary */

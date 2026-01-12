@@ -58,6 +58,14 @@ export function HomeSidebar() {
     return count > 2 ? count : 0; // Only show badge if count > 2
   };
 
+  // Get consistent color variant for space icon
+  const getSpaceIconColor = (spaceId: string | number): string => {
+    const idString = String(spaceId);
+    const hash = idString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colors = ['purple', 'blue', 'orange', 'lime', 'gray'];
+    return colors[hash % colors.length];
+  };
+
   if (!isClient) return null;
 
   const isActive = (path: string) => pathname === path;
@@ -137,6 +145,7 @@ export function HomeSidebar() {
               <>
                 {mySpaces.slice(0, 10).map((space) => {
                   const activityCount = getSpaceActivityCount(space.id);
+                  const iconColor = getSpaceIconColor(space.id);
                   return (
                     <div key={space.id} className={styles.spaceItem}>
                       <Link
@@ -145,7 +154,7 @@ export function HomeSidebar() {
                           pathname === `/spaces/${space.id}` ? styles.linkActive : ''
                         }`}
                       >
-                        <span className={styles.spaceIcon}>
+                        <span className={`${styles.spaceIcon} ${styles[`spaceIcon--${iconColor}`]}`}>
                           {space.title.charAt(0).toUpperCase()}
                         </span>
                         <span className={styles.linkText}>{space.title}</span>

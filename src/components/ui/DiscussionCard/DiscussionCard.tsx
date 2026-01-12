@@ -145,7 +145,7 @@ export function DiscussionCard({ discussion, spaceId }: DiscussionCardProps) {
                                         className={styles.adminMenuItem}
                                         onSelect={handleBroadcast}
                                     >
-                                        <Icon icon="mail" size={16} className={styles.adminMenuIcon} />
+                                        <Icon icon="send" size={16} className={styles.adminMenuIcon} />
                                         <div className={styles.adminMenuText}>
                                             <div className={styles.adminMenuLabel}>Broadcast This</div>
                                             <div className={styles.adminMenuDesc}>

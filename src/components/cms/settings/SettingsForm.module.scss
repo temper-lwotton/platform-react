@@ -356,3 +356,132 @@
     border-color: var(--color-primary);
   }
 }
+
+// Theme Settings Specific Styles
+.themeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.themeCard {
+  @include button-base;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.25rem;
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-bg-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.themeCardActive {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.themeCardCheck {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+}
+
+.themeCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-primary);
+}
+
+.themeCardTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.themeCardDescription {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+}
+
+.themeColorPreview {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.themeColorSwatch {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  border: 2px solid var(--color-border-primary);
+}
+
+.colorInput {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.colorPicker {
+  width: 4rem;
+  height: 2.5rem;
+  padding: 0.25rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  background: var(--color-bg-primary);
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 0.25rem;
+  }
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+
+  span {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+}
+
+.checkbox {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}

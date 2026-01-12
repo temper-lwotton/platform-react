@@ -213,7 +213,7 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
                       className={styles.adminMenuItem}
                       onSelect={handleBroadcast}
                     >
-                      <Icon icon="mail" size={16} className={styles.adminMenuIcon} />
+                      <Icon icon="send" size={16} className={styles.adminMenuIcon} />
                       <div className={styles.adminMenuText}>
                         <div className={styles.adminMenuLabel}>Broadcast This</div>
                         <div className={styles.adminMenuDesc}>
@@ -230,7 +230,7 @@ export function EventCard({ event, showRSVP = false }: EventCardProps) {
                     >
                       <div className={styles.moderationSection}>
                         <InlineModerationControls
-                          contentId={event.id}
+                          contentId={String(event.id)}
                           contentType="post"
                           isAdmin={isAdmin}
                           compact={true}

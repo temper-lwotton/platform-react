@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Link as LinkIcon,
   Settings,
+  Palette,
 } from 'lucide-react';
 import styles from './SettingsLayout.module.scss';
 
@@ -30,6 +31,12 @@ const settingsTabs: SettingsTab[] = [
     href: '/admin/settings/general',
     icon: Globe,
     description: 'Site name, description, timezone, and language',
+  },
+  {
+    label: 'Theme',
+    href: '/admin/settings/theme',
+    icon: Palette,
+    description: 'Platform theme, colors, and visual appearance',
   },
   {
     label: 'Media',

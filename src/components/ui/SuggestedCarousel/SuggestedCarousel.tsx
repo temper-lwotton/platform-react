@@ -32,7 +32,6 @@ const MOCK_SUGGESTIONS: Suggestion[] = [
         title: 'Dr. Emily Chen',
         description: 'AI Research Scientist specializing in neural networks and deep learning',
         reason: 'You both have interest in Machine Learning and Neural Networks',
-        image: null,
         url: '/users/15',
     },
     {
@@ -83,7 +82,6 @@ const MOCK_SUGGESTIONS: Suggestion[] = [
         title: 'Marcus Thompson',
         description: 'Full-stack developer passionate about distributed systems',
         reason: 'You both recently posted about Microservices Architecture',
-        image: null,
         url: '/users/27',
     },
     {

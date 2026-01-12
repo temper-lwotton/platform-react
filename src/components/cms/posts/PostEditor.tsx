@@ -261,7 +261,7 @@ export function PostEditor({ postId }: PostEditorProps) {
               <span>Media</span>
             </Tabs.Trigger>
             <Tabs.Trigger value="content" className={styles.tabsTrigger}>
-              <Icon icon="tag" size={16} />
+              <Icon icon="fileText" size={16} />
               <span>Content</span>
             </Tabs.Trigger>
             <Tabs.Trigger value="seo" className={styles.tabsTrigger}>

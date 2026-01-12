@@ -82,6 +82,23 @@ export interface PermalinkSettings {
   tagBase: string;
 }
 
+// Theme settings
+export interface ThemeSettings {
+  platformTheme: 'innovation-spectrum' | 'deep-focus' | 'bright-studio' | 'coastal-fusion' | 'custom';
+  defaultColorMode: 'light' | 'dark' | 'system';
+  allowUserOverride: boolean; // Allow users to override platform theme with their preference
+  // Innovation Spectrum (default)
+  primaryColor: string; // Purple for creativity
+  infoColor: string; // Blue for information
+  ctaColor: string; // Orange for CTAs
+  accentColor: string; // Lime for success/growth
+  // Custom theme overrides (only used when platformTheme is 'custom')
+  customPrimaryColor?: string;
+  customInfoColor?: string;
+  customCtaColor?: string;
+  customAccentColor?: string;
+}
+
 // Combined settings
 export interface CMSSettings {
   general: GeneralSettings;
@@ -90,12 +107,13 @@ export interface CMSSettings {
   writing: WritingSettings;
   discussion: DiscussionSettings;
   permalinks: PermalinkSettings;
+  theme: ThemeSettings;
 }
 
 // API request/response types
 export interface UpdateSettingsRequest {
   category: keyof CMSSettings;
-  settings: Partial<GeneralSettings | MediaSettings | ReadingSettings | WritingSettings | DiscussionSettings | PermalinkSettings>;
+  settings: Partial<GeneralSettings | MediaSettings | ReadingSettings | WritingSettings | DiscussionSettings | PermalinkSettings | ThemeSettings>;
 }
 
 export interface SettingsResponse {

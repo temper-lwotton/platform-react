@@ -33,7 +33,8 @@
       "Bash(wc:*)",
       "Bash(git show:*)",
       "Bash(/tmp/media-library-page.module.scss)",
-      "Bash(tail:*)"
+      "Bash(tail:*)",
+      "WebFetch(domain:cdn.dribbble.com)"
     ],
     "deny": [],
     "ask": []

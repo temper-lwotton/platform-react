@@ -11,13 +11,13 @@
 
 // Variants
 .variant-primary {
-  background: var(--color-primary); /* Black */
+  background: var(--color-primary); /* Purple - Innovation & Creativity */
   color: white;
 
   &:hover:not(:disabled) {
     background: var(--color-primary-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
   }
 
   &:active:not(:disabled) {
@@ -31,8 +31,9 @@
   border: 1.5px solid var(--color-border-secondary);
 
   &:hover:not(:disabled) {
-    background: var(--color-bg-hover);
-    border-color: var(--color-text-primary);
+    background: var(--color-primary-bg);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 }
 
@@ -52,13 +53,14 @@
 }
 
 .variant-success {
-  background: var(--color-success); /* Desaturated accent */
-  color: var(--color-text-primary);
+  background: var(--color-success); /* Lime - Success & Growth */
+  color: var(--gray-900);
+  font-weight: 600;
 
   &:hover:not(:disabled) {
-    background: rgba(192, 242, 60, 0.85);
+    background: var(--color-accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(192, 242, 60, 0.2);
+    box-shadow: 0 4px 12px rgba(192, 242, 60, 0.3);
   }
 
   &:active:not(:disabled) {

@@ -42,12 +42,12 @@ export default function EditProfilePage() {
     useEffect(() => {
         if (user) {
             setFormData({
-                fullName: user.fullName || '',
+                fullName: user.profile?.fullName || '',
                 email: user.email || '',
-                bio: user.bio || '',
-                location: user.location || '',
-                website: user.website || '',
-                avatar: user.avatar || '',
+                bio: user.profile?.bio || '',
+                location: '',
+                website: user.profile?.linkedInProfile || '',
+                avatar: user.profile?.photo || '',
             });
         }
     }, [user]);

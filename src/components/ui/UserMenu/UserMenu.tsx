@@ -141,7 +141,7 @@ export function UserMenu() {
                     href="/admin"
                     className={styles.item}>
 
-                    <Icon icon="shield" size={16} />
+                    <Icon icon="lock" size={16} />
                     <span>Admin Area</span>
                 </Link>
 

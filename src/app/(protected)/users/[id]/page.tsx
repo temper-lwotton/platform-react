@@ -156,7 +156,7 @@ export default function UserPage() {
                         {isOwnProfile ? (
                             <div className="user-detail-actions">
                                 <Link href={`/users/${id}/edit`} className="user-detail-btn user-detail-btn--primary">
-                                    <Icon icon="edit" size={16} />
+                                    <Icon icon="pencil" size={16} />
                                     Edit Profile
                                 </Link>
                             </div>

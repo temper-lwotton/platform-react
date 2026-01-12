@@ -81,19 +81,19 @@ export function DocumentCard({ document, viewType = 'grid' }: DocumentCardProps)
                 <div className={styles.author}>
                     <Avatar
                         src={document.authorPhoto}
-                        alt={document.authorName}
-                        fallback={document.authorName.charAt(0).toUpperCase()}
+                        alt={document.authorName || 'Unknown'}
+                        fallback={document.authorName?.charAt(0).toUpperCase() || 'U'}
                         size="sm"
                     />
                     <div className={styles.authorInfo}>
-                        <div className={styles.authorName}>{document.authorName}</div>
+                        <div className={styles.authorName}>{document.authorName || 'Unknown'}</div>
                         <div className={styles.date}>
                             Updated {formatDate(document.updatedAt)}
                         </div>
                     </div>
                 </div>
 
-                {document.collaborators.length > 0 && (
+                {document.collaborators && document.collaborators.length > 0 && (
                     <div className={styles.collaborators}>
                         <div className={styles.collaboratorAvatars}>
                             {document.collaborators.slice(0, 3).map((collab) => (

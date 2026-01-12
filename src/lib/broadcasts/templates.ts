@@ -31,7 +31,11 @@ export function generateEventBroadcast(event: Event): BroadcastTemplate {
     ? getTextPreview(event.htmlContent)
     : 'Join us for this exciting event!';
 
-  const blocks = [
+  const blocks: Array<{
+    id: string;
+    type: 'heading' | 'text' | 'image' | 'button' | 'divider' | 'spacer';
+    content: any;
+  }> = [
     {
       id: '1',
       type: 'heading' as const,
@@ -129,7 +133,11 @@ export function generateDiscussionBroadcast(discussion: Discussion, spaceId: str
     ? discussion.space?.title
     : 'our community';
 
-  const blocks = [
+  const blocks: Array<{
+    id: string;
+    type: 'heading' | 'text' | 'image' | 'button' | 'divider' | 'spacer';
+    content: any;
+  }> = [
     {
       id: '1',
       type: 'heading' as const,

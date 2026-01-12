@@ -11,6 +11,7 @@ import type {
   WritingSettings,
   DiscussionSettings,
   PermalinkSettings,
+  ThemeSettings,
   UpdateSettingsRequest,
 } from '../types/settings';
 
@@ -82,6 +83,15 @@ const defaultSettings: CMSSettings = {
     structure: 'post-name',
     categoryBase: 'category',
     tagBase: 'tag',
+  },
+  theme: {
+    platformTheme: 'innovation-spectrum',
+    defaultColorMode: 'light',
+    allowUserOverride: true,
+    primaryColor: '#8b5cf6', // Vibrant purple
+    infoColor: '#3b82f6', // Electric blue
+    ctaColor: '#f97316', // Coral orange
+    accentColor: '#C0F23C', // Lime green
   },
 };
 
@@ -260,6 +270,31 @@ export async function updatePermalinkSettings(
 
   return {
     data: updatedPermalinks,
+    success: true,
+  };
+}
+
+/**
+ * Update theme settings
+ */
+export async function updateThemeSettings(
+  updates: Partial<ThemeSettings>
+): Promise<{ data: ThemeSettings; success: boolean }> {
+  await new Promise(resolve => setTimeout(resolve, 200));
+
+  const settings = getStoredSettings();
+  const updatedTheme = { ...settings.theme, ...updates };
+  const newSettings = { ...settings, theme: updatedTheme };
+
+  saveSettings(newSettings);
+
+  // Emit custom event to notify ThemeContext of changes
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('platform-theme-change', { detail: updatedTheme }));
+  }
+
+  return {
+    data: updatedTheme,
     success: true,
   };
 }

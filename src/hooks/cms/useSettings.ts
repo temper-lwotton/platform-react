@@ -12,6 +12,7 @@ import type {
   WritingSettings,
   DiscussionSettings,
   PermalinkSettings,
+  ThemeSettings,
 } from '@/services/cms/types/settings';
 
 // Query keys
@@ -23,6 +24,7 @@ export const settingsKeys = {
   writing: () => [...settingsKeys.all, 'writing'] as const,
   discussion: () => [...settingsKeys.all, 'discussion'] as const,
   permalinks: () => [...settingsKeys.all, 'permalinks'] as const,
+  theme: () => [...settingsKeys.all, 'theme'] as const,
 };
 
 /**
@@ -186,6 +188,32 @@ export function useUpdatePermalinkSettings() {
       settingsAPI.updatePermalinkSettings(updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: settingsKeys.permalinks() });
+      queryClient.invalidateQueries({ queryKey: settingsKeys.all });
+    },
+  });
+}
+
+/**
+ * Hook to fetch theme settings
+ */
+export function useThemeSettings() {
+  return useQuery({
+    queryKey: settingsKeys.theme(),
+    queryFn: () => settingsAPI.getSettingsCategory('theme'),
+  });
+}
+
+/**
+ * Hook to update theme settings
+ */
+export function useUpdateThemeSettings() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (updates: Partial<ThemeSettings>) =>
+      settingsAPI.updateThemeSettings(updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: settingsKeys.theme() });
       queryClient.invalidateQueries({ queryKey: settingsKeys.all });
     },
   });
